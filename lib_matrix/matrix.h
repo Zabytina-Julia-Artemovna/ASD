@@ -131,8 +131,8 @@ Matrix<T> Matrix<T>::operator - (const MathVector<T>& vector) const {
 }
 template <class T>
 MathVector<T> Matrix<T>::operator * (const MathVector<T>& vector) const {
-    Matrix<T> matrix;
-    return matrix;
+    MathVector<T> math_vector;
+    return math_vector;
 }
 
 template <class T>
