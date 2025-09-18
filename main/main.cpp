@@ -131,42 +131,43 @@ int main() {
 
 void printMainMenu() {
     std::cout << "==========================================\n";
-    std::cout << "|     КАЛЬКУЛЯТОР ДЛЯ РАЗЛИЧНЫХ МАТРИЦ   |\n";
-    std::cout << "|          (обычные и треугольные)       |\n";
+    std::cout << "|     CALCULATOR FOR VARIOUS MATRICES     |\n";
+    std::cout << "|       (REGULAR AND TRIANGULAR)          |\n";
     std::cout << "==========================================\n";
     std::cout << "\n";
-    std::cout << "ГЛАВНОЕ МЕНЮ =====\n";
-    std::cout << " 1.Сложение матриц\n";
-    std::cout << " 2.Вычитание матриц\n";
-    std::cout << " 3.Умножение матриц\n";
-    std::cout << " 4.Прибавить скаляр к матрице\n";
-    std::cout << " 5.Вычесть скаляр из матрицы\n";
-    std::cout << " 6.Умножить матрицу на скаляр\n";
-    std::cout << " 7.Деление на скаляр\n";
-    std::cout << " 8.Прибавить к матрице вектор\n";
-    std::cout << " 9.Вычесть вектор из матрицы\n";
-    std::cout << " 10.Умножить матрицу на вектор\n";
-    std::cout << " 11.Выйти\n";
+    std::cout << "MAIN MENU =====\n";
+    std::cout << " 1. Matrix addition\n";
+    std::cout << " 2. Matrix subtraction\n";
+    std::cout << " 3. Matrix multiplication\n";
+    std::cout << " 4. Add scalar to matrix\n";
+    std::cout << " 5. Subtract scalar from matrix\n";
+    std::cout << " 6. Multiply matrix by scalar\n";
+    std::cout << " 7. Division by scalar\n";
+    std::cout << " 8. Add vector to matrix\n";
+    std::cout << " 9. Subtract vector from matrix\n";
+    std::cout << " 10. Multiply matrix by vector\n";
+    std::cout << " 11. Exit\n";
 }
+
 int main() {
     setlocale(LC_ALL, "Russian");
     int user_choice;
     do {
         printMainMenu();
-        std::cout << "Ваш выбор: ";
+        std::cout << "Your choice: ";
         std::cin >> user_choice;
 
         if (user_choice == 11) {
             break;
         }
         int matrix_type;
-        std::cout << "Выберите тип матрицы:\n";
-        std::cout << "1. Обычная матрица\n";
-        std::cout << "2. Треугольная матрица\n";
+        std::cout << "Choose matrix type:\n";
+        std::cout << "1. Regular matrix\n";
+        std::cout << "2. Triangular matrix\n";
         std::cin >> matrix_type;
 
         size_t M, N;
-        std::cout << "Введите размеры матрицы 1 (M - кол-во строк, N - кол-во столбцов)\n";
+        std::cout << "Enter dimensions of matrix 1 (M - rows, N - columns)\n";
         std::cout << "M = ";
         std::cin >> M;
         std::cout << "N = ";
@@ -174,133 +175,133 @@ int main() {
 
         Matrix<int> matrix1(M, N);
 
-        std::cout << "Введите элементы матрицы 1:\n";
+        std::cout << "Enter elements of matrix 1:\n";
         system("pause");
 
         switch (user_choice) {
         case 1: {
             size_t K, L;
-            std::cout << "Введите размеры матрицы 2 (K - кол-во строк, L - кол-во столбцов)\n";
+            std::cout << "Enter dimensions of matrix 2 (K - rows, L - columns)\n";
             std::cout << "K = ";
             std::cin >> K;
             std::cout << "L = ";
             std::cin >> L;
             Matrix<int> matrix2(K, L);
 
-            std::cout << "Введите элементы матрицы 2:\n";
+            std::cout << "Enter elements of matrix 2:\n";
             system("pause");
             Matrix<int> result = matrix1 + matrix2;
-            std::cout << "Результат:\n" << result;
+            std::cout << "Result:\n" << result;
             break;
         }
         case 2: {
             size_t K, L;
-            std::cout << "Введите размеры матрицы 2 (K - кол-во строк, L - кол-во столбцов)\n";
+            std::cout << "Enter dimensions of matrix 2 (K - rows, L - columns)\n";
             std::cout << "K = ";
             std::cin >> K;
             std::cout << "L = ";
             std::cin >> L;
             Matrix<int> matrix2(K, L);
 
-            std::cout << "Введите элементы матрицы 2:\n";
+            std::cout << "Enter elements of matrix 2:\n";
             system("pause");
             Matrix<int> result = matrix1 - matrix2;
-            std::cout << "Результат:\n" << result;
+            std::cout << "Result:\n" << result;
             break;
         }
         case 3: {
             size_t K, L;
-            std::cout << "Введите размеры матрицы 2 (K - кол-во строк, L - кол-во столбцов)\n";
+            std::cout << "Enter dimensions of matrix 2 (K - rows, L - columns)\n";
             std::cout << "K = ";
             std::cin >> K;
             std::cout << "L = ";
             std::cin >> L;
             Matrix<int> matrix2(K, L);
 
-            std::cout << "Введите элементы матрицы 2:\n";
+            std::cout << "Enter elements of matrix 2:\n";
             system("pause");
             Matrix<int> result = matrix1 * matrix2;
-            std::cout << "Результат:\n" << result;
+            std::cout << "Result:\n" << result;
             break;
         }
         case 4: {
             int scalar;
-            std::cout << "Введите скаляр:\n";
+            std::cout << "Enter scalar:\n";
             std::cin >> scalar;
             system("pause");
             Matrix<int> result = matrix1 + scalar;
-            std::cout << "Результат:\n" << result;
+            std::cout << "Result:\n" << result;
             break;
         }
         case 5: {
             int scalar;
-            std::cout << "Введите скаляр:\n";
+            std::cout << "Enter scalar:\n";
             std::cin >> scalar;
             system("pause");
             Matrix<int> result = matrix1 - scalar;
-            std::cout << "Результат:\n" << result;
+            std::cout << "Result:\n" << result;
             break;
         }
         case 6: {
             int scalar;
-            std::cout << "Введите скаляр:\n";
+            std::cout << "Enter scalar:\n";
             std::cin >> scalar;
             system("pause");
             Matrix<int> result = matrix1 * scalar;
-            std::cout << "Результат:\n" << result;
+            std::cout << "Result:\n" << result;
             break;
         }
         case 7: {
             int scalar;
-            std::cout << "Введите скаляр:\n";
+            std::cout << "Enter scalar:\n";
             std::cin >> scalar;
             system("pause");
             Matrix<int> result = matrix1 / scalar;
-            std::cout << "Результат:\n" << result;
+            std::cout << "Result:\n" << result;
             break;
         }
         case 8: {
             size_t size;
-            std::cout << "Введите размер вектора:\n";
+            std::cout << "Enter vector size:\n";
             std::cin >> size;
             MathVector<int> mathvector(size);
 
-            std::cout << "Введите элементы вектора:\n";
+            std::cout << "Enter vector elements:\n";
             system("pause");
             Matrix<int> result = matrix1 + mathvector;
-            std::cout << "Результат:\n" << result;
+            std::cout << "Result:\n" << result;
             break;
         }
         case 9: {
             size_t size;
-            std::cout << "Введите размер вектора:\n";
+            std::cout << "Enter vector size:\n";
             std::cin >> size;
             MathVector<int> mathvector(size);
 
-            std::cout << "Введите элементы вектора:\n";
+            std::cout << "Enter vector elements:\n";
             system("pause");
             Matrix<int> result = matrix1 - mathvector;
-            std::cout << "Результат:\n" << result;
+            std::cout << "Result:\n" << result;
             break;
         }
         case 10: {
             size_t size;
-            std::cout << "Введите размер вектора:\n";
+            std::cout << "Enter vector size:\n";
             std::cin >> size;
             MathVector<int> mathvector(size);
 
-            std::cout << "Введите элементы вектора:\n";
+            std::cout << "Enter vector elements:\n";
             system("pause");
             MathVector<int> result = matrix1 * mathvector;
-            std::cout << "Результат:\n" << result;
-            break;
-        }  
-        default: {
-            std::cout << "Неверный ввод! Попробуйте снова\n";
+            std::cout << "Result:\n" << result;
             break;
         }
-                }
-        std::cout << "\n Нажмите Enter для продолжения...";
+        default: {
+            std::cout << "Invalid input! Please try again\n";
+            break;
+        }
+        }
+        std::cout << "\n Press Enter to continue...";
         std::cin.ignore();
         std::cin.get();
     } while (true);
