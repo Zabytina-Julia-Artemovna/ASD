@@ -9,7 +9,6 @@ public:
     MathVector(T* data, size_t size);
     MathVector(const MathVector<T>& other);
     virtual ~MathVector();
-
     MathVector<T> operator * (T value) const;
     MathVector<T> operator / (T value) const;
 
@@ -22,7 +21,7 @@ public:
 
     MathVector<T>& operator += (const MathVector<T>& vector);
     MathVector<T>& operator -= (const MathVector<T>& vector);
-
+    friend std::ostream& operator<<(std::ostream& out, const MathVector<T>& vector);
 };
 template<class T>
 MathVector<T>::MathVector() : Tvector<T>() {}
@@ -34,12 +33,11 @@ template <class T>
 MathVector<T>::MathVector(const MathVector<T>& other) : Tvector<T>(other) {}
 template <class T>
 MathVector<T>::~MathVector() = default;
-
 template <class T>
 MathVector<T> MathVector<T>::operator * (T value) const {
     MathVector<T> result(this->get_size());
     for (size_t i = 0; i < this->get_size(); ++i) {
-        result[i] = this->get_data()[i] * value;
+        result[i] = (*this)[i] * value;
     }
     return result;
 }
@@ -50,14 +48,14 @@ MathVector<T> MathVector<T>::operator / (T value) const {
     }
     MathVector<T> result(this->get_size());
     for (size_t i = 0; i < this->get_size(); ++i) {
-        result[i] = this->get_data()[i] / value;
+        result[i] = (*this)[i] / value;
     }
     return result;
 }
 template <class T>
 MathVector<T>& MathVector<T>::operator *= (T value) {
     for (size_t i = 0; i < this->get_size(); ++i) {
-        this->get_data()[i] *= value;
+        (*this)[i] *= value;
    }
     return *this;
 }
@@ -67,7 +65,7 @@ MathVector<T>& MathVector<T>::operator /= (T value) {
         throw std::logic_error("Can't divide by zero!");
     }
     for (size_t i = 0; i < this->get_size(); ++i) {
-        this->get_data()[i] /= value;
+        (*this)[i] /= value;
     }
     return *this;
 }
@@ -78,7 +76,7 @@ MathVector<T> MathVector<T>::operator + (const MathVector<T>& vector) const {
     }
     MathVector<T> result(this->get_size());
     for (size_t i = 0; i < this->get_size(); ++i) {
-        result[i] = this->get_data()[i] + vector.get_data()[i];
+        result[i] = (*this)[i] + vector[i];
     }
     return result;
 }
@@ -89,7 +87,7 @@ MathVector<T> MathVector<T>::operator - (const MathVector<T>& vector) const {
     }
     MathVector<T> result(this->get_size());
     for (size_t i = 0; i < this->get_size(); ++i) {
-        result[i] = this->get_data()[i] - vector.get_data()[i];
+        result[i] = (*this)[i] - vector[i];
     }
     return result;
 }
@@ -100,7 +98,7 @@ T MathVector<T>::operator * (const MathVector<T>& vector) const {
     }
     T result{};
     for (size_t i = 0; i < this->get_size(); ++i) {
-        result += this->get_data()[i] * vector.get_data()[i];
+        result += (*this)[i] * vector[i];
     }
     return result;
 }
@@ -110,7 +108,7 @@ MathVector<T>& MathVector<T>::operator += (const MathVector<T>& vector)  {
         throw std::logic_error("Vectors must have the same dimension");
     }
     for (size_t i = 0; i < this->get_size(); ++i) {
-        this->get_data()[i] += vector.get_data()[i];
+        (*this)[i] += vector[i];
     }
     return *this;
 }
@@ -120,17 +118,19 @@ MathVector<T>& MathVector<T>::operator -= (const MathVector<T>& vector) {
         throw std::logic_error("Vectors must have the same dimension");
     }
     for (size_t i = 0; i < this->get_size(); ++i) {
-        this->get_data()[i] -= vector.get_data()[i];
+        (*this)[i] -= vector[i];
     }
     return *this;
 }
-
-
-
-
-
-
-
-
-
-
+template<class T>
+std::ostream& operator<<(std::ostream& out, const MathVector<T>& vector) {
+    out << "[";
+    for (size_t i = 0; i < vector.get_size(); ++i) {
+        out << vector[i];
+        if (i < vector.get_size() - 1) {
+            out << ", ";
+        }
+    }
+    out << "]";
+    return out;
+}
