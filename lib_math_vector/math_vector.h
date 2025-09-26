@@ -1,4 +1,5 @@
 #pragma once
+#include <stdexcept> 
 #include "../lib_vector/vector.h"
 template <class T>
 class MathVector : public Tvector<T> {
@@ -8,6 +9,14 @@ public:
     MathVector(T* data, size_t size);
     MathVector(const MathVector<T>& other);
     virtual ~MathVector();
+
+    MathVector<T> operator * (T value) const;
+    MathVector<T> operator / (T value) const;
+
+    MathVector<T>& operator *= (T value);
+    MathVector<T>& operator /= (T value);
+
+
 };
 template<class T>
 MathVector<T>::MathVector() : Tvector<T>() {}
@@ -19,3 +28,42 @@ template <class T>
 MathVector<T>::MathVector(const MathVector<T>& other) : Tvector<T>(other) {}
 template <class T>
 MathVector<T>::~MathVector() = default;
+
+template <class T>
+MathVector<T> MathVector<T>::operator * (T value) const {
+    MathVector<T> result(this->get_size());
+    for (size_t i = 0; i < this->get_size(); ++i) {
+        result[i] = this->get_data()[i] * value;
+    }
+    return result;
+}
+template <class T>
+MathVector<T> MathVector<T>::operator / (T value) const {
+    if (value == 0) {
+        throw std::logic_error("Can't divide by zero!");
+    }
+    MathVector<T> result(this->get_size());
+    for (size_t i = 0; i < this->get_size(); ++i) {
+        result[i] = this->get_data()[i] / value;
+    }
+    return result;
+}
+template <class T>
+MathVector<T>& MathVector<T>::operator *= (T value) {
+    for (size_t i = 0; i < this->get_size(); ++i) {
+        this->get_data()[i] *= value;
+   }
+    return *this;
+}
+template <class T>
+MathVector<T>& MathVector<T>::operator /= (T value) {
+    if (value == 0) {
+        throw std::logic_error("Can't divide by zero!");
+    }
+    for (size_t i = 0; i < this->get_size(); ++i) {
+        this->get_data()[i] /= value;
+    }
+    return *this;
+}
+
+
