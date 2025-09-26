@@ -16,6 +16,12 @@ public:
     MathVector<T>& operator *= (T value);
     MathVector<T>& operator /= (T value);
 
+    MathVector<T> operator + (const MathVector<T>& vector) const;
+    MathVector<T> operator - (const MathVector<T>& vector) const;
+    T operator * (const MathVector<T>& vector) const;
+
+    MathVector<T>& operator += (const MathVector<T>& vector);
+    MathVector<T>& operator -= (const MathVector<T>& vector);
 
 };
 template<class T>
@@ -65,5 +71,66 @@ MathVector<T>& MathVector<T>::operator /= (T value) {
     }
     return *this;
 }
+template<class T>
+MathVector<T> MathVector<T>::operator + (const MathVector<T>& vector) const {
+    if (this->get_size() != vector.get_size()) {
+        throw std::logic_error("Vectors must have the same dimension");
+    }
+    MathVector<T> result(this->get_size());
+    for (size_t i = 0; i < this->get_size(); ++i) {
+        result[i] = this->get_data()[i] + vector.get_data()[i];
+    }
+    return result;
+}
+template<class T>
+MathVector<T> MathVector<T>::operator - (const MathVector<T>& vector) const {
+    if (this->get_size() != vector.get_size()) {
+        throw std::logic_error("Vectors must have the same dimension");
+    }
+    MathVector<T> result(this->get_size());
+    for (size_t i = 0; i < this->get_size(); ++i) {
+        result[i] = this->get_data()[i] - vector.get_data()[i];
+    }
+    return result;
+}
+template<class T>
+T MathVector<T>::operator * (const MathVector<T>& vector) const {
+    if (this->get_size() != vector.get_size()) {
+        throw std::logic_error("Vectors must have the same dimension");
+    }
+    T result{};
+    for (size_t i = 0; i < this->get_size(); ++i) {
+        result += this->get_data()[i] * vector.get_data()[i];
+    }
+    return result;
+}
+template<class T>
+MathVector<T>& MathVector<T>::operator += (const MathVector<T>& vector)  {
+    if (this->get_size() != vector.get_size()) {
+        throw std::logic_error("Vectors must have the same dimension");
+    }
+    for (size_t i = 0; i < this->get_size(); ++i) {
+        this->get_data()[i] += vector.get_data()[i];
+    }
+    return *this;
+}
+template<class T>
+MathVector<T>& MathVector<T>::operator -= (const MathVector<T>& vector) {
+    if (this->get_size() != vector.get_size()) {
+        throw std::logic_error("Vectors must have the same dimension");
+    }
+    for (size_t i = 0; i < this->get_size(); ++i) {
+        this->get_data()[i] -= vector.get_data()[i];
+    }
+    return *this;
+}
+
+
+
+
+
+
+
+
 
 
