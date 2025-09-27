@@ -158,3 +158,45 @@ TEST(TestMathVectorLib, mathvector_scalar_product) {
     // Assert
     EXPECT_EQ(result, scalar_product);  
 }
+TEST(TestMathVectorLib, mathvector_add_for_vectors_with_different_dimension_exception) {
+    // Arrange & Act
+    int data1[3] = { 4, 7 ,28 };
+    size_t size1 = 3;
+
+    int data2[5] = { 5, 100, 1, 22, 7 };
+    size_t size2 = 5;
+
+    MathVector<int> vector1(data1, size1);
+    MathVector<int> vector2(data2, size2);
+   
+    // Assert
+    EXPECT_THROW(vector1 + vector2, std::logic_error);
+}
+TEST(TestMathVectorLib, mathvector_sub_for_vectors_with_different_dimension_exception) {
+    // Arrange & Act
+    int data1[3] = { 4, 7 ,28 };
+    size_t size1 = 3;
+
+    int data2[5] = { 5, 100, 1, 22, 7 };
+    size_t size2 = 5;
+
+    MathVector<int> vector1(data1, size1);
+    MathVector<int> vector2(data2, size2);
+
+    // Assert
+    EXPECT_THROW(vector1 - vector2, std::logic_error);
+}
+TEST(TestMathVectorLib, mathvector_scalar_product_for_vectors_with_different_dimension_exception) {
+    // Arrange & Act
+    int data1[3] = { 4, 7 ,28 };
+    size_t size1 = 3;
+
+    int data2[5] = { 5, 100, 1, 22, 7 };
+    size_t size2 = 5;
+
+    MathVector<int> vector1(data1, size1);
+    MathVector<int> vector2(data2, size2);
+
+    // Assert
+    EXPECT_THROW(vector1 * vector2, std::logic_error);
+}
