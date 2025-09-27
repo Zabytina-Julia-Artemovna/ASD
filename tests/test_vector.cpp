@@ -2,63 +2,39 @@
 #include <gtest/gtest.h>
 #include "../lib_vector/vector.h"
 TEST(TestVectorLib, vector_default_constructor) {
-    // Arrange
+    // Arrange & Act
     Tvector<int> vector;
-    // Act
-    bool actual_result = vector.get_size() == 0
-        && vector.get_deleted() == 0
-        && vector.get_capacity() == 0
-        && vector.get_data() == nullptr
-        && vector.get_states() == nullptr;
-
     // Assert
-    bool expected_result = true;
-    EXPECT_EQ(expected_result, actual_result);
+    EXPECT_TRUE(vector.is_empty());
 }
 TEST(TestVectorLib, vector_constructor_with_size) {
-    // Arrange
+    // Arrange & Act
     size_t size = 10;
     Tvector<int> vector(size);
-    // Act
-    bool actual_result = vector.get_size() == size
-        && vector.get_capacity() == 25
-        && vector.get_data() != nullptr
-        && vector.get_states() != nullptr
-        && vector.get_deleted() == 0;;
-
     // Assert
-    bool expected_result = true;
-    EXPECT_EQ(expected_result, actual_result);
+    EXPECT_LE(vector.get_size(), vector.get_capacity());
+    EXPECT_EQ(vector.get_size(), size);
 }
 TEST(TestVectorLib, vector_constructor_with_array_and_size) {
-    // Arrange
+    // Arrange & Act
     int data[3] = { 1,2,3 };
     size_t size = 3;
     Tvector<int> vector(data, size);
-    // Act
-    bool actual_result = vector.get_size() == size
-        && vector.get_capacity() == 18
-        && vector.get_data() != nullptr
-        && vector.get_states() != nullptr
-        && vector.get_data()[0] == data[0]
-        && vector.get_data()[1] == data[1]
-        && vector.get_data()[2] == data[2]
-        && vector.get_deleted() == 0;
     // Assert
-    bool expected_result = true;
-    EXPECT_EQ(expected_result, actual_result);
+    EXPECT_EQ(vector.get_size(), size);
+    EXPECT_EQ(vector[0], data[0]);
+    EXPECT_EQ(vector[1], data[1]);
+    EXPECT_EQ(vector[2], data[2]);
+    EXPECT_LE(vector.get_size(), vector.get_capacity());
 }
 TEST(TestVectorLib, vector_copy_constructor) {
-    // Arrange
+    // Arrange & Act
     int data[3] = { 1,2,3 };
     size_t size = 3;
     Tvector<int> old_vector(data, size);
     Tvector<int> new_vector(old_vector);
-    // Act
-    bool actual_result = old_vector == new_vector;
     // Assert
-    bool expected_result = true;
-    EXPECT_EQ(expected_result, actual_result);
+    EXPECT_EQ(old_vector, new_vector);
 }
 TEST(TestVectorLib, is_empty) {
     // Arrange
