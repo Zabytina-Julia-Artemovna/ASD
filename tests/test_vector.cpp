@@ -141,7 +141,7 @@ TEST(TestVectorLib, get_end) {
     int* expected_result = &(vector.get_data()[0]) + size;
     EXPECT_EQ(expected_result, actual_result);
 }
-TEST(TestVectorLib, ñomparison_operator_true) {
+TEST(TestVectorLib, comparison_operator_true) {
     // Arrange
     int data[3] = { 1,2,3 };
     size_t size = 3;
@@ -153,7 +153,7 @@ TEST(TestVectorLib, ñomparison_operator_true) {
     bool expected_result = true;
     EXPECT_EQ(expected_result, actual_result);
 }
-TEST(TestVectorLib, ñomparison_operator_false) {
+TEST(TestVectorLib, comparison_operator_false) {
     // Arrange
     int data1[3] = { 1,2,3 };
     size_t size1 = 3;
@@ -167,7 +167,7 @@ TEST(TestVectorLib, ñomparison_operator_false) {
     bool expected_result = false;
     EXPECT_EQ(expected_result, actual_result);
 }
-TEST(TestVectorLib, not_ñomparison_operator_true) {
+TEST(TestVectorLib, not_comparison_operator_true) {
     // Arrange
     int data1[3] = { 1,2,3 };
     size_t size1 = 3;
@@ -181,7 +181,7 @@ TEST(TestVectorLib, not_ñomparison_operator_true) {
     bool expected_result = true;
     EXPECT_EQ(expected_result, actual_result);
 }
-TEST(TestVectorLib, not_ñomparison_operator_false) {
+TEST(TestVectorLib, not_comparison_operator_false) {
     // Arrange
     int data[3] = { 1,2,3 };
     size_t size = 3;
