@@ -1,8 +1,7 @@
 // Copyright 2025 Julia Zabytina
 #include <gtest/gtest.h>
-#include "../lib_easy_example/easy_example.h"
 #include "../lib_vector/vector.h"
-TEST(TestVectorLib, default_constructor) {
+TEST(TestVectorLib, vector_default_constructor) {
     // Arrange
     Tvector<int> vector;
     // Act
@@ -16,7 +15,7 @@ TEST(TestVectorLib, default_constructor) {
     bool expected_result = true;
     EXPECT_EQ(expected_result, actual_result);
 }
-TEST(TestVectorLib, constructor_with_size) {
+TEST(TestVectorLib, vector_constructor_with_size) {
     // Arrange
     size_t size = 10;
     Tvector<int> vector(size);
@@ -31,7 +30,7 @@ TEST(TestVectorLib, constructor_with_size) {
     bool expected_result = true;
     EXPECT_EQ(expected_result, actual_result);
 }
-TEST(TestVectorLib, constructor_with_array_and_size) {
+TEST(TestVectorLib, vector_constructor_with_array_and_size) {
     // Arrange
     int data[3] = { 1,2,3 };
     size_t size = 3;
@@ -49,7 +48,7 @@ TEST(TestVectorLib, constructor_with_array_and_size) {
     bool expected_result = true;
     EXPECT_EQ(expected_result, actual_result);
 }
-TEST(TestVectorLib, copy_constructor) {
+TEST(TestVectorLib, vector_copy_constructor) {
     // Arrange
     int data[3] = { 1,2,3 };
     size_t size = 3;
