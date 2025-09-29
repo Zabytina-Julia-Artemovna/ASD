@@ -53,7 +53,12 @@ public:
     }
     MathVector<T>& operator[](size_t index);
     const MathVector<T>& operator[](size_t index) const;
-
+    size_t getM() const {
+        return M;
+    }
+    size_t getN() const {
+        return N;
+    }
 
 };
 template <class T>
