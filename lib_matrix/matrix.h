@@ -25,13 +25,6 @@ public:
     Matrix<T>& operator *= (T value);
     Matrix<T>& operator /= (T value);
 
-    Matrix<T> operator + (const MathVector<T>& vector) const;
-    Matrix<T> operator - (const MathVector<T>& vector) const;
-    MathVector<T> operator * (const MathVector<T>& vector) const;
-
-    Matrix<T>& operator += (const MathVector<T>& vector);
-    Matrix<T>& operator -= (const MathVector<T>& vector);
-
     Matrix<T> operator + (const Matrix<T>& other_matrix) const;
     Matrix<T> operator - (const Matrix<T>& other_matrix) const;
     Matrix<T> operator * (const Matrix<T>& other_matrix) const;
@@ -167,39 +160,30 @@ Matrix<T>& Matrix<T>::operator /= (T value) {
     return *this;
 }
 template <class T>
-Matrix<T> Matrix<T>::operator + (const MathVector<T>& vector) const {
-    Matrix<T> matrix;
-    return matrix;
-}
-template <class T>
-Matrix<T> Matrix<T>::operator - (const MathVector<T>& vector) const {
-    Matrix<T> matrix;
-    return matrix;
-}
-template <class T>
-MathVector<T> Matrix<T>::operator * (const MathVector<T>& vector) const {
-    MathVector<T> math_vector;
-    return math_vector;
-}
-
-template <class T>
-Matrix<T>& Matrix<T>::operator += (const MathVector<T>& vector) {
-    return *this;
-}
-template <class T>
-Matrix<T>& Matrix<T>::operator -= (const MathVector<T>& vector) {
-    return *this;
-}
-
-template <class T>
 Matrix<T> Matrix<T>::operator + (const Matrix<T>& other_matrix) const {
-    Matrix<T> matrix;
-    return matrix;
+    if (_M != other_matrix.getM() || _N != other_matrix.getN()) {
+        throw std::logic_error("The matrices have different sizes!");
+    }
+    Matrix<T> result(_M, _N);
+    for (size_t i = 0; i < _M; ++i) {
+        for (size_t j = 0; j < _N; ++j) {
+            result[i][j] = (*this)[i][j] + other_matrix[i][j];
+        }
+    }
+    return result;
 }
 template <class T>
 Matrix<T> Matrix<T>::operator - (const Matrix<T>& other_matrix) const {
-    Matrix<T> matrix;
-    return matrix;
+    if (_M != other_matrix.getM() || _N != other_matrix.getN()) {
+        throw std::logic_error("The matrices have different sizes!");
+    }
+    Matrix<T> result(_M, _N);
+    for (size_t i = 0; i < _M; ++i) {
+        for (size_t j = 0; j < _N; ++j) {
+            result[i][j] = (*this)[i][j] - other_matrix[i][j];
+        }
+    }
+    return result;
 }
 template <class T>
 Matrix<T> Matrix<T>::operator * (const Matrix<T>& other_matrix) const {
