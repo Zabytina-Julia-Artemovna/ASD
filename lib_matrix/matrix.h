@@ -63,16 +63,16 @@ template <class T>
 Matrix<T>::Matrix(size_t M, size_t N) : MathVector<MathVector<T>>(M) {
     _M = M;
     _N = N;
-    for (size_t i = 0; i < M; ++i) {
-        (*this)[i] = MathVector<T>(N);
+    for (size_t i = 0; i < _M; ++i) {
+        (*this)[i] = MathVector<T>(_N);
     }
 }
 template <class T>
 Matrix<T>::Matrix(T* data, size_t M, size_t N) : MathVector<MathVector<T>>(M) {
     _M = M;
     _N = N;
-    for (size_t i = 0; i < M; ++i) {
-        (*this)[i] = MathVector<T>(data + i * N, N);
+    for (size_t i = 0; i < _M; ++i) {
+        (*this)[i] = MathVector<T>(data + i * _N, _N);
     }
 }
 template <class T>
