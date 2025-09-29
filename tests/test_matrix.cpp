@@ -255,3 +255,61 @@ TEST(TestMatrixLib, matrix_sub_matrix_with_exception) {
     // Assert
     EXPECT_THROW(matrix1 - matrix2, std::logic_error);
 }
+TEST(TestMatrixLib, matrix_add_assign_matrix) {
+    // Arrange
+    size_t M = 2, N = 3;
+    int data1[6] = { 2, 2, 10, 4, 5, 7 };
+    int data2[6] = { 8, 2, 3, 0, 5, 7 };
+
+    Matrix<int> matrix1(data1, M, N);
+    Matrix<int> matrix2(data2, M, N);
+    // Act
+    matrix1 += matrix2;
+    // Assert
+    EXPECT_EQ(matrix1[0][0], data1[0] + data2[0]);
+    EXPECT_EQ(matrix1[0][1], data1[1] + data2[1]);
+    EXPECT_EQ(matrix1[0][2], data1[2] + data2[2]);
+    EXPECT_EQ(matrix1[1][0], data1[3] + data2[3]);
+    EXPECT_EQ(matrix1[1][1], data1[4] + data2[4]);
+    EXPECT_EQ(matrix1[1][2], data1[5] + data2[5]);
+}
+TEST(TestMatrixLib, matrix_add_assign_matrix_with_exception) {
+    // Arrange & Act
+    size_t M1 = 2, N1 = 3;
+    size_t M2 = 2, N2 = 2;
+    int data1[6] = { 2, 2, 10, 4, 5, 7 };
+    int data2[4] = { 8, 2, 3, 0 };
+    Matrix<int> matrix1(data1, M1, N1);
+    Matrix<int> matrix2(data2, M2, N2);
+    // Assert
+    EXPECT_THROW(matrix1 += matrix2, std::logic_error);
+}
+TEST(TestMatrixLib, matrix_sub_assign_matrix) {
+    // Arrange
+    size_t M = 2, N = 3;
+    int data1[6] = { 2, 2, 10, 4, 5, 7 };
+    int data2[6] = { 8, 2, 3, 0, 5, 7 };
+
+    Matrix<int> matrix1(data1, M, N);
+    Matrix<int> matrix2(data2, M, N);
+    // Act
+    matrix1 -= matrix2;
+    // Assert
+    EXPECT_EQ(matrix1[0][0], data1[0] - data2[0]);
+    EXPECT_EQ(matrix1[0][1], data1[1] - data2[1]);
+    EXPECT_EQ(matrix1[0][2], data1[2] - data2[2]);
+    EXPECT_EQ(matrix1[1][0], data1[3] - data2[3]);
+    EXPECT_EQ(matrix1[1][1], data1[4] - data2[4]);
+    EXPECT_EQ(matrix1[1][2], data1[5] - data2[5]);
+}
+TEST(TestMatrixLib, matrix_sub_assign_matrix_with_exception) {
+    // Arrange & Act
+    size_t M1 = 2, N1 = 3;
+    size_t M2 = 2, N2 = 2;
+    int data1[6] = { 2, 2, 10, 4, 5, 7 };
+    int data2[4] = { 8, 2, 3, 0 };
+    Matrix<int> matrix1(data1, M1, N1);
+    Matrix<int> matrix2(data2, M2, N2);
+    // Assert
+    EXPECT_THROW(matrix1 -= matrix2, std::logic_error);
+}
