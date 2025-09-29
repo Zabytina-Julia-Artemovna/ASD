@@ -190,13 +190,28 @@ Matrix<T> Matrix<T>::operator * (const Matrix<T>& other_matrix) const {
     Matrix<T> matrix;
     return matrix;
 }
-
 template <class T>
 Matrix<T>& Matrix<T>::operator += (const Matrix<T>& other_matrix) {
+    if (_M != other_matrix.getM() || _N != other_matrix.getN()) {
+        throw std::logic_error("The matrices have different sizes!");
+    }
+    for (size_t i = 0; i < _M; ++i) {
+        for (size_t j = 0; j < _N; ++j) {
+            (*this)[i][j] += other_matrix[i][j];
+        }
+    }
     return *this;
 }
 template <class T>
 Matrix<T>& Matrix<T>::operator -= (const Matrix<T>& other_matrix) {
+    if (_M != other_matrix.getM() || _N != other_matrix.getN()) {
+        throw std::logic_error("The matrices have different sizes!");
+    }
+    for (size_t i = 0; i < _M; ++i) {
+        for (size_t j = 0; j < _N; ++j) {
+            (*this)[i][j] -= other_matrix[i][j];
+        }
+    }
     return *this;
 }
 template <class T>
