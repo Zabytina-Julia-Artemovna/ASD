@@ -11,12 +11,8 @@ public:
     Matrix(T* data, size_t M, size_t N);
     Matrix(const Matrix& other);
     virtual ~Matrix();
-    size_t getM() const {
-        return _M;
-    }
-    size_t getN() const {
-        return _N;
-    }
+    size_t getM() const;
+    size_t getN() const;
     Matrix<T> operator + (T value) const;
     Matrix<T> operator - (T value) const;
     Matrix<T> operator * (T value) const;
@@ -41,7 +37,6 @@ public:
     Matrix<T>& operator += (const Matrix<T>& other_matrix);
     Matrix<T>& operator -= (const Matrix<T>& other_matrix);
     Matrix<T>& operator *= (const Matrix<T>& other_matrix);
-
     friend std::ostream& operator<< (std::ostream& out, const Matrix<T>& matrix) {
         for (size_t i = 0; i < matrix.getM(); ++i) {
             for (size_t j = 0; j < matrix.getN(); ++j) {
@@ -53,14 +48,15 @@ public:
     }
     MathVector<T>& operator[](size_t index);
     const MathVector<T>& operator[](size_t index) const;
-    size_t getM() const {
-        return M;
-    }
-    size_t getN() const {
-        return N;
-    }
-
 };
+template <class T>
+size_t Matrix<T>::getM() const {
+    return _M;
+}
+template <class T>
+size_t Matrix<T>::getN() const {
+    return _N;
+}
 template <class T>
 Matrix<T>::Matrix() : MathVector<MathVector<T>>(), _M(0), _N(0) {}
 template <class T>
