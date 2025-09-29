@@ -89,7 +89,7 @@ Matrix<T> Matrix<T>::operator + (T value) const {
     Matrix<T> matrix(_M, _N);
     for (size_t i = 0; i < _M; ++i) {
         for (size_t j = 0; j < _N; ++j) {
-            matrix[i][j] = (*this)[i][j] + value
+            matrix[i][j] = (*this)[i][j] + value;
         }
     }
     return matrix;
@@ -99,7 +99,7 @@ Matrix<T> Matrix<T>::operator - (T value) const {
     Matrix<T> matrix(_M, _N);
     for (size_t i = 0; i < _M; ++i) {
         for (size_t j = 0; j < _N; ++j) {
-            matrix[i][j] = (*this)[i][j] - value
+            matrix[i][j] = (*this)[i][j] - value;
         }
     }
     return matrix;
@@ -109,40 +109,63 @@ Matrix<T> Matrix<T>::operator * (T value) const {
     Matrix<T> matrix(_M, _N);
     for (size_t i = 0; i < _M; ++i) {
         for (size_t j = 0; j < _N; ++j) {
-            matrix[i][j] = (*this)[i][j] * value
+            matrix[i][j] = (*this)[i][j] * value;
         }
     }
     return matrix;
 }
 template <class T>
 Matrix<T> Matrix<T>::operator / (T value) const {
+    if (value == 0) {
+        throw std::logic_error("Division by zero!");
+    }
     Matrix<T> matrix(_M, _N);
     for (size_t i = 0; i < _M; ++i) {
         for (size_t j = 0; j < _N; ++j) {
-            matrix[i][j] = (*this)[i][j] / value
+            matrix[i][j] = (*this)[i][j] / value;
         }
     }
     return matrix;
 }
-
 template <class T>
 Matrix<T>& Matrix<T>::operator += (T value) {
+    for (size_t i = 0; i < _M; ++i) {
+        for (size_t j = 0; j < _N; ++j) {
+            (*this)[i][j] = (*this)[i][j] + value;
+        }
+    }
     return *this;
 }
 template <class T>
 Matrix<T>& Matrix<T>::operator -= (T value) {
+    for (size_t i = 0; i < _M; ++i) {
+        for (size_t j = 0; j < _N; ++j) {
+            (*this)[i][j] = (*this)[i][j] - value;
+        }
+    }
     return *this;
-
 }
 template <class T>
 Matrix<T>& Matrix<T>::operator *= (T value) {
+    for (size_t i = 0; i < _M; ++i) {
+        for (size_t j = 0; j < _N; ++j) {
+            (*this)[i][j] = (*this)[i][j] * value;
+        }
+    }
     return *this;
 }
 template <class T>
 Matrix<T>& Matrix<T>::operator /= (T value) {
+    if (value == 0) {
+        throw std::logic_error("Division by zero!");
+    }
+    for (size_t i = 0; i < _M; ++i) {
+        for (size_t j = 0; j < _N; ++j) {
+            (*this)[i][j] = (*this)[i][j] / value;
+        }
+    }
     return *this;
 }
-
 template <class T>
 Matrix<T> Matrix<T>::operator + (const MathVector<T>& vector) const {
     Matrix<T> matrix;
