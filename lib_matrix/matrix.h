@@ -1,4 +1,5 @@
 #pragma once
+#include <stdexcept>
 #include "../lib_math_vector/math_vector.h"
 template <class T>
 class Matrix : public MathVector<MathVector<T>> {
@@ -13,6 +14,7 @@ public:
     virtual ~Matrix();
     size_t getM() const;
     size_t getN() const;
+
     Matrix<T> operator + (T value) const;
     Matrix<T> operator - (T value) const;
     Matrix<T> operator * (T value) const;
@@ -57,6 +59,7 @@ template <class T>
 size_t Matrix<T>::getN() const {
     return _N;
 }
+
 template <class T>
 Matrix<T>::Matrix() : MathVector<MathVector<T>>(), _M(0), _N(0) {}
 template <class T>
@@ -83,22 +86,42 @@ Matrix<T>::~Matrix() = default;
 
 template <class T>
 Matrix<T> Matrix<T>::operator + (T value) const {
-    Matrix<T> matrix;
+    Matrix<T> matrix(_M, _N);
+    for (size_t i = 0; i < _M; ++i) {
+        for (size_t j = 0; j < _N; ++j) {
+            matrix[i][j] = (*this)[i][j] + value
+        }
+    }
     return matrix;
 }
 template <class T>
 Matrix<T> Matrix<T>::operator - (T value) const {
-    Matrix<T> matrix;
+    Matrix<T> matrix(_M, _N);
+    for (size_t i = 0; i < _M; ++i) {
+        for (size_t j = 0; j < _N; ++j) {
+            matrix[i][j] = (*this)[i][j] - value
+        }
+    }
     return matrix;
 }
 template <class T>
 Matrix<T> Matrix<T>::operator * (T value) const {
-    Matrix<T> matrix;
+    Matrix<T> matrix(_M, _N);
+    for (size_t i = 0; i < _M; ++i) {
+        for (size_t j = 0; j < _N; ++j) {
+            matrix[i][j] = (*this)[i][j] * value
+        }
+    }
     return matrix;
 }
 template <class T>
 Matrix<T> Matrix<T>::operator / (T value) const {
-    Matrix<T> matrix;
+    Matrix<T> matrix(_M, _N);
+    for (size_t i = 0; i < _M; ++i) {
+        for (size_t j = 0; j < _N; ++j) {
+            matrix[i][j] = (*this)[i][j] / value
+        }
+    }
     return matrix;
 }
 
