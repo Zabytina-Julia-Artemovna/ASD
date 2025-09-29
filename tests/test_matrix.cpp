@@ -55,3 +55,203 @@ TEST(TestMatrixLib, matrix_assignment_operator) {
     // Assert
     EXPECT_EQ(matrix1, matrix2);
 }
+TEST(TestMatrixLib, matrix_add_value) {
+    // Arrange
+    size_t M = 2, N = 2;
+    int data[4] = { 1, 2, 3, 4 };
+    int value = 10;
+    Matrix<int> matrix(data, M, N);
+    Matrix<int> result(M, N);
+    // Act
+    result = matrix + value;
+    // Assert
+    EXPECT_EQ(result[0][0], data[0] + value);
+    EXPECT_EQ(result[0][1], data[1] + value);
+    EXPECT_EQ(result[1][0], data[2] + value);
+    EXPECT_EQ(result[1][1], data[3] + value);
+}
+TEST(TestMatrixLib, matrix_sub_value) {
+    // Arrange
+    size_t M = 2, N = 2;
+    int data[4] = { 1, 2, 3, 4 };
+    int value = 10;
+    Matrix<int> matrix(data, M, N);
+    Matrix<int> result(M, N);
+    // Act
+    result = matrix - value;
+    // Assert
+    EXPECT_EQ(result[0][0], data[0] - value);
+    EXPECT_EQ(result[0][1], data[1] - value);
+    EXPECT_EQ(result[1][0], data[2] - value);
+    EXPECT_EQ(result[1][1], data[3] - value);
+}
+TEST(TestMatrixLib, matrix_mult_value) {
+    // Arrange
+    size_t M = 2, N = 2;
+    int data[4] = { 1, 2, 3, 4 };
+    int value = 10;
+    Matrix<int> matrix(data, M, N);
+    Matrix<int> result(M, N);
+    // Act
+    result = matrix * value;
+    // Assert   
+    EXPECT_EQ(result[0][0], data[0] * value);
+    EXPECT_EQ(result[0][1], data[1] * value);
+    EXPECT_EQ(result[1][0], data[2] * value);
+    EXPECT_EQ(result[1][1], data[3] * value);
+}
+TEST(TestMatrixLib, matrix_div_value) {
+    // Arrange
+    size_t M = 2, N = 2;
+    int data[4] = { 2, 2, 10, 4 };
+    int value = 2;
+    Matrix<int> matrix(data, M, N);
+    Matrix<int> result(M, N);
+    // Act
+    result = matrix  / value;
+    // Assert
+    EXPECT_EQ(result[0][0], data[0] / value);
+    EXPECT_EQ(result[0][1], data[1] / value);
+    EXPECT_EQ(result[1][0], data[2] / value);
+    EXPECT_EQ(result[1][1], data[3] / value);
+}
+TEST(TestMatrixLib, matrix_div_value_with_exception) {
+    // Arrange & Act
+    size_t M = 2, N = 2;
+    int data[4] = { 1, 2, 3, 4 };
+    int value = 0;
+    Matrix<int> matrix(data, M, N);
+    // Assert
+    EXPECT_THROW(matrix / value;, std::logic_error);
+}
+TEST(TestMatrixLib, matrix_add_assign_value) {
+    // Arrange
+    size_t M = 2, N = 2;
+    int data[4] = { 2, 2, 10, 4 };
+    int value = 2;
+    Matrix<int> matrix(data, M, N);
+    // Act
+    matrix += value;
+    // Assert
+    EXPECT_EQ(matrix[0][0], data[0] + value);
+    EXPECT_EQ(matrix[0][1], data[1] + value);
+    EXPECT_EQ(matrix[1][0], data[2] + value);
+    EXPECT_EQ(matrix[1][1], data[3] + value);
+}
+TEST(TestMatrixLib, matrix_sub_assign_value) {
+    // Arrange
+    size_t M = 2, N = 2;
+    int data[4] = { 2, 2, 10, 4 };
+    int value = 2;
+    Matrix<int> matrix(data, M, N);
+    // Act
+    matrix -= value;
+    // Assert
+    EXPECT_EQ(matrix[0][0], data[0] - value);
+    EXPECT_EQ(matrix[0][1], data[1] - value);
+    EXPECT_EQ(matrix[1][0], data[2] - value);
+    EXPECT_EQ(matrix[1][1], data[3] - value);
+}
+TEST(TestMatrixLib, matrix_mult_assign_value) {
+    // Arrange
+    size_t M = 2, N = 2;
+    int data[4] = { 2, 2, 10, 4 };
+    int value = 2;
+    Matrix<int> matrix(data, M, N);
+    // Act
+    matrix *= value;
+    // Assert
+    EXPECT_EQ(matrix[0][0], data[0] * value);
+    EXPECT_EQ(matrix[0][1], data[1] * value);
+    EXPECT_EQ(matrix[1][0], data[2] * value);
+    EXPECT_EQ(matrix[1][1], data[3] * value);
+}
+TEST(TestMatrixLib, matrix_div_assign_value) {
+    // Arrange
+    size_t M = 2, N = 2;
+    int data[4] = { 2, 2, 10, 4 };
+    int value = 2;
+    Matrix<int> matrix(data, M, N);
+    // Act
+    matrix /= value;
+    // Assert
+    EXPECT_EQ(matrix[0][0], data[0] / value);
+    EXPECT_EQ(matrix[0][1], data[1] / value);
+    EXPECT_EQ(matrix[1][0], data[2] / value);
+    EXPECT_EQ(matrix[1][1], data[3] / value);
+}
+TEST(TestMatrixLib, matrix_div_assign_value_with_exception) {
+    // Arrange & Act
+    size_t M = 2, N = 2;
+    int data[4] = { 1, 2, 3, 4 };
+    int value = 0;
+    Matrix<int> matrix(data, M, N);
+    // Assert
+    EXPECT_THROW(matrix /= value; , std::logic_error);
+}
+TEST(TestMatrixLib, matrix_add_matrix) {
+    // Arrange
+    size_t M = 2, N = 3;
+    int data1[6] = { 2, 2, 10, 4, 5, 7 };
+    int data2[6] = { 8, 2, 3, 0, 5, 7};
+
+    Matrix<int> matrix1(data1, M, N);
+    Matrix<int> matrix2(data2, M, N);
+    Matrix<int> result(M, N);
+    // Act
+    result = matrix1 + matrix2;
+    // Assert
+    EXPECT_EQ(result[0][0], data1[0] + data2[0]);
+    EXPECT_EQ(result[0][1], data1[1] + data2[1]);
+    EXPECT_EQ(result[0][2], data1[2] + data2[2]);
+    EXPECT_EQ(result[1][0], data1[3] + data2[3]);
+    EXPECT_EQ(result[1][1], data1[4] + data2[4]);
+    EXPECT_EQ(result[1][2], data1[5] + data2[5]);
+}
+TEST(TestMatrixLib, matrix_sub_matrix) {
+    // Arrange
+    size_t M = 2, N = 3;
+    int data1[6] = { 2, 2, 10, 4, 5, 7 };
+    int data2[6] = { 8, 2, 3, 0, 5, 7 };
+
+    Matrix<int> matrix1(data1, M, N);
+    Matrix<int> matrix2(data2, M, N);
+    Matrix<int> result(M, N);
+    // Act
+    result = matrix1 - matrix2;
+    // Assert
+    EXPECT_EQ(result[0][0], data1[0] - data2[0]);
+    EXPECT_EQ(result[0][1], data1[1] - data2[1]);
+    EXPECT_EQ(result[0][2], data1[2] - data2[2]);
+    EXPECT_EQ(result[1][0], data1[3] - data2[3]);
+    EXPECT_EQ(result[1][1], data1[4] - data2[4]);
+    EXPECT_EQ(result[1][2], data1[5] - data2[5]);
+}
+TEST(TestMatrixLib, matrix_add_matrix_with_exception) {
+    // Arrange & Act
+    size_t M1 = 2, N1 = 3;
+    size_t M2 = 2, N2 = 2;
+
+    int data1[6] = { 2, 2, 10, 4, 5, 7 };
+    int data2[4] = { 8, 2, 3, 0 };
+
+    Matrix<int> matrix1(data1, M1, N1);
+    Matrix<int> matrix2(data2, M2, N2);
+   
+    // Assert
+    EXPECT_THROW(matrix1 + matrix2, std::logic_error);
+}
+TEST(TestMatrixLib, matrix_sub_matrix_with_exception) {
+    // Arrange & Act
+    size_t M1 = 2, N1 = 3;
+    size_t M2 = 2, N2 = 2;
+
+    int data1[6] = { 2, 2, 10, 4, 5, 7 };
+    int data2[4] = { 8, 2, 3, 0 };
+
+    Matrix<int> matrix1(data1, M1, N1);
+    Matrix<int> matrix2(data2, M2, N2);
+
+    // Assert
+    EXPECT_THROW(matrix1 - matrix2, std::logic_error);
+}
