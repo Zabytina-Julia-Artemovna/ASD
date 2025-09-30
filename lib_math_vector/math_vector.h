@@ -21,6 +21,7 @@ public:
 
     MathVector<T>& operator += (const MathVector<T>& vector);
     MathVector<T>& operator -= (const MathVector<T>& vector);
+    MathVector<T>& operator=(const MathVector<T>& other);
     friend std::ostream& operator<<(std::ostream& out, const MathVector<T>& vector) {
         out << "[";
         for (size_t i = 0; i < vector.get_size(); ++i) {
@@ -129,6 +130,13 @@ MathVector<T>& MathVector<T>::operator -= (const MathVector<T>& vector) {
     }
     for (size_t i = 0; i < this->get_size(); ++i) {
         (*this)[i] -= vector[i];
+    }
+    return *this;
+}
+template <class T>
+MathVector<T>& MathVector<T>::operator=(const MathVector<T>& other) {
+    if (this != &other) {
+        Tvector<T>::operator=(other);
     }
     return *this;
 }
