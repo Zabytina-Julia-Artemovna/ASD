@@ -16,6 +16,8 @@ protected:
         return result;
     }
 public:
+    using MathVector<MathVector<T>>::operator=;
+
     Matrix();
     Matrix(size_t M, size_t N);
     Matrix(T* data, size_t M, size_t N);
@@ -38,7 +40,7 @@ public:
     Matrix<T> operator - (const Matrix<T>& other_matrix) const;
     Matrix<T> operator * (const Matrix<T>& other_matrix) const;
 
-    Matrix<T> operator * (const MathVector<T>& vector) const;
+    MathVector<T> operator * (const MathVector<T>& vector) const;
 
     Matrix<T>& operator += (const Matrix<T>& other_matrix);
     Matrix<T>& operator -= (const Matrix<T>& other_matrix);
@@ -212,7 +214,7 @@ Matrix<T> Matrix<T>::operator * (const Matrix<T>& other_matrix) const {
     return result;
 }
 template <class T>
-Matrix<T> Matrix<T>::operator * (const MathVector<T>& vector) const {
+MathVector<T> Matrix<T>::operator * (const MathVector<T>& vector) const {
     if (_N != vector.get_size()) {
         throw std::logic_error
         ("Size of matrix aren't compatible with vector's size for this operation!");
