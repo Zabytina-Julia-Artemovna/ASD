@@ -260,3 +260,17 @@ TEST(TestMathVectorLib, mathvector_sub_assign_for_vectors_with_different_dimensi
     // Assert
     EXPECT_THROW(vector1 -= vector2, std::logic_error);
 }
+TEST(TestMathVectorLib, mathvector_simple_assignment) {
+    // Arrange
+    MathVector<int> vector1(2);
+    MathVector<int> vector2(2);
+    vector1[0] = 1;
+    vector1[1] = 2;
+    vector2[0] = 3;
+    vector2[1] = 4;
+    //Act
+    vector1 = vector2;
+    // Assert
+    EXPECT_EQ(vector1[0], 3);
+    EXPECT_EQ(vector1[1], 4);  
+}
