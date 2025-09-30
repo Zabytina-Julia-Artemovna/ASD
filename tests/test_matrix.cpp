@@ -313,3 +313,33 @@ TEST(TestMatrixLib, matrix_sub_assign_matrix_with_exception) {
     // Assert
     EXPECT_THROW(matrix1 -= matrix2, std::logic_error);
 }
+TEST(TestMatrixLib, matrix_mult_matrix) {
+    // Arrange
+    size_t M1 = 2, N1 = 3, M2 = 3, N2 = 2;
+   
+    int data1[6] = { 2, 2, 1, 2, 1, 2 };
+    int data2[6] = { 3, 2, 2, 1, 3, 2 };
+
+    Matrix<int> matrix1(data1, M1, N1);
+    Matrix<int> matrix2(data2, M2, N2);
+    Matrix<int> result(M1, N2);
+    // Act
+    result = matrix1 * matrix2;
+    // Assert
+    EXPECT_EQ(result[0][0], 13);
+    EXPECT_EQ(result[0][1], 8);
+    EXPECT_EQ(result[1][0], 14);
+    EXPECT_EQ(result[1][1], 9);
+}
+TEST(TestMatrixLib, matrix_mult_matrix_with_throw) {
+    //Arrange & Act
+    size_t M1 = 2, N1 = 3, M2 = 2, N2 = 2;
+
+    int data1[6] = { 2, 2, 1, 2, 1, 2 };
+    int data2[6] = { 3, 2, 2, 1 };
+
+    Matrix<int> matrix1(data1, M1, N1);
+    Matrix<int> matrix2(data2, M2, N2);
+    //Assert
+    EXPECT_THROW(matrix1 * matrix2, std::logic_error);
+}
