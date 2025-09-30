@@ -53,6 +53,7 @@ public:
     }
     MathVector<T>& operator[](size_t index);
     const MathVector<T>& operator[](size_t index) const;
+    Matrix<T>& operator=(const Matrix<T>& other);
 };
 template <class T>
 size_t Matrix<T>::getM() const {
@@ -198,7 +199,8 @@ Matrix<T> Matrix<T>::operator - (const Matrix<T>& other_matrix) const {
 template <class T>
 Matrix<T> Matrix<T>::operator * (const Matrix<T>& other_matrix) const {
     if (_N != other_matrix.getM()) {
-        throw std::logic_error("The sizes of the matrices are not compatible for this operation!");
+        throw std::logic_error
+        ("The sizes of the matrices are not compatible for this operation!");
     }
     Matrix<T> result (_M, other_matrix.getN());
     Matrix<T> matrix_t = other_matrix.transpose();
@@ -212,17 +214,16 @@ Matrix<T> Matrix<T>::operator * (const Matrix<T>& other_matrix) const {
 template <class T>
 Matrix<T> Matrix<T>::operator * (const MathVector<T>& vector) const {
     if (_N != vector.get_size()) {
+        throw std::logic_error
+        ("Size of matrix aren't compatible with vector's size for this operation!");
+    }
+    MathVector<T> result(_M);
+    for (size_t i = 0; i < _M; ++i) {
+        result[i] = (*this)[i] * vector;
 
     }
+    return result;
 }
-
-
-
-
-
-
-
-
 template <class T>
 Matrix<T>& Matrix<T>::operator += (const Matrix<T>& other_matrix) {
     if (_M != other_matrix.getM() || _N != other_matrix.getN()) {
@@ -254,4 +255,11 @@ MathVector<T>& Matrix<T>::operator[](size_t index) {
 template <class T>
 const MathVector<T>& Matrix<T>::operator[](size_t index) const {
     return MathVector<MathVector<T>>::operator[](index);
+}
+template <class T>
+Matrix<T>& Matrix<T>::operator=(const Matrix<T>& other) {
+    MathVector<MathVector<T>>::operator=(other);
+    _M = other._M;
+    _N = other._N;
+    return *this;
 }
