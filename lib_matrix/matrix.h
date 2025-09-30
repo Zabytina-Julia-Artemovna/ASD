@@ -6,6 +6,15 @@ class Matrix : public MathVector<MathVector<T>> {
 protected:
     size_t _M;
     size_t _N;
+    Matrix<T> transpose() const {
+        Matrix<T> result(_N, _M);
+        for (size_t i = 0; i < _M; ++i) {
+            for (size_t j = 0; j < _N; ++j) {
+                result[j][i] = (*this)[i][j];
+            }
+        }
+        return result;
+    }
 public:
     Matrix();
     Matrix(size_t M, size_t N);
@@ -29,9 +38,10 @@ public:
     Matrix<T> operator - (const Matrix<T>& other_matrix) const;
     Matrix<T> operator * (const Matrix<T>& other_matrix) const;
 
+    Matrix<T> operator * (const MathVector<T>& vector) const;
+
     Matrix<T>& operator += (const Matrix<T>& other_matrix);
     Matrix<T>& operator -= (const Matrix<T>& other_matrix);
-    Matrix<T>& operator *= (const Matrix<T>& other_matrix);
     friend std::ostream& operator<< (std::ostream& out, const Matrix<T>& matrix) {
         for (size_t i = 0; i < matrix.getM(); ++i) {
             for (size_t j = 0; j < matrix.getN(); ++j) {
@@ -187,9 +197,32 @@ Matrix<T> Matrix<T>::operator - (const Matrix<T>& other_matrix) const {
 }
 template <class T>
 Matrix<T> Matrix<T>::operator * (const Matrix<T>& other_matrix) const {
-    Matrix<T> matrix;
-    return matrix;
+    if (_N != other_matrix.getM()) {
+        throw std::logic_error("The sizes of the matrices are not compatible for this operation!");
+    }
+    Matrix<T> result (_M, other_matrix.getN());
+    Matrix<T> matrix_t = other_matrix.transpose();
+    for (size_t i = 0; i < _M; ++i) {
+        for (size_t j = 0; j < matrix_t.getM(); ++j) {
+            result[i][j] = (*this)[i] * matrix_t[j];
+        }
+    }
+    return result;
 }
+template <class T>
+Matrix<T> Matrix<T>::operator * (const MathVector<T>& vector) const {
+    if (_N != vector.get_size()) {
+
+    }
+}
+
+
+
+
+
+
+
+
 template <class T>
 Matrix<T>& Matrix<T>::operator += (const Matrix<T>& other_matrix) {
     if (_M != other_matrix.getM() || _N != other_matrix.getN()) {
@@ -212,10 +245,6 @@ Matrix<T>& Matrix<T>::operator -= (const Matrix<T>& other_matrix) {
             (*this)[i][j] -= other_matrix[i][j];
         }
     }
-    return *this;
-}
-template <class T>
-Matrix<T>& Matrix<T>::operator *= (const Matrix<T>& other_matrix) {
     return *this;
 }
 template <class T>
