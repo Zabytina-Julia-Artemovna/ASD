@@ -143,10 +143,8 @@ void printMainMenu() {
     std::cout << " 5. Subtract scalar from matrix\n";
     std::cout << " 6. Multiply matrix by scalar\n";
     std::cout << " 7. Division by scalar\n";
-    std::cout << " 8. Add vector to matrix\n";
-    std::cout << " 9. Subtract vector from matrix\n";
-    std::cout << " 10. Multiply matrix by vector\n";
-    std::cout << " 11. Exit\n";
+    std::cout << " 8. Multiply matrix by vector\n";
+    std::cout << " 9. Exit\n";
 }
 
 int main() {
@@ -268,32 +266,12 @@ int main() {
 
             std::cout << "Enter vector elements:\n";
             system("pause");
-            Matrix<int> result = matrix1 + mathvector;
+            MathVector<int> result = matrix1 * mathvector;
             std::cout << "Result:\n" << result;
             break;
         }
         case 9: {
-            size_t size;
-            std::cout << "Enter vector size:\n";
-            std::cin >> size;
-            MathVector<int> mathvector(size);
 
-            std::cout << "Enter vector elements:\n";
-            system("pause");
-            Matrix<int> result = matrix1 - mathvector;
-            std::cout << "Result:\n" << result;
-            break;
-        }
-        case 10: {
-            size_t size;
-            std::cout << "Enter vector size:\n";
-            std::cin >> size;
-            MathVector<int> mathvector(size);
-
-            std::cout << "Enter vector elements:\n";
-            system("pause");
-            MathVector<int> result = matrix1 * mathvector;
-            std::cout << "Result:\n" << result;
             break;
         }
         default: {
