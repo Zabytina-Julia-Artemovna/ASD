@@ -343,3 +343,47 @@ TEST(TestMatrixLib, matrix_mult_matrix_with_throw) {
     //Assert
     EXPECT_THROW(matrix1 * matrix2, std::logic_error);
 }
+TEST(TestMatrixLib, matrix_mult_vector) {
+    // Arrange
+    size_t M = 2, N = 3, size = 3;
+    int data1[6] = { 2, 3, 1, 4, 1, 2 };
+    int data2[3] = { 2, 2, 2 };
+    Matrix<int> matrix(data1, M, N);
+    MathVector<int> vector(data2, size);
+    MathVector<int> result(M);
+    // Act
+    result = matrix * vector;
+    // Assert
+    EXPECT_EQ(result[0], 12);
+    EXPECT_EQ(result[1], 14);
+}
+TEST(TestMatrixLib, matrix_mult_vector_with_exception) {
+    // Arrange & Act
+    size_t M = 2, N = 3, size = 5;
+    int data1[6] = { 2, 3, 1, 4, 1, 2 };
+    int data2[5] = { 2, 2, 2, 6, 7 };
+    Matrix<int> matrix(data1, M, N);
+    MathVector<int> vector(data2, size);
+    // Assert
+    EXPECT_THROW(matrix * vector, std::logic_error);
+}
+TEST(TestMatrixLib, matrix_simple_assignment) {
+    // Arrange
+    Matrix<int> matrix1(2, 2);
+    Matrix<int> matrix2(2, 2);
+    matrix1[0][0] = 1;
+    matrix1[0][1] = 2;
+    matrix1[1][0] = 3;
+    matrix1[1][1] = 4;
+    matrix2[0][0] = 5;
+    matrix2[0][1] = 6;
+    matrix2[1][0] = 7;
+    matrix2[1][1] = 8;
+    //Act
+    matrix1 = matrix2;
+    // Проверяем
+    EXPECT_EQ(matrix1[0][0], 5);
+    EXPECT_EQ(matrix1[0][1], 6);
+    EXPECT_EQ(matrix1[1][0], 7);
+    EXPECT_EQ(matrix1[1][1], 8);
+}
