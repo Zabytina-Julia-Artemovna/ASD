@@ -16,6 +16,16 @@ TEST(TestMathVectorLib, mathvector_constructor_with_size) {
     EXPECT_LE(vector.get_size(), vector.get_capacity());
     EXPECT_EQ(vector.get_size(), size);
 }
+TEST(TestMathVectorLib, mathvector_constructor_with_size_and_start_index) {
+    // Arrange & Act
+    size_t size = 10;
+    size_t start_index = 1;
+    MathVector<int> vector(size, start_index);
+    // Assert
+    EXPECT_LE(vector.get_size(), vector.get_capacity());
+    EXPECT_EQ(vector.get_size(), size);
+    EXPECT_EQ(vector.get_start_index(), start_index);
+}
 TEST(TestMathVectorLib, mathvector_constructor_with_array_and_size) {
     // Arrange & Act
     int data[3] = { 1,2,3 };
@@ -28,6 +38,20 @@ TEST(TestMathVectorLib, mathvector_constructor_with_array_and_size) {
     EXPECT_EQ(vector[2], data[2]);
     EXPECT_LE(vector.get_size(), vector.get_capacity());
 }
+TEST(TestMathVectorLib, mathvector_constructor_with_array_and_size_and_start_index) {
+    // Arrange & Act
+    int data[3] = { 1,2,3 };
+    size_t size = 3;
+    size_t start_index = 1;
+    MathVector<int> vector(data, size, start_index);
+    // Assert
+    EXPECT_EQ(vector.get_start_index(), start_index);
+    EXPECT_EQ(vector.get_size(), size);
+    EXPECT_EQ(vector[1], data[0]);
+    EXPECT_EQ(vector[2], data[1]);
+    EXPECT_EQ(vector[3], data[2]);
+    EXPECT_LE(vector.get_size(), vector.get_capacity());
+}
 TEST(TestMathVectorLib, mathvector_copy_constructor) {
     // Arrange & Act
     int data[3] = { 1,2,3 };
@@ -35,6 +59,7 @@ TEST(TestMathVectorLib, mathvector_copy_constructor) {
     MathVector<int> old_vector(data, size);
     MathVector<int> new_vector(old_vector);
     // Assert
+    EXPECT_EQ(old_vector.get_start_index(), new_vector.get_start_index());
     EXPECT_EQ(old_vector, new_vector);
 }
 TEST(TestMathVectorLib, mathvector_mult_on_value) {
@@ -273,4 +298,34 @@ TEST(TestMathVectorLib, mathvector_simple_assignment) {
     // Assert
     EXPECT_EQ(vector1[0], 3);
     EXPECT_EQ(vector1[1], 4);  
+}
+TEST(TestMathVectorLib, mathvector_operator_square_brackets) {
+    // Arrange
+    size_t size = 5;
+    size_t start_index = 1;
+    MathVector<int> vector1(size, start_index);
+    vector1[1] = 2;
+    vector1[2] = 3;
+    vector1[3] = 4;
+    vector1[4] = 5;
+    vector1[5] = 6;
+    //Act & Assert
+    EXPECT_EQ(vector1[1], 2);
+    EXPECT_EQ(vector1[2], 3);
+    EXPECT_EQ(vector1[5], 6);
+}
+TEST(TestMathVectorLib, mathvector_operator_square_brackets_with_exception) {
+    // Arrange
+    size_t size = 5;
+    size_t start_index = 2;
+    MathVector<int> vector1(size, start_index);
+    vector1[2] = 3;
+    vector1[3] = 4;
+    vector1[4] = 5;
+    vector1[5] = 6;
+    vector1[6] = 7;
+    //Act & Assert
+    EXPECT_THROW(vector1[0], std::logic_error);
+    EXPECT_THROW(vector1[1], std::logic_error);
+    EXPECT_THROW(vector1[7], std::logic_error);
 }
