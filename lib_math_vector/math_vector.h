@@ -17,6 +17,9 @@ public:
     size_t get_start_index() const { 
         return _start_index; 
     }
+    void set_start_index(size_t index) { 
+        _start_index = index; 
+    }
 
     MathVector<T> operator * (T value) const;
     MathVector<T> operator / (T value) const;
@@ -42,6 +45,8 @@ public:
         out << "]";
         return out;
     }
+    T& operator[](size_t index);
+    const T& operator[](size_t index) const;
 };
 template<class T>
 MathVector<T>::MathVector() : Tvector<T>() {}
@@ -55,7 +60,8 @@ template <class T>
 MathVector<T>::MathVector(T* data, size_t size, size_t start_index) : 
     Tvector<T>(data, size), _start_index(start_index) {}
 template <class T>
-MathVector<T>::MathVector(const MathVector<T>& other) : Tvector<T>(other) {}
+MathVector<T>::MathVector(const MathVector<T>& other) : 
+    Tvector<T>(other), _start_index(other._start_index) {}
 template <class T>
 MathVector<T>::~MathVector() = default;
 template <class T>
@@ -153,4 +159,18 @@ MathVector<T>& MathVector<T>::operator=(const MathVector<T>& other) {
         Tvector<T>::operator=(other);
     }
     return *this;
+}
+template <class T>
+T& MathVector<T>::operator[](size_t index) {
+    if (index < _start_index || index >= _start_index + this->get_size()) {
+        throw std::out_of_range("Index out of range");
+    }
+    return Tvector<T>::operator[](index - _start_index);
+}
+template <class T>
+const T& MathVector<T>::operator[](size_t index) const {
+    if (index < _start_index || index >= _start_index + this->get_size()) {
+        throw std::out_of_range("Index out of range");
+    }
+    return Tvector<T>::operator[](index - _start_index);
 }
