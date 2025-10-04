@@ -1,7 +1,8 @@
 #pragma once 
 #include "../lib_matrix/matrix.h"
+
 template <class T>
-class TriangleMatrix: public Matrix<T> {
+class TriangleMatrix : public Matrix<T> {
 public:
     TriangleMatrix();
     TriangleMatrix(size_t size);
@@ -9,8 +10,8 @@ public:
     TriangleMatrix(const TriangleMatrix& other);
     ~TriangleMatrix();
 
-    size_t getSize() const { 
-        return this->_M; 
+    size_t getSize() const {
+        return this->_M;
     }
 
     TriangleMatrix<T> operator + (T value) const;
@@ -34,8 +35,8 @@ public:
     TriangleMatrix<T>& operator= (const TriangleMatrix<T>& other);
 
     friend std::ostream& operator<<(std::ostream& out, const TriangleMatrix<T>& matrix) {
-        for (size_t i = 0; i < matrix._M; ++i) {
-            for (size_t j = 0; j < matrix._N; ++j) {
+        for (size_t i = 0; i < matrix.getSize(); ++i) {
+            for (size_t j = 0; j < matrix.getSize(); ++j) {
                 if (i <= j) {
                     out << matrix[i][j] << "\t";
                 }
@@ -49,22 +50,24 @@ public:
     }
 };
 template<class T>
-TriangleMatrix<T>::TriangleMatrix(): Matrix<T>() {}
+TriangleMatrix<T>::TriangleMatrix() : Matrix<T>() {}
 template<class T>
-TriangleMatrix<T>::TriangleMatrix(size_t N): MathVector<MathVector<T>>(N) {
-    for (size_t i = 0; i < N; ++i) {
-       
+TriangleMatrix<T>::TriangleMatrix(size_t size) : Matrix<T>(size, size) {
+    for (size_t i = 0; i < size; ++i) {
+        (*this)[i] = MathVector<T>(size - i, i);
     }
 }
 template<class T>
-TriangleMatrix<T>::TriangleMatrix(T* data, size_t size) {
-
+TriangleMatrix<T>::TriangleMatrix(T* data, size_t size) : Matrix<T>(size, size) {
+    size_t data_index = 0;
+    for (size_t i = 0; i < size; ++i) {
+        (*this)[i] = MathVector<T>(size - i, i);
+        for (size_t j = i; j < size; ++j) {
+            (*this)[i][j] = data[data_index++];
+        }
+    }
 }
-
 template<class T>
-TriangleMatrix<T>::TriangleMatrix(const TriangleMatrix& other) {
-
-}
-
+TriangleMatrix<T>::TriangleMatrix(const TriangleMatrix& other) : Matrix<T>(other) {}
 template<class T>
 TriangleMatrix<T>::~TriangleMatrix() = default;
