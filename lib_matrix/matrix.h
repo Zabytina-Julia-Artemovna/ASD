@@ -16,8 +16,6 @@ protected:
         return result;
     }
 public:
-    using MathVector<MathVector<T>>::operator=;
-
     Matrix();
     Matrix(size_t M, size_t N);
     Matrix(T* data, size_t M, size_t N);
@@ -53,8 +51,7 @@ public:
         }
         return out;
     }
-    MathVector<T>& operator[](size_t index);
-    const MathVector<T>& operator[](size_t index) const;
+    
     Matrix<T>& operator=(const Matrix<T>& other);
 };
 template <class T>
@@ -249,14 +246,6 @@ Matrix<T>& Matrix<T>::operator -= (const Matrix<T>& other_matrix) {
         }
     }
     return *this;
-}
-template <class T>
-MathVector<T>& Matrix<T>::operator[](size_t index) {
-    return MathVector<MathVector<T>>::operator[](index);
-}
-template <class T>
-const MathVector<T>& Matrix<T>::operator[](size_t index) const {
-    return MathVector<MathVector<T>>::operator[](index);
 }
 template <class T>
 Matrix<T>& Matrix<T>::operator=(const Matrix<T>& other) {
