@@ -2,7 +2,9 @@
 #include <stdexcept> 
 #include "../lib_vector/vector.h"
 template <class T>
-class MathVector : public Tvector<T> {
+class MathVector:public Tvector<T> {
+protected:
+    size_t _start_index = 0;
 public:
     MathVector();
     MathVector(size_t size);
@@ -118,7 +120,7 @@ MathVector<T>& MathVector<T>::operator += (const MathVector<T>& vector)  {
     if (this->get_size() != vector.get_size()) {
         throw std::logic_error("Vectors must have the same dimension");
     }
-    for (size_t i = 0; i < this->get_size(); ++i) {
+    for (size_t i = 0; i < this->get_size(); ++i) { 
         (*this)[i] += vector[i];
     }
     return *this;
