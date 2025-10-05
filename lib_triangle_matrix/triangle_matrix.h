@@ -59,15 +59,19 @@ TriangleMatrix<T>::TriangleMatrix(size_t size) : Matrix<T>(size, size) {
 }
 template<class T>
 TriangleMatrix<T>::TriangleMatrix(T* data, size_t size) : Matrix<T>(size, size) {
-    size_t data_index = 0;
     for (size_t i = 0; i < size; ++i) {
-        (*this)[i] = MathVector<T>(size - i, i);
-        for (size_t j = i; j < size; ++j) {
-            (*this)[i][j] = data[data_index++];
-        }
+        (*this)[i] = MathVector<T>(data + i * size + i, size - i, i);
+       
     }
 }
 template<class T>
 TriangleMatrix<T>::TriangleMatrix(const TriangleMatrix& other) : Matrix<T>(other) {}
 template<class T>
 TriangleMatrix<T>::~TriangleMatrix() = default;
+template<class T>
+TriangleMatrix<T>& TriangleMatrix<T>::operator= (const TriangleMatrix<T>& other) {
+    if (this != &other) {
+        Matrix<T>::operator=(other);
+    }
+    return *this;
+}
