@@ -114,3 +114,42 @@ TriangleMatrix<T> TriangleMatrix<T>::operator / (T value) const {
     }
     return result;
 }
+template<class T>
+TriangleMatrix<T>& TriangleMatrix<T>::operator += (T value) {
+    for (size_t i = 0; i < this->getSize(); ++i) {
+        for (size_t j = i; j < this->getSize(); ++j) {
+            (*this)[i][j] += value;
+        }
+    }
+    return *this;
+}
+template<class T>
+TriangleMatrix<T>& TriangleMatrix<T>::operator -= (T value) {
+    for (size_t i = 0; i < this->getSize(); ++i) {
+        for (size_t j = i; j < this->getSize(); ++j) {
+            (*this)[i][j] -= value;
+        }
+    }
+    return *this;
+}
+template<class T>
+TriangleMatrix<T>& TriangleMatrix<T>::operator *= (T value) {
+    for (size_t i = 0; i < this->getSize(); ++i) {
+        for (size_t j = i; j < this->getSize(); ++j) {
+            (*this)[i][j] *= value;
+        }
+    }
+    return *this;
+}
+template<class T>
+TriangleMatrix<T>& TriangleMatrix<T>::operator /= (T value) {
+    if (value == 0) {
+        throw std::logic_error("Division by zero!");
+    }
+    for (size_t i = 0; i < this->getSize(); ++i) {
+        for (size_t j = i; j < this->getSize(); ++j) {
+            (*this)[i][j] /= value;
+        }
+    }
+    return *this;
+}
