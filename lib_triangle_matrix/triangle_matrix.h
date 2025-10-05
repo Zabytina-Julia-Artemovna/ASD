@@ -57,13 +57,9 @@ TriangleMatrix<T>::TriangleMatrix(size_t size) : Matrix<T>(size, size) {
         (*this)[i] = MathVector<T>(size - i, i);
     }
 }
-template<class T>
-TriangleMatrix<T>::TriangleMatrix(T* data, size_t size) : Matrix<T>(size, size) {
-    for (size_t i = 0; i < size; ++i) {
-        (*this)[i] = MathVector<T>(data + i * size + i, size - i, i);
-       
-    }
-}
+//template<class T>
+//TriangleMatrix<T>::TriangleMatrix(T* data, size_t size) : Matrix<T>(size, size) { 
+//}
 template<class T>
 TriangleMatrix<T>::TriangleMatrix(const TriangleMatrix& other) : Matrix<T>(other) {}
 template<class T>
@@ -74,4 +70,47 @@ TriangleMatrix<T>& TriangleMatrix<T>::operator= (const TriangleMatrix<T>& other)
         Matrix<T>::operator=(other);
     }
     return *this;
+}
+template<class T>
+TriangleMatrix<T> TriangleMatrix<T>::operator + (T value) const {
+    TriangleMatrix<T> result(this->getSize());
+    for (size_t i = 0; i < result.getSize(); ++i) {
+        for (size_t j = i; j < result.getSize(); ++j) {
+            result[i][j] = (*this)[i][j] + value;
+        }
+    }
+    return result;
+}
+template<class T>
+TriangleMatrix<T> TriangleMatrix<T>::operator - (T value) const {
+    TriangleMatrix<T> result(this->getSize());
+    for (size_t i = 0; i < result.getSize(); ++i) {
+        for (size_t j = i; j < result.getSize(); ++j) {
+            result[i][j] = (*this)[i][j] - value;
+        }
+    }
+    return result;
+}
+template<class T>
+TriangleMatrix<T> TriangleMatrix<T>::operator * (T value) const {
+    TriangleMatrix<T> result(this->getSize());
+    for (size_t i = 0; i < result.getSize(); ++i) {
+        for (size_t j = i; j < result.getSize(); ++j) {
+            result[i][j] = (*this)[i][j] * value;
+        }
+    }
+    return result;
+}
+template<class T>
+TriangleMatrix<T> TriangleMatrix<T>::operator / (T value) const {
+    if (value == 0) {
+        throw std::logic_error("Division by zero!");
+    }
+    TriangleMatrix<T> result(this->getSize());
+    for (size_t i = 0; i < result.getSize(); ++i) {
+        for (size_t j = i; j < result.getSize(); ++j) {
+            result[i][j] = (*this)[i][j] / value;
+        }
+    }
+    return result;
 }
