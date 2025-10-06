@@ -60,14 +60,9 @@ TriangleMatrix<T>::TriangleMatrix(size_t size) : Matrix<T>(size, size) {
 }
 template<class T>
 TriangleMatrix<T>::TriangleMatrix(T* data, size_t size) : Matrix<T>(size, size) {
-    if (size > 0 && data == nullptr) {
-        throw std::invalid_argument("Null data pointer with non-zero size");
-    }
     size_t data_index = 0;
     for (size_t i = 0; i < size; ++i) {
-        // Создаем MathVector для строки i
         (*this)[i] = MathVector<T>(size - i, i);
-        // Заполняем элементы от i до size-1
         for (size_t j = i; j < size; ++j) {
             (*this)[i][j] = data[data_index++];
         }
@@ -162,6 +157,67 @@ TriangleMatrix<T>& TriangleMatrix<T>::operator /= (T value) {
     for (size_t i = 0; i < this->getSize(); ++i) {
         for (size_t j = i; j < this->getSize(); ++j) {
             (*this)[i][j] /= value;
+        }
+    }
+    return *this;
+}
+template<class T>
+MathVector<T> TriangleMatrix<T>::operator * (const MathVector<T>& vector) const {
+    if (this->getSize() != vector.getSize()()) {
+        throw std::logic_error("Matrix columns must equal vector size");
+    }
+    MathVector<T> result(this->getSize());
+    for (size_t i = 0; i < this->getSize(); ++i) {
+        result[i] = (*this)[i] * vector;
+    }
+    return result;
+}
+template<class T>
+TriangleMatrix<T> TriangleMatrix<T>::operator + (const TriangleMatrix<T>& other) const {
+    if (this->getSize() != other.getSize()()) {
+        throw std::logic_error("Matrices must have the same size");
+    }
+    TriangleMatrix<T> result(this->getSize());
+    for (size_t i = 0; i < this->getSize(); ++i) {
+        for (size_t j = i; j < this->getSize(); ++j){
+            result[i][j] = (*this)[i][j] + other[i][j];
+        }
+    }
+    return result;
+}
+template<class T>
+TriangleMatrix<T> TriangleMatrix<T>::operator - (const TriangleMatrix<T>& other) const {
+    if (this->getSize() != other.getSize()()) {
+        throw std::logic_error("Matrices must have the same size");
+    }
+    TriangleMatrix<T> result(this->getSize());
+    for (size_t i = 0; i < this->getSize(); ++i) {
+        for (size_t j = i; j < this->getSize(); ++j){
+            result[i][j] = (*this)[i][j] - other[i][j];
+        }
+    }
+    return result;
+}
+template<class T>
+TriangleMatrix<T>& TriangleMatrix<T>::operator += (const TriangleMatrix<T>& other) {
+    if (this->getSize() != other.getSize()()) {
+        throw std::logic_error("Matrices must have the same size");
+    }
+    for (size_t i = 0; i < this->getSize(); ++i) {
+        for (size_t j = i; j < this->getSize(); ++j) {
+            (*this)[i][j] += other[i][j];
+        }
+    }
+    return *this;
+}
+template<class T>
+TriangleMatrix<T>& TriangleMatrix<T>::operator -= (const TriangleMatrix<T>& other) {
+    if (this->getSize() != other.getSize()()) {
+        throw std::logic_error("Matrices must have the same size");
+    }
+    for (size_t i = 0; i < this->getSize(); ++i) {
+        for (size_t j = i; j < this->getSize(); ++j) {
+            (*this)[i][j] -= other[i][j];
         }
     }
     return *this;
