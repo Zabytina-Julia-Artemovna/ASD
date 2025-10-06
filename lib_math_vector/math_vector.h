@@ -40,7 +40,7 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const MathVector<T>& vector) {
         out << "[";
         for (size_t i = 0; i < vector.get_size(); ++i) {
-            out << vector.Tvector<T>::operator[](i); 
+            out << vector[i];
             if (i < vector.get_size() - 1) {
                 out << ", ";
             }
