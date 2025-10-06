@@ -52,3 +52,140 @@ TEST(TestTriangleMatrixLib, tr_matrix_operator_assignment) {
     // Assert
     EXPECT_EQ(matrix1, matrix2);
 }
+TEST(TestTriangleMatrixLib, tr_matrix_add_value) {
+    // Arrange
+    size_t size = 3;
+    int data[6] = { 1, 2, 3, 4, 5, 6 };
+    size_t value = 10;
+    TriangleMatrix<int> matrix(data, size);
+    TriangleMatrix<int> result(size);
+    //Act
+    result = matrix + value;
+    // Assert
+    EXPECT_EQ(result.at(0).at(0), 11);
+    EXPECT_EQ(result.at(0).at(1), 12);
+    EXPECT_EQ(result.at(0).at(2), 13);
+    EXPECT_EQ(result.at(1).at(1), 14);
+    EXPECT_EQ(result.at(1).at(2), 15);
+    EXPECT_EQ(result.at(2).at(2), 16);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_sub_value) {
+    // Arrange
+    size_t size = 3;
+    int data[6] = { 1, 2, 3, 4, 5, 6 };
+    size_t value = 1;
+    TriangleMatrix<int> matrix(data, size);
+    TriangleMatrix<int> result(size);
+    //Act
+    result = matrix - value;
+    // Assert
+    EXPECT_EQ(result.at(0).at(0), 0);
+    EXPECT_EQ(result.at(0).at(1), 1);
+    EXPECT_EQ(result.at(0).at(2), 2);
+    EXPECT_EQ(result.at(1).at(1), 3);
+    EXPECT_EQ(result.at(1).at(2), 4);
+    EXPECT_EQ(result.at(2).at(2), 5);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_mult_value) {
+    // Arrange
+    size_t size = 3;
+    int data[6] = { 1, 2, 3, 4, 5, 6 };
+    size_t value = 10;
+    TriangleMatrix<int> matrix(data, size);
+    TriangleMatrix<int> result(size);
+    //Act
+    result = matrix * value;
+    // Assert
+    EXPECT_EQ(result.at(0).at(0), 10);
+    EXPECT_EQ(result.at(0).at(1), 20);
+    EXPECT_EQ(result.at(0).at(2), 30);
+    EXPECT_EQ(result.at(1).at(1), 40);
+    EXPECT_EQ(result.at(1).at(2), 50);
+    EXPECT_EQ(result.at(2).at(2), 60);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_div_value) {
+    // Arrange
+    size_t size = 3;
+    int data[6] = { 2, 2, 4, 4, 8, 6 };
+    size_t value = 2;
+    TriangleMatrix<int> matrix(data, size);
+    TriangleMatrix<int> result(size);
+    //Act
+    result = matrix / value;
+    // Assert
+    EXPECT_EQ(result.at(0).at(0), 1);
+    EXPECT_EQ(result.at(0).at(1), 1);
+    EXPECT_EQ(result.at(0).at(2), 2);
+    EXPECT_EQ(result.at(1).at(1), 2);
+    EXPECT_EQ(result.at(1).at(2), 4);
+    EXPECT_EQ(result.at(2).at(2), 3);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_div_value_with_exception) {
+    // Arrange & Act
+    size_t size = 3;
+    int data[6] = { 2, 2, 4, 4, 8, 6 };
+    size_t value = 0;
+    TriangleMatrix<int> matrix(data, size);
+    // Assert
+    EXPECT_THROW(matrix / value, std::logic_error);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_add_assign_value) {
+    // Arrange & Act
+    size_t size = 3;
+    int data[6] = { 2, 2, 4, 4, 8, 6 };
+    size_t value = 2;
+    TriangleMatrix<int> matrix(data, size);
+    matrix += value;
+    // Assert
+    EXPECT_EQ(matrix.at(0).at(0), 4);
+    EXPECT_EQ(matrix.at(0).at(1), 4);
+    EXPECT_EQ(matrix.at(0).at(2), 6);
+    EXPECT_EQ(matrix.at(1).at(1), 6);
+    EXPECT_EQ(matrix.at(1).at(2), 10);
+    EXPECT_EQ(matrix.at(2).at(2), 8);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_sub_assign_value) {
+    // Arrange & Act
+    size_t size = 3;
+    int data[6] = { 2, 2, 4, 4, 8, 6 };
+    size_t value = 2;
+    TriangleMatrix<int> matrix(data, size);
+    matrix -= value;
+    // Assert
+    EXPECT_EQ(matrix.at(0).at(0), 0);
+    EXPECT_EQ(matrix.at(0).at(1), 0);
+    EXPECT_EQ(matrix.at(0).at(2), 2);
+    EXPECT_EQ(matrix.at(1).at(1), 2);
+    EXPECT_EQ(matrix.at(1).at(2), 6);
+    EXPECT_EQ(matrix.at(2).at(2), 4);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_mult_assign_value) {
+    // Arrange & Act
+    size_t size = 3;
+    int data[6] = { 1, 2, 3, 4, 5, 6 };
+    size_t value = 10;
+    TriangleMatrix<int> matrix(data, size);
+    matrix *= value;
+    // Assert
+    EXPECT_EQ(matrix.at(0).at(0), 10);
+    EXPECT_EQ(matrix.at(0).at(1), 20);
+    EXPECT_EQ(matrix.at(0).at(2), 30);
+    EXPECT_EQ(matrix.at(1).at(1), 40);
+    EXPECT_EQ(matrix.at(1).at(2), 50);
+    EXPECT_EQ(matrix.at(2).at(2), 60);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_div_assign_value) {
+    // Arrange & Act
+    size_t size = 3;
+    int data[6] = { 2, 2, 4, 4, 8, 6 };
+    size_t value = 2;
+    TriangleMatrix<int> matrix(data, size);
+    matrix /= value;
+    // Assert
+    EXPECT_EQ(matrix.at(0).at(0), 1);
+    EXPECT_EQ(matrix.at(0).at(1), 1);
+    EXPECT_EQ(matrix.at(0).at(2), 2);
+    EXPECT_EQ(matrix.at(1).at(1), 2);
+    EXPECT_EQ(matrix.at(1).at(2), 4);
+    EXPECT_EQ(matrix.at(2).at(2), 3);
+}
