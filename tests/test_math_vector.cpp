@@ -312,9 +312,11 @@ TEST(TestMathVectorLib, mathvector_operator_square_brackets) {
     //Act & Assert
     EXPECT_EQ(vector1[1], 2);
     EXPECT_EQ(vector1[2], 3);
+    EXPECT_EQ(vector1[3], 4);
+    EXPECT_EQ(vector1[4], 5);
     EXPECT_EQ(vector1[5], 6);
 }
-TEST(TestMathVectorLib, mathvector_operator_square_brackets_with_exception) {
+TEST(TestMathVectorLib, mathvector_at) {
     // Arrange
     size_t size = 5;
     size_t start_index = 2;
@@ -325,7 +327,24 @@ TEST(TestMathVectorLib, mathvector_operator_square_brackets_with_exception) {
     vector1[5] = 6;
     vector1[6] = 7;
     //Act & Assert
-    EXPECT_THROW(vector1[0], std::logic_error);
-    EXPECT_THROW(vector1[1], std::logic_error);
-    EXPECT_THROW(vector1[7], std::logic_error);
+    EXPECT_EQ(vector1.at(2), 3);
+    EXPECT_EQ(vector1.at(3), 4);
+    EXPECT_EQ(vector1.at(4), 5);
+    EXPECT_EQ(vector1.at(5), 6);
+    EXPECT_EQ(vector1.at(6), 7);
+}
+TEST(TestMathVectorLib, mathvector_at_with_exception) { 
+    // Arrange
+    size_t size = 5;
+    size_t start_index = 2;
+    MathVector<int> vector1(size, start_index);
+    vector1[2] = 3;
+    vector1[3] = 4;
+    vector1[4] = 5;
+    vector1[5] = 6;
+    vector1[6] = 7;
+    //Act & Assert
+    EXPECT_THROW(vector1.at(0), std::logic_error);
+    EXPECT_THROW(vector1.at(1), std::logic_error);
+    EXPECT_THROW(vector1.at(7), std::logic_error);
 }
