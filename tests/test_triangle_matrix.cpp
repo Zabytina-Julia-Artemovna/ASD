@@ -334,3 +334,31 @@ TEST(TestTriangleMatrixLib, tr_matrix_mult_vector_with_exception) {
     // Assert
     EXPECT_THROW(matrix * vector, std::logic_error);
 }
+TEST(TestTriangleMatrixLib, tr_matrix_mult_tr_matrix) {
+    // Arrange
+    size_t size = 3;
+    int data1[6] = { 2, 2, 4, 4, 8, 6 };
+    int data2[6] = { 1, 1, 1, 1, 1, 1 };
+    TriangleMatrix<int> matrix1(data1, size);
+    TriangleMatrix<int> matrix2(data2, size);
+    TriangleMatrix<int> result(size);
+    //Act
+    result = matrix1 * matrix2;
+    // Assert
+    EXPECT_EQ(result.at(0).at(0), 2);
+    EXPECT_EQ(result.at(0).at(1), 4);
+    EXPECT_EQ(result.at(0).at(2), 8);
+    EXPECT_EQ(result.at(1).at(1), 4);
+    EXPECT_EQ(result.at(1).at(2), 12);
+    EXPECT_EQ(result.at(2).at(2), 6);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_mult_tr_matrix_with_exception) {
+    // Arrange & Act
+    int data1[6] = { 2, 2, 4, 4, 8, 6 };
+    int data2[8] = { 1, 1, 1, 1, 1, 1, 1, 1 };
+    TriangleMatrix<int> matrix1(data1, 3);
+    TriangleMatrix<int> matrix2(data2, 4);
+    TriangleMatrix<int> result(3);
+    // Assert
+    EXPECT_THROW(matrix1 * matrix2, std::logic_error);
+}
