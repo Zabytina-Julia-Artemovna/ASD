@@ -10,6 +10,7 @@ public:
     TriangleMatrix(const TriangleMatrix& other);
     ~TriangleMatrix();
 
+
     size_t getSize() const {
         return this->_M;
     }
@@ -57,9 +58,21 @@ TriangleMatrix<T>::TriangleMatrix(size_t size) : Matrix<T>(size, size) {
         (*this)[i] = MathVector<T>(size - i, i);
     }
 }
-//template<class T>
-//TriangleMatrix<T>::TriangleMatrix(T* data, size_t size) : Matrix<T>(size, size) { 
-//}
+template<class T>
+TriangleMatrix<T>::TriangleMatrix(T* data, size_t size) : Matrix<T>(size, size) {
+    if (size > 0 && data == nullptr) {
+        throw std::invalid_argument("Null data pointer with non-zero size");
+    }
+    size_t data_index = 0;
+    for (size_t i = 0; i < size; ++i) {
+        // Создаем MathVector для строки i
+        (*this)[i] = MathVector<T>(size - i, i);
+        // Заполняем элементы от i до size-1
+        for (size_t j = i; j < size; ++j) {
+            (*this)[i][j] = data[data_index++];
+        }
+    }
+}
 template<class T>
 TriangleMatrix<T>::TriangleMatrix(const TriangleMatrix& other) : Matrix<T>(other) {}
 template<class T>
