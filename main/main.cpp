@@ -147,144 +147,269 @@ void printMainMenu() {
     std::cout << " 9. Exit\n";
 }
 
+template<typename T>
+void fillMatrix(Matrix<T>& matrix) {
+    for (size_t i = 0; i < matrix.getM(); ++i) {
+        for (size_t j = 0; j < matrix.getN(); ++j) {
+            T value;
+            std::cout << "Element [" << i << "][" << j << "]: ";
+            std::cin >> value;
+            matrix[i][j] = value;
+        }
+    }
+}
+
+template<typename T>
+void fillTriangleMatrix(TriangleMatrix<T>& matrix) {
+    for (size_t i = 0; i < matrix.getSize(); ++i) {
+        for (size_t j = i; j < matrix.getSize(); ++j) {
+            T value;
+            std::cout << "Element [" << i << "][" << j << "]: ";
+            std::cin >> value;
+            matrix[i][j] = value;
+        }
+    }
+}
+
+template<typename T>
+void fillVector(MathVector<T>& vector) {
+    for (size_t i = 0; i < vector.get_size(); ++i) {
+        T value;
+        std::cout << "Element [" << i << "]: ";
+        std::cin >> value;
+        vector[i] = value;
+    }
+}
+
 int main() {
     setlocale(LC_ALL, "Russian");
     int user_choice;
+
     do {
         printMainMenu();
         std::cout << "Your choice: ";
         std::cin >> user_choice;
 
-        if (user_choice == 11) {
+        if (user_choice == 9) {
             break;
         }
+
         int matrix_type;
         std::cout << "Choose matrix type:\n";
         std::cout << "1. Regular matrix\n";
         std::cout << "2. Triangular matrix\n";
         std::cin >> matrix_type;
 
-        size_t M, N;
-        std::cout << "Enter dimensions of matrix 1 (M - rows, N - columns)\n";
-        std::cout << "M = ";
-        std::cin >> M;
-        std::cout << "N = ";
-        std::cin >> N;
+        if (matrix_type == 1) {
+            // Regular Matrix operations
+            size_t M, N;
+            std::cout << "Enter dimensions of matrix 1 (M - rows, N - columns)\n";
+            std::cout << "M = ";
+            std::cin >> M;
+            std::cout << "N = ";
+            std::cin >> N;
 
-        Matrix<int> matrix1(M, N);
+            Matrix<int> matrix1(M, N);
+            std::cout << "Enter elements of matrix 1:\n";
+            fillMatrix(matrix1);
 
-        std::cout << "Enter elements of matrix 1:\n";
-        system("pause");
-
-        switch (user_choice) {
-        case 1: {
-            size_t K, L;
-            std::cout << "Enter dimensions of matrix 2 (K - rows, L - columns)\n";
-            std::cout << "K = ";
-            std::cin >> K;
-            std::cout << "L = ";
-            std::cin >> L;
-            Matrix<int> matrix2(K, L);
-
-            std::cout << "Enter elements of matrix 2:\n";
-            system("pause");
-            Matrix<int> result = matrix1 + matrix2;
-            std::cout << "Result:\n" << result;
-            break;
+            switch (user_choice) {
+            case 1: {
+                std::cout << "Enter dimensions of matrix 2 (must be " << M << " x " << N << ")\n";
+                Matrix<int> matrix2(M, N);
+                std::cout << "Enter elements of matrix 2:\n";
+                fillMatrix(matrix2);
+                Matrix<int> result = matrix1 + matrix2;
+                std::cout << "Result:\n" << result;
+                break;
+            }
+            case 2: {
+                std::cout << "Enter dimensions of matrix 2 (must be " << M << " x " << N << ")\n";
+                Matrix<int> matrix2(M, N);
+                std::cout << "Enter elements of matrix 2:\n";
+                fillMatrix(matrix2);
+                Matrix<int> result = matrix1 - matrix2;
+                std::cout << "Result:\n" << result;
+                break;
+            }
+            case 3: {
+                size_t K;
+                std::cout << "Enter number of columns for matrix 2 (must be " << N << " rows)\n";
+                std::cout << "K = ";
+                std::cin >> K;
+                Matrix<int> matrix2(N, K);
+                std::cout << "Enter elements of matrix 2:\n";
+                fillMatrix(matrix2);
+                Matrix<int> result = matrix1 * matrix2;
+                std::cout << "Result:\n" << result;
+                break;
+            }
+            case 4: {
+                int scalar;
+                std::cout << "Enter scalar: ";
+                std::cin >> scalar;
+                Matrix<int> result = matrix1 + scalar;
+                std::cout << "Result:\n" << result;
+                break;
+            }
+            case 5: {
+                int scalar;
+                std::cout << "Enter scalar: ";
+                std::cin >> scalar;
+                Matrix<int> result = matrix1 - scalar;
+                std::cout << "Result:\n" << result;
+                break;
+            }
+            case 6: {
+                int scalar;
+                std::cout << "Enter scalar: ";
+                std::cin >> scalar;
+                Matrix<int> result = matrix1 * scalar;
+                std::cout << "Result:\n" << result;
+                break;
+            }
+            case 7: {
+                int scalar;
+                std::cout << "Enter scalar: ";
+                std::cin >> scalar;
+                try {
+                    Matrix<int> result = matrix1 / scalar;
+                    std::cout << "Result:\n" << result;
+                }
+                catch (const std::exception& e) {
+                    std::cout << "Error: " << e.what() << std::endl;
+                }
+                break;
+            }
+            case 8: {
+                size_t size;
+                std::cout << "Enter vector size (must be " << N << "): ";
+                std::cin >> size;
+                if (size != N) {
+                    std::cout << "Error: Vector size must match matrix columns!\n";
+                    break;
+                }
+                MathVector<int> mathvector(size);
+                std::cout << "Enter vector elements:\n";
+                fillVector(mathvector);
+                try {
+                    MathVector<int> result = matrix1 * mathvector;
+                    std::cout << "Result:\n" << result;
+                }
+                catch (const std::exception& e) {
+                    std::cout << "Error: " << e.what() << std::endl;
+                }
+                break;
+            }
+            default: {
+                std::cout << "Invalid input! Please try again\n";
+                break;
+            }
+            }
         }
-        case 2: {
-            size_t K, L;
-            std::cout << "Enter dimensions of matrix 2 (K - rows, L - columns)\n";
-            std::cout << "K = ";
-            std::cin >> K;
-            std::cout << "L = ";
-            std::cin >> L;
-            Matrix<int> matrix2(K, L);
-
-            std::cout << "Enter elements of matrix 2:\n";
-            system("pause");
-            Matrix<int> result = matrix1 - matrix2;
-            std::cout << "Result:\n" << result;
-            break;
-        }
-        case 3: {
-            size_t K, L;
-            std::cout << "Enter dimensions of matrix 2 (K - rows, L - columns)\n";
-            std::cout << "K = ";
-            std::cin >> K;
-            std::cout << "L = ";
-            std::cin >> L;
-            Matrix<int> matrix2(K, L);
-
-            std::cout << "Enter elements of matrix 2:\n";
-            system("pause");
-            Matrix<int> result = matrix1 * matrix2;
-            std::cout << "Result:\n" << result;
-            break;
-        }
-        case 4: {
-            int scalar;
-            std::cout << "Enter scalar:\n";
-            std::cin >> scalar;
-            system("pause");
-            Matrix<int> result = matrix1 + scalar;
-            std::cout << "Result:\n" << result;
-            break;
-        }
-        case 5: {
-            int scalar;
-            std::cout << "Enter scalar:\n";
-            std::cin >> scalar;
-            system("pause");
-            Matrix<int> result = matrix1 - scalar;
-            std::cout << "Result:\n" << result;
-            break;
-        }
-        case 6: {
-            int scalar;
-            std::cout << "Enter scalar:\n";
-            std::cin >> scalar;
-            system("pause");
-            Matrix<int> result = matrix1 * scalar;
-            std::cout << "Result:\n" << result;
-            break;
-        }
-        case 7: {
-            int scalar;
-            std::cout << "Enter scalar:\n";
-            std::cin >> scalar;
-            system("pause");
-            Matrix<int> result = matrix1 / scalar;
-            std::cout << "Result:\n" << result;
-            break;
-        }
-        case 8: {
+        else if (matrix_type == 2) {
+            // Triangular Matrix operations
             size_t size;
-            std::cout << "Enter vector size:\n";
+            std::cout << "Enter size of triangular matrix: ";
             std::cin >> size;
-            MathVector<int> mathvector(size);
 
-            std::cout << "Enter vector elements:\n";
-            system("pause");
-            MathVector<int> result = matrix1 * mathvector;
-            std::cout << "Result:\n" << result;
-            break;
-        }
-        case 9: {
+            TriangleMatrix<int> matrix1(size);
+            std::cout << "Enter elements of triangular matrix (only upper triangle):\n";
+            fillTriangleMatrix(matrix1);
 
-            break;
+            switch (user_choice) {
+            case 1: {
+                TriangleMatrix<int> matrix2(size);
+                std::cout << "Enter elements of second triangular matrix:\n";
+                fillTriangleMatrix(matrix2);
+                try {
+                    TriangleMatrix<int> result = matrix1 + matrix2;
+                    std::cout << "Result:\n" << result;
+                }
+                catch (const std::exception& e) {
+                    std::cout << "Error: " << e.what() << std::endl;
+                }
+                break;
+            }
+            case 2: {
+                TriangleMatrix<int> matrix2(size);
+                std::cout << "Enter elements of second triangular matrix:\n";
+                fillTriangleMatrix(matrix2);
+                try {
+                    TriangleMatrix<int> result = matrix1 - matrix2;
+                    std::cout << "Result:\n" << result;
+                }
+                catch (const std::exception& e) {
+                    std::cout << "Error: " << e.what() << std::endl;
+                }
+                break;
+            }
+            case 3: {
+                std::cout << "Matrix multiplication for triangular matrices not implemented in this example\n";
+                break;
+            }
+            case 4: {
+                int scalar;
+                std::cout << "Enter scalar: ";
+                std::cin >> scalar;
+                TriangleMatrix<int> result = matrix1 + scalar;
+                std::cout << "Result:\n" << result;
+                break;
+            }
+            case 5: {
+                int scalar;
+                std::cout << "Enter scalar: ";
+                std::cin >> scalar;
+                TriangleMatrix<int> result = matrix1 - scalar;
+                std::cout << "Result:\n" << result;
+                break;
+            }
+            case 6: {
+                int scalar;
+                std::cout << "Enter scalar: ";
+                std::cin >> scalar;
+                TriangleMatrix<int> result = matrix1 * scalar;
+                std::cout << "Result:\n" << result;
+                break;
+            }
+            case 7: {
+                int scalar;
+                std::cout << "Enter scalar: ";
+                std::cin >> scalar;
+                try {
+                    TriangleMatrix<int> result = matrix1 / scalar;
+                    std::cout << "Result:\n" << result;
+                }
+                catch (const std::exception& e) {
+                    std::cout << "Error: " << e.what() << std::endl;
+                }
+                break;
+            }
+            case 8: {
+                MathVector<int> mathvector(size);
+                std::cout << "Enter vector elements:\n";
+                fillVector(mathvector);
+                try {
+                    MathVector<int> result = matrix1 * mathvector;
+                    std::cout << "Result:\n" << result;
+                }
+                catch (const std::exception& e) {
+                    std::cout << "Error: " << e.what() << std::endl;
+                }
+                break;
+            }
+            default: {
+                std::cout << "Invalid input! Please try again\n";
+                break;
+                }
+            }
         }
-        default: {
-            std::cout << "Invalid input! Please try again\n";
-            break;
-        }
-        }
-        std::cout << "\n Press Enter to continue...";
+        std::cout << "\nPress Enter to continue...";
         std::cin.ignore();
         std::cin.get();
-    } while (true);
+        system("cls");
 
+    } while (true);
     return 0;
 }
 #endif
-
