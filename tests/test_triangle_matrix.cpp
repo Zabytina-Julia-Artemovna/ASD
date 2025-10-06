@@ -56,7 +56,7 @@ TEST(TestTriangleMatrixLib, tr_matrix_add_value) {
     // Arrange
     size_t size = 3;
     int data[6] = { 1, 2, 3, 4, 5, 6 };
-    size_t value = 10;
+    int value = 10;
     TriangleMatrix<int> matrix(data, size);
     TriangleMatrix<int> result(size);
     //Act
@@ -73,7 +73,7 @@ TEST(TestTriangleMatrixLib, tr_matrix_sub_value) {
     // Arrange
     size_t size = 3;
     int data[6] = { 1, 2, 3, 4, 5, 6 };
-    size_t value = 1;
+    int value = 1;
     TriangleMatrix<int> matrix(data, size);
     TriangleMatrix<int> result(size);
     //Act
@@ -90,7 +90,7 @@ TEST(TestTriangleMatrixLib, tr_matrix_mult_value) {
     // Arrange
     size_t size = 3;
     int data[6] = { 1, 2, 3, 4, 5, 6 };
-    size_t value = 10;
+    int value = 10;
     TriangleMatrix<int> matrix(data, size);
     TriangleMatrix<int> result(size);
     //Act
@@ -107,7 +107,7 @@ TEST(TestTriangleMatrixLib, tr_matrix_div_value) {
     // Arrange
     size_t size = 3;
     int data[6] = { 2, 2, 4, 4, 8, 6 };
-    size_t value = 2;
+    int value = 2;
     TriangleMatrix<int> matrix(data, size);
     TriangleMatrix<int> result(size);
     //Act
@@ -131,9 +131,9 @@ TEST(TestTriangleMatrixLib, tr_matrix_div_value_with_exception) {
 }
 TEST(TestTriangleMatrixLib, tr_matrix_add_assign_value) {
     // Arrange & Act
-    size_t size = 3;
+    int size = 3;
     int data[6] = { 2, 2, 4, 4, 8, 6 };
-    size_t value = 2;
+    int value = 2;
     TriangleMatrix<int> matrix(data, size);
     matrix += value;
     // Assert
@@ -148,7 +148,7 @@ TEST(TestTriangleMatrixLib, tr_matrix_sub_assign_value) {
     // Arrange & Act
     size_t size = 3;
     int data[6] = { 2, 2, 4, 4, 8, 6 };
-    size_t value = 2;
+    int value = 2;
     TriangleMatrix<int> matrix(data, size);
     matrix -= value;
     // Assert
@@ -163,7 +163,7 @@ TEST(TestTriangleMatrixLib, tr_matrix_mult_assign_value) {
     // Arrange & Act
     size_t size = 3;
     int data[6] = { 1, 2, 3, 4, 5, 6 };
-    size_t value = 10;
+    int value = 10;
     TriangleMatrix<int> matrix(data, size);
     matrix *= value;
     // Assert
@@ -178,7 +178,7 @@ TEST(TestTriangleMatrixLib, tr_matrix_div_assign_value) {
     // Arrange & Act
     size_t size = 3;
     int data[6] = { 2, 2, 4, 4, 8, 6 };
-    size_t value = 2;
+    int value = 2;
     TriangleMatrix<int> matrix(data, size);
     matrix /= value;
     // Assert
@@ -188,4 +188,149 @@ TEST(TestTriangleMatrixLib, tr_matrix_div_assign_value) {
     EXPECT_EQ(matrix.at(1).at(1), 2);
     EXPECT_EQ(matrix.at(1).at(2), 4);
     EXPECT_EQ(matrix.at(2).at(2), 3);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_add_tr_matrix) {
+    // Arrange
+    size_t size = 3;
+    int data1[6] = { 2, 2, 4, 4, 8, 6 };
+    int data2[6] = { 1, 1, 1, 1, 1, 1 };
+   
+    TriangleMatrix<int> matrix1(data1, size);
+    TriangleMatrix<int> matrix2(data2, size);
+    TriangleMatrix<int> result(size);
+    //Act
+    result = matrix1 + matrix2;
+    // Assert
+    EXPECT_EQ(result.at(0).at(0), 3);
+    EXPECT_EQ(result.at(0).at(1), 3);
+    EXPECT_EQ(result.at(0).at(2), 5);
+    EXPECT_EQ(result.at(1).at(1), 5);
+    EXPECT_EQ(result.at(1).at(2), 9);
+    EXPECT_EQ(result.at(2).at(2), 7);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_sub_tr_matrix) {
+    // Arrange
+    size_t size = 3;
+    int data1[6] = { 2, 2, 4, 4, 8, 6 };
+    int data2[6] = { 1, 1, 1, 1, 1, 1 };
+
+    TriangleMatrix<int> matrix1(data1, size);
+    TriangleMatrix<int> matrix2(data2, size);
+    TriangleMatrix<int> result(size);
+    //Act
+    result = matrix1 - matrix2;
+    // Assert
+    EXPECT_EQ(result.at(0).at(0), 1);
+    EXPECT_EQ(result.at(0).at(1), 1);
+    EXPECT_EQ(result.at(0).at(2), 3);
+    EXPECT_EQ(result.at(1).at(1), 3);
+    EXPECT_EQ(result.at(1).at(2), 7);
+    EXPECT_EQ(result.at(2).at(2), 5);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_add_assig_tr_matrix) {
+    // Arrange & Act
+    size_t size = 3;
+    int data1[6] = { 2, 2, 4, 4, 8, 6 };
+    int data2[6] = { 1, 1, 1, 1, 1, 1 };
+
+    TriangleMatrix<int> matrix1(data1, size);
+    TriangleMatrix<int> matrix2(data2, size);
+    matrix1 += matrix2;
+    // Assert
+    EXPECT_EQ(matrix1.at(0).at(0), 3);
+    EXPECT_EQ(matrix1.at(0).at(1), 3);
+    EXPECT_EQ(matrix1.at(0).at(2), 5);
+    EXPECT_EQ(matrix1.at(1).at(1), 5);
+    EXPECT_EQ(matrix1.at(1).at(2), 9);
+    EXPECT_EQ(matrix1.at(2).at(2), 7);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_sub_assig_tr_matrix) {
+    // Arrange & Act
+    size_t size = 3;
+    int data1[6] = { 2, 2, 4, 4, 8, 6 };
+    int data2[6] = { 1, 1, 1, 1, 1, 1 };
+
+    TriangleMatrix<int> matrix1(data1, size);
+    TriangleMatrix<int> matrix2(data2, size);
+    matrix1 -= matrix2;
+    // Assert
+    EXPECT_EQ(matrix1.at(0).at(0), 1);
+    EXPECT_EQ(matrix1.at(0).at(1), 1);
+    EXPECT_EQ(matrix1.at(0).at(2), 3);
+    EXPECT_EQ(matrix1.at(1).at(1), 3);
+    EXPECT_EQ(matrix1.at(1).at(2), 7);
+    EXPECT_EQ(matrix1.at(2).at(2), 5);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_add_tr_matrix_with_exception) {
+    // Arrange & Act
+   
+    int data1[6] = { 2, 2, 4, 4, 8, 6 };
+    int data2[4] = { 1, 1, 1, 1 };
+
+    TriangleMatrix<int> matrix1(data1, 3);
+    TriangleMatrix<int> matrix2(data2, 2);
+ 
+    // Assert
+    EXPECT_THROW(matrix1 + matrix2, std::logic_error);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_sub_tr_matrix_with_exception) {
+    // Arrange & Act
+
+    int data1[6] = { 2, 2, 4, 4, 8, 6 };
+    int data2[4] = { 1, 1, 1, 1 };
+
+    TriangleMatrix<int> matrix1(data1, 3);
+    TriangleMatrix<int> matrix2(data2, 2);
+
+    // Assert
+    EXPECT_THROW(matrix1 - matrix2, std::logic_error);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_add_assign_tr_matrix_with_exception) {
+    // Arrange & Act
+
+    int data1[6] = { 2, 2, 4, 4, 8, 6 };
+    int data2[4] = { 1, 1, 1, 1 };
+
+    TriangleMatrix<int> matrix1(data1, 3);
+    TriangleMatrix<int> matrix2(data2, 2);
+
+    // Assert
+    EXPECT_THROW(matrix1 += matrix2, std::logic_error);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_sub_assign_tr_matrix_with_exception) {
+    // Arrange & Act
+
+    int data1[6] = { 2, 2, 4, 4, 8, 6 };
+    int data2[4] = { 1, 1, 1, 1 };
+
+    TriangleMatrix<int> matrix1(data1, 3);
+    TriangleMatrix<int> matrix2(data2, 2);
+
+    // Assert
+    EXPECT_THROW(matrix1 -= matrix2, std::logic_error);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_mult_vector) {
+    // Arrange
+    int data1[6] = { 2, 2, 4, 4, 8, 6 };
+    int data2[3] = { 1, 1, 1 };
+
+    TriangleMatrix<int> matrix(data1, 3);
+    MathVector<int> vector(data2, 3);
+    MathVector<int> result(3);
+    //Act
+    result = matrix * vector;
+    // Assert
+    EXPECT_EQ(result.at(0), 8);
+    EXPECT_EQ(result.at(1), 12);
+    EXPECT_EQ(result.at(2), 6);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_mult_vector_with_exception) {
+    // Arrange & Act
+    int data1[6] = { 2, 2, 4, 4, 8, 6 };
+    int data2[10] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+    TriangleMatrix<int> matrix(data1, 3);
+    MathVector<int> vector(data2, 10);
+    MathVector<int> result(3);
+    // Assert
+    EXPECT_THROW(matrix * vector, std::logic_error);
 }
