@@ -161,9 +161,10 @@ TriangleMatrix<T>& TriangleMatrix<T>::operator /= (T value) {
     }
     return *this;
 }
+
 template<class T>
 MathVector<T> TriangleMatrix<T>::operator * (const MathVector<T>& vector) const {
-    if (this->getSize() != vector.getSize()()) {
+    if (this->getSize() != vector.get_size() ) {
         throw std::logic_error("Matrix columns must equal vector size");
     }
     MathVector<T> result(this->getSize());
@@ -174,7 +175,7 @@ MathVector<T> TriangleMatrix<T>::operator * (const MathVector<T>& vector) const 
 }
 template<class T>
 TriangleMatrix<T> TriangleMatrix<T>::operator + (const TriangleMatrix<T>& other) const {
-    if (this->getSize() != other.getSize()()) {
+    if (this->getSize() != other.getSize()) {
         throw std::logic_error("Matrices must have the same size");
     }
     TriangleMatrix<T> result(this->getSize());
@@ -187,7 +188,7 @@ TriangleMatrix<T> TriangleMatrix<T>::operator + (const TriangleMatrix<T>& other)
 }
 template<class T>
 TriangleMatrix<T> TriangleMatrix<T>::operator - (const TriangleMatrix<T>& other) const {
-    if (this->getSize() != other.getSize()()) {
+    if (this->getSize() != other.getSize()) {
         throw std::logic_error("Matrices must have the same size");
     }
     TriangleMatrix<T> result(this->getSize());
@@ -200,7 +201,7 @@ TriangleMatrix<T> TriangleMatrix<T>::operator - (const TriangleMatrix<T>& other)
 }
 template<class T>
 TriangleMatrix<T>& TriangleMatrix<T>::operator += (const TriangleMatrix<T>& other) {
-    if (this->getSize() != other.getSize()()) {
+    if (this->getSize() != other.getSize()) {
         throw std::logic_error("Matrices must have the same size");
     }
     for (size_t i = 0; i < this->getSize(); ++i) {
@@ -212,7 +213,7 @@ TriangleMatrix<T>& TriangleMatrix<T>::operator += (const TriangleMatrix<T>& othe
 }
 template<class T>
 TriangleMatrix<T>& TriangleMatrix<T>::operator -= (const TriangleMatrix<T>& other) {
-    if (this->getSize() != other.getSize()()) {
+    if (this->getSize() != other.getSize()) {
         throw std::logic_error("Matrices must have the same size");
     }
     for (size_t i = 0; i < this->getSize(); ++i) {
