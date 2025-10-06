@@ -16,26 +16,39 @@ TEST(TestTriangleMatrixLib, tr_matrix_constructor_with_size) {
     // Assert
     EXPECT_EQ(size, matrix.getSize());
 }
-
 TEST(TestTriangleMatrixLib, tr_matrix_constructor_with_array_and_size) {
     // Arrange & Act
     size_t size = 3;
     int data[6] = { 1, 2, 3, 4, 5, 6 };
     TriangleMatrix<int> matrix(data, size);
-
     // Assert
     EXPECT_EQ(size, matrix.getSize());
-
-    EXPECT_EQ(matrix[0][0], 1);
-    EXPECT_EQ(matrix[0][1], 2);
-    EXPECT_EQ(matrix[0][2], 3);
-    EXPECT_EQ(matrix[1][1], 4);
-    EXPECT_EQ(matrix[1][2], 5);
-    EXPECT_EQ(matrix[2][2], 6);
-
-    EXPECT_THROW(matrix[1][0], std::logic_error);
-    EXPECT_THROW(matrix[2][0], std::logic_error);
-    EXPECT_THROW(matrix[2][1], std::logic_error);
+    EXPECT_EQ(matrix.at(0).at(0), 1);
+    EXPECT_EQ(matrix.at(0).at(1), 2);
+    EXPECT_EQ(matrix.at(0).at(2), 3);
+    EXPECT_EQ(matrix.at(1).at(1), 4); 
+    EXPECT_EQ(matrix.at(1).at(2), 5);
+    EXPECT_EQ(matrix.at(2).at(2), 6);
+    EXPECT_THROW(matrix.at(1).at(0), std::logic_error);
+    EXPECT_THROW(matrix.at(2).at(0), std::logic_error);
+    EXPECT_THROW(matrix.at(2).at(1), std::logic_error);
 }
-
-
+TEST(TestTriangleMatrixLib, tr_matrix_copy_constructor) {
+    // Arrange & Act
+    size_t size = 3;
+    int data[6] = { 1, 2, 3, 4, 5, 6 };
+    TriangleMatrix<int> matrix1(data, size);
+    TriangleMatrix<int> matrix2(matrix1);
+    // Assert
+    EXPECT_EQ(matrix1, matrix2);
+}
+TEST(TestTriangleMatrixLib, tr_matrix_operator_assignment) {
+    // Arrange & Act
+    size_t size = 3;
+    int data[6] = { 1, 2, 3, 4, 5, 6 };
+    TriangleMatrix<int> matrix1(data, size);
+    TriangleMatrix<int> matrix2;
+    matrix2 = matrix1;
+    // Assert
+    EXPECT_EQ(matrix1, matrix2);
+}
