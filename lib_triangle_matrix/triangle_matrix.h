@@ -161,27 +161,19 @@ TriangleMatrix<T>& TriangleMatrix<T>::operator /= (T value) {
     }
     return *this;
 }
-
 template<class T>
 MathVector<T> TriangleMatrix<T>::operator * (const MathVector<T>& vector) const {
     if (this->getSize() != vector.get_size()) {
         throw std::logic_error("Matrix columns must equal vector size");
     }
-
     MathVector<T> result(this->getSize());
-
     for (size_t i = 0; i < this->getSize(); ++i) {
-        T sum = T(); // »нициализируем нулем типа T
-
-        // –учное вычисление скал€рного произведени€
-        // ƒл€ треугольной матрицы: элементы ниже диагонали = 0
+        T sum = T(); 
         for (size_t j = i; j < this->getSize(); ++j) {
             sum += (*this)[i][j] * vector[j];
         }
-
         result[i] = sum;
     }
-
     return result;
 }
 template<class T>
@@ -240,5 +232,14 @@ TriangleMatrix<T> TriangleMatrix<T>::operator * (const TriangleMatrix<T>& other)
         throw std::logic_error("Matrices must have the same size");
     }
     TriangleMatrix<T> result(this->getSize());
-
+    for (size_t i = 0; i < this->getSize(); ++i) {
+        for (size_t j = i; j < this->getSize(); ++j) {
+            T sum = T();
+            for (size_t k = i; k <= j; ++k) {
+                sum += (*this)[i][k] * other[k][j];
+            }
+            result[i][j] = sum;
+        }
+    }
+    return result;
 }
