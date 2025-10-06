@@ -1,7 +1,6 @@
 // Copyright 2025 Julia Zabytina
 #include <gtest/gtest.h>
 #include "../lib_vector/vector.h"
-/*
 TEST(TestVectorLib, vector_default_constructor) {
     // Arrange & Act
     Tvector<int> vector;
@@ -509,8 +508,8 @@ TEST(TestVectorLib, find_last) {
 }
 TEST(TestVectorLib, find_count_of_suitable_elements) {
     // Arrange
-    int data[7] = { 1 ,3, 3, 4, 5, 3, 3 };
-    size_t size = 7;
+    int data[8] = { 1 ,3, 3, 4, 5, 3, 3, 7 };
+    size_t size = 8;
     Tvector<int> vector(data, size);
     // Act
     size_t actual_result = find_count_of_all_suitable_elements(vector, 3);
@@ -518,5 +517,3 @@ TEST(TestVectorLib, find_count_of_suitable_elements) {
     size_t expected_result = 4;
     EXPECT_EQ(expected_result, actual_result);
 }
-
-*/
