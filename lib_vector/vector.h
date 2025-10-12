@@ -24,23 +24,21 @@
         T* _data;
         State* _states;
         size_t _deleted;
-
         size_t get_real_position(size_t busy_index) const noexcept;
         void resize(size_t new_size);
         void resize(size_t new_size, const T& value);
         void shrink_to_fit();
         void reserve(size_t new_capacity);
         void compact_storage();
-        inline bool is_full() const noexcept {
-            return _size == _capacity;
-        }
     public:
         Tvector() noexcept;
         Tvector(size_t size);
         Tvector(T* data, size_t size);
         Tvector(const Tvector<T>& other_vector);
         virtual ~Tvector() noexcept;
-
+        inline bool is_full() const noexcept {
+            return _size == _capacity;
+        }
         inline bool is_empty() const noexcept {
             return _size == 0;
         }
