@@ -148,3 +148,20 @@ TEST(TestStackLib, stack_operator_assign) {
     EXPECT_TRUE(stack == stack_other);
     EXPECT_EQ(stack.top(), 200);
 }
+TEST(TestStackLib, stack_operator_not_compare_expect_true) {
+    // Arrange & Act
+    size_t size = 10;
+    Stack<int> stack(size);
+    Stack<int> stack_other(size);
+    // Assert
+    EXPECT_FALSE(stack != stack_other);
+}
+TEST(TestStackLib, stack_operator_not_compare_expect_false) {
+    // Arrange & Act
+    size_t size1 = 10;
+    size_t size2 = 20;
+    Stack<int> stack(size1);
+    Stack<int> stack_other(size2);
+    // Assert
+    EXPECT_TRUE(stack != stack_other);
+}
