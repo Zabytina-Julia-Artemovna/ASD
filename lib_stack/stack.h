@@ -7,7 +7,9 @@ private:
 public:
     Stack(size_t size);
     Stack(const Stack<T>& other);
+
     const Tvector<T>& getData() const;
+
     Stack<T>& operator=(const Stack<T>& other);
     bool operator ==(const Stack<T>& other) const;
     void push(T value);
@@ -18,7 +20,8 @@ public:
     void clear() noexcept; 
 };
 template <class T>
-Stack<T>::Stack(size_t size): _data(size) {}
+Stack<T>::Stack(size_t size): _data(size) {
+}
 template <class T>
 Stack<T>::Stack(const Stack<T>& other): _data(other.getData()) {}
 template <class T>
@@ -32,11 +35,17 @@ Stack<T>& Stack<T>::operator=(const Stack<T>& other) {
     }
     return *this;
 }
+template <class T>
+bool Stack<T>::operator ==(const Stack<T>& other) const {
+    return _data == other.getData();
+}
 
 template <class T>
-
-bool  Stack<T>::operator ==(const Stack<T>& other) const {
-    return _data == other.getData();
+inline T Stack<T>::top() const {
+    if (is_empty()) {
+        throw std::logic_error("Stack is empty, you can't get top element's index");
+    }
+    return _data.back();
 }
 
 template <class T>
@@ -52,4 +61,19 @@ void Stack<T>::pop() {
         throw std::logic_error("You can't pop the element, because stack is empty");
     }
     _data.pop_back();
+}
+
+template <class T>
+
+inline bool Stack<T>::is_empty() const noexcept {
+    return _data.is_empty();
+}
+template <class T>
+
+inline bool Stack<T>::is_full() const noexcept {
+    return _data.is_full();
+}
+template <class T>
+void Stack<T>::clear() noexcept {
+    _data.clear();
 }
