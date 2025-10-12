@@ -10,6 +10,7 @@ public:
     const Tvector<T>& getData() const;
     Stack<T>& operator=(const Stack<T>& other);
     bool operator ==(const Stack<T>& other) const;
+    bool operator !=(const Stack<T>& other) const;
     void push(T value);
     void pop();
     inline T top() const;
@@ -36,6 +37,10 @@ Stack<T>& Stack<T>::operator=(const Stack<T>& other) {
 template <class T>
 bool Stack<T>::operator ==(const Stack<T>& other) const {
     return _data == other.getData();
+}
+template <class T>
+bool Stack<T>::operator !=(const Stack<T>& other) const {
+    return !(_data == other.getData());
 }
 template <class T>
 inline T Stack<T>::top() const {
