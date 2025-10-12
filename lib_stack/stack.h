@@ -7,9 +7,7 @@ private:
 public:
     Stack(size_t size);
     Stack(const Stack<T>& other);
-
     const Tvector<T>& getData() const;
-
     Stack<T>& operator=(const Stack<T>& other);
     bool operator ==(const Stack<T>& other) const;
     void push(T value);
@@ -39,7 +37,6 @@ template <class T>
 bool Stack<T>::operator ==(const Stack<T>& other) const {
     return _data == other.getData();
 }
-
 template <class T>
 inline T Stack<T>::top() const {
     if (is_empty()) {
@@ -47,7 +44,6 @@ inline T Stack<T>::top() const {
     }
     return _data.back();
 }
-
 template <class T>
 void Stack<T>::push(T value) {
     if (is_full()) {
@@ -62,14 +58,11 @@ void Stack<T>::pop() {
     }
     _data.pop_back();
 }
-
 template <class T>
-
 inline bool Stack<T>::is_empty() const noexcept {
     return _data.is_empty();
 }
 template <class T>
-
 inline bool Stack<T>::is_full() const noexcept {
     return _data.is_full();
 }
