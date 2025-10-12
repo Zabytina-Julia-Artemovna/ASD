@@ -14,7 +14,7 @@
     public:
         enum State {
             empty, busy, deleted
-        };
+        };   //ÂÛÍÅÑËÀ èñ ýìïòè 
     protected:
         static constexpr size_t RESERVE_MEMORY = 15;
         static constexpr size_t MAX_PERCENT_DELETED = 15;
@@ -31,9 +31,6 @@
         void shrink_to_fit();
         void reserve(size_t new_capacity);
         void compact_storage();
-        inline bool is_full() const noexcept {
-            return _size == _capacity;
-        }
     public:
         Tvector() noexcept;
         Tvector(size_t size);
@@ -43,6 +40,9 @@
 
         inline bool is_empty() const noexcept {
             return _size == 0;
+        }
+        inline bool is_full() const noexcept {
+            return _size == _capacity;
         }
         inline const T* get_data() const noexcept {
             return _data;
@@ -100,6 +100,7 @@
         template <class U> friend size_t find_last_element(const Tvector<U>& object, const U& value);
         template <class U> friend size_t find_count_of_all_suitable_elements(const Tvector<U>& object, const U& value);
     };
+
     template <class T>
     size_t Tvector<T>::get_real_position(size_t busy_index) const noexcept {
         size_t busy_count = 0;
