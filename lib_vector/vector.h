@@ -14,7 +14,7 @@
     public:
         enum State {
             empty, busy, deleted
-        };   //ÂÛÍÅÑËÀ èñ ýìïòè 
+        };
     protected:
         static constexpr size_t RESERVE_MEMORY = 15;
         static constexpr size_t MAX_PERCENT_DELETED = 15;
@@ -24,7 +24,6 @@
         T* _data;
         State* _states;
         size_t _deleted;
-
         size_t get_real_position(size_t busy_index) const noexcept;
         void resize(size_t new_size);
         void resize(size_t new_size, const T& value);
