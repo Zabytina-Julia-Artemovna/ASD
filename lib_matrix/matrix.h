@@ -42,15 +42,8 @@ public:
 
     Matrix<T>& operator += (const Matrix<T>& other_matrix);
     Matrix<T>& operator -= (const Matrix<T>& other_matrix);
-    friend std::ostream& operator<< (std::ostream& out, const Matrix<T>& matrix) {
-        for (size_t i = 0; i < matrix.getM(); ++i) {
-            for (size_t j = 0; j < matrix.getN(); ++j) {
-                out << matrix[i][j] << "\t";
-            }
-            out << std::endl;
-        }
-        return out;
-    }
+    template<typename U>
+    friend std::ostream& operator<<(std::ostream&, const Matrix<U>& matrix);
     
     Matrix<T>& operator=(const Matrix<T>& other);
 };
@@ -62,7 +55,6 @@ template <class T>
 size_t Matrix<T>::getN() const {
     return _N;
 }
-
 template <class T>
 Matrix<T>::Matrix() : MathVector<MathVector<T>>(), _M(0), _N(0) {}
 template <class T>
@@ -253,4 +245,14 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& other) {
     _M = other._M;
     _N = other._N;
     return *this;
+}
+template <class U>
+std::ostream& operator<<(std::ostream&, const Matrix<U>& matrix) {
+    for (size_t i = 0; i < matrix.getM(); ++i) {
+        for (size_t j = 0; j < matrix.getN(); ++j) {
+            out << matrix[i][j] << "\t";
+        }
+        out << std::endl;
+    }
+    return out;
 }
