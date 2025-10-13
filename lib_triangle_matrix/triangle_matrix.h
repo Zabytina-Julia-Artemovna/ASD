@@ -35,20 +35,8 @@ public:
     TriangleMatrix<T>& operator -= (const TriangleMatrix<T>& other);
     TriangleMatrix<T>& operator= (const TriangleMatrix<T>& other);
 
-    friend std::ostream& operator<<(std::ostream& out, const TriangleMatrix<T>& matrix) {
-        for (size_t i = 0; i < matrix.getSize(); ++i) {
-            for (size_t j = 0; j < matrix.getSize(); ++j) {
-                if (i <= j) {
-                    out << matrix[i][j] << "\t";
-                }
-                else {
-                    out << "0\t";
-                }
-            }
-            out << std::endl;
-        }
-        return out;
-    }
+    template <typename U>
+    friend std::ostream& operator<<(std::ostream& out, const TriangleMatrix<T>& matrix);
 };
 template<class T>
 TriangleMatrix<T>::TriangleMatrix() : Matrix<T>() {}
@@ -242,4 +230,19 @@ TriangleMatrix<T> TriangleMatrix<T>::operator * (const TriangleMatrix<T>& other)
         }
     }
     return result;
+}
+template <typename U>
+std::ostream& operator<<(std::ostream& out, const TriangleMatrix<U>& matrix) {
+    for (size_t i = 0; i < matrix.getSize(); ++i) {
+        for (size_t j = 0; j < matrix.getSize(); ++j) {
+            if (i <= j) {
+                out << matrix[i][j] << "\t";
+            }
+            else {
+                out << "0\t";
+            }
+        }
+        out << std::endl;
+    }
+    return out;
 }
