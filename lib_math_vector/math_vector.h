@@ -180,7 +180,7 @@ const T& MathVector<T>::at(size_t index) const {
 }
 
 template <class U>
-std::ostream& operator<<(std::ostream&, const MathVector<U>& vector) {
+std::ostream& operator<<(std::ostream& out, const MathVector<U>& vector) {
     out << "[";
     for (size_t i = 0; i < vector.get_size(); ++i) {
         out << vector[i];
