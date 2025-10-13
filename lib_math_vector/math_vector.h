@@ -37,17 +37,9 @@ public:
     MathVector<T>& operator += (const MathVector<T>& vector);
     MathVector<T>& operator -= (const MathVector<T>& vector);
     MathVector<T>& operator=(const MathVector<T>& other);
-    friend std::ostream& operator<<(std::ostream& out, const MathVector<T>& vector) {
-        out << "[";
-        for (size_t i = 0; i < vector.get_size(); ++i) {
-            out << vector[i];
-            if (i < vector.get_size() - 1) {
-                out << ", ";
-            }
-        }
-        out << "]";
-        return out;
-    }
+    template<typename U>
+    friend std::ostream& operator<<(std::ostream&, const MathVector<U>& vector);
+   
     T& operator[](size_t index);
     const T& operator[](size_t index) const;
 };
@@ -166,23 +158,35 @@ MathVector<T>& MathVector<T>::operator=(const MathVector<T>& other) {
 }
 template <class T>
 T& MathVector<T>::operator[](size_t index) {
-    return Tvector<T>::operator[](index - _start_index);
+    return this->Tvector<T>::operator[](index - _start_index);
 }
 template <class T>
 const T& MathVector<T>::operator[](size_t index) const {
-    return Tvector<T>::operator[](index - _start_index);
+    return this->Tvector<T>::operator[](index - _start_index);
 }
 template <class T>
 T& MathVector<T>::at(size_t index) {
     if (index < _start_index || index >= _start_index + this->get_size()) {
         throw std::logic_error("MathVector index out of range");
     }
-    return Tvector<T>::operator[](index - _start_index);
+    return this->Tvector<T>::operator[](index - _start_index);
 }
 template <class T>
 const T& MathVector<T>::at(size_t index) const {
     if (index < _start_index || index >= _start_index + this->get_size()) {
         throw std::std::logic_error("MathVector index out of range");
     }
-    return Tvector<T>::operator[](index - _start_index);
+    return this->Tvector<T>::operator[](index - _start_index);
+}
+template <class U>
+std::ostream& operator<<(std::ostream&, const MathVector<U>& vector) {
+    out << "[";
+    for (size_t i = 0; i < vector.get_size(); ++i) {
+        out << vector[i];
+        if (i < vector.get_size() - 1) {
+            out << ", ";
+        }
+    }
+    out << "]";
+    return out;
 }
