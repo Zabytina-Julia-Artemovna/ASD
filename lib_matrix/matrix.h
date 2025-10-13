@@ -103,9 +103,7 @@ template <class T>
 Matrix<T> Matrix<T>::operator * (T value) const {
     Matrix<T> matrix(_M, _N);
     for (size_t i = 0; i < _M; ++i) {
-        for (size_t j = 0; j < _N; ++j) {
-            matrix[i][j] = (*this)[i][j] * value;
-        }
+        matrix[i] = (*this)[i] * value;
     }
     return matrix;
 }
@@ -116,9 +114,7 @@ Matrix<T> Matrix<T>::operator / (T value) const {
     }
     Matrix<T> matrix(_M, _N);
     for (size_t i = 0; i < _M; ++i) {
-        for (size_t j = 0; j < _N; ++j) {
-            matrix[i][j] = (*this)[i][j] / value;
-        }
+        matrix[i] = (*this)[i] / value;
     }
     return matrix;
 }
@@ -126,7 +122,7 @@ template <class T>
 Matrix<T>& Matrix<T>::operator += (T value) {
     for (size_t i = 0; i < _M; ++i) {
         for (size_t j = 0; j < _N; ++j) {
-            (*this)[i][j] = (*this)[i][j] + value;
+            (*this)[i][j] += value;
         }
     }
     return *this;
@@ -135,7 +131,7 @@ template <class T>
 Matrix<T>& Matrix<T>::operator -= (T value) {
     for (size_t i = 0; i < _M; ++i) {
         for (size_t j = 0; j < _N; ++j) {
-            (*this)[i][j] = (*this)[i][j] - value;
+            (*this)[i][j] -=  value;
         }
     }
     return *this;
@@ -143,9 +139,7 @@ Matrix<T>& Matrix<T>::operator -= (T value) {
 template <class T>
 Matrix<T>& Matrix<T>::operator *= (T value) {
     for (size_t i = 0; i < _M; ++i) {
-        for (size_t j = 0; j < _N; ++j) {
-            (*this)[i][j] = (*this)[i][j] * value;
-        }
+        (*this)[i] *= value;
     }
     return *this;
 }
@@ -155,10 +149,8 @@ Matrix<T>& Matrix<T>::operator /= (T value) {
         throw std::logic_error("Division by zero!");
     }
     for (size_t i = 0; i < _M; ++i) {
-        for (size_t j = 0; j < _N; ++j) {
-            (*this)[i][j] = (*this)[i][j] / value;
+            (*this)[i] /= value;
         }
-    }
     return *this;
 }
 template <class T>
@@ -168,9 +160,7 @@ Matrix<T> Matrix<T>::operator + (const Matrix<T>& other_matrix) const {
     }
     Matrix<T> result(_M, _N);
     for (size_t i = 0; i < _M; ++i) {
-        for (size_t j = 0; j < _N; ++j) {
-            result[i][j] = (*this)[i][j] + other_matrix[i][j];
-        }
+        result[i] = (*this)[i] + other_matrix[i];
     }
     return result;
 }
@@ -181,9 +171,7 @@ Matrix<T> Matrix<T>::operator - (const Matrix<T>& other_matrix) const {
     }
     Matrix<T> result(_M, _N);
     for (size_t i = 0; i < _M; ++i) {
-        for (size_t j = 0; j < _N; ++j) {
-            result[i][j] = (*this)[i][j] - other_matrix[i][j];
-        }
+        result[i] = (*this)[i] - other_matrix[i];
     }
     return result;
 }
@@ -221,9 +209,7 @@ Matrix<T>& Matrix<T>::operator += (const Matrix<T>& other_matrix) {
         throw std::logic_error("The matrices have different sizes!");
     }
     for (size_t i = 0; i < _M; ++i) {
-        for (size_t j = 0; j < _N; ++j) {
-            (*this)[i][j] += other_matrix[i][j];
-        }
+        (*this)[i] += other_matrix[i];
     }
     return *this;
 }
@@ -233,9 +219,7 @@ Matrix<T>& Matrix<T>::operator -= (const Matrix<T>& other_matrix) {
         throw std::logic_error("The matrices have different sizes!");
     }
     for (size_t i = 0; i < _M; ++i) {
-        for (size_t j = 0; j < _N; ++j) {
-            (*this)[i][j] -= other_matrix[i][j];
-        }
+        (*this)[i] -= other_matrix[i];
     }
     return *this;
 }
@@ -247,7 +231,7 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& other) {
     return *this;
 }
 template <class U>
-std::ostream& operator<<(std::ostream&, const Matrix<U>& matrix) {
+std::ostream& operator<<(std::ostream& out, const Matrix<U>& matrix) {
     for (size_t i = 0; i < matrix.getM(); ++i) {
         for (size_t j = 0; j < matrix.getN(); ++j) {
             out << matrix[i][j] << "\t";
