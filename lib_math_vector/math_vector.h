@@ -178,6 +178,7 @@ const T& MathVector<T>::at(size_t index) const {
     }
     return this->Tvector<T>::operator[](index - _start_index);
 }
+
 template <class U>
 std::ostream& operator<<(std::ostream&, const MathVector<U>& vector) {
     out << "[";
