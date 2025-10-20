@@ -21,9 +21,9 @@ public:
     Matrix(T* data, size_t M, size_t N);
     Matrix(const Matrix& other);
     virtual ~Matrix();
-    size_t getM() const;
-    size_t getN() const;
-
+    size_t getM() const noexcept;
+    size_t getN() const noexcept;
+   
     Matrix<T> operator * (T value) const;
     Matrix<T> operator / (T value) const;
 
@@ -44,11 +44,11 @@ public:
     Matrix<T>& operator=(const Matrix<T>& other);
 };
 template <class T>
-size_t Matrix<T>::getM() const {
+size_t Matrix<T>::getM() const noexcept {
     return _M;
 }
 template <class T>
-size_t Matrix<T>::getN() const {
+size_t Matrix<T>::getN() const noexcept {
     return _N;
 }
 template <class T>
@@ -95,9 +95,7 @@ Matrix<T> Matrix<T>::operator / (T value) const {
 }
 template <class T>
 Matrix<T>& Matrix<T>::operator *= (T value) {
-    for (size_t i = 0; i < _M; ++i) {
-        (*this)[i] *= value;
-    }
+    (*this) = (*this) * value;
     return *this;
 }
 template <class T>
@@ -105,9 +103,7 @@ Matrix<T>& Matrix<T>::operator /= (T value) {
     if (value == 0) {
         throw std::logic_error("Division by zero!");
     }
-    for (size_t i = 0; i < _M; ++i) {
-            (*this)[i] /= value;
-        }
+    (*this) = (*this) / value;
     return *this;
 }
 template <class T>
@@ -177,11 +173,11 @@ Matrix<T>& Matrix<T>::operator -= (const Matrix<T>& other_matrix) {
 }
 template <class T>
 Matrix<T>& Matrix<T>::operator=(const Matrix<T>& other) {
-    (if this != &other) {
-    MathVector<MathVector<T>>::operator=(other);
-    _M = other._M;
-    _N = other._N;
-}
+    if (this != &other) {
+        MathVector<MathVector<T>>::operator=(other);
+        _M = other._M;
+        _N = other._N;
+    }
     return *this;
 }
 template <class U>
