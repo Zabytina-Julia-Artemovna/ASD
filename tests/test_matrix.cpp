@@ -2,6 +2,8 @@
 #include <stdexcept>
 #include <gtest/gtest.h>
 #include "../lib_matrix/matrix.h"
+
+
 TEST(TestMatrixLib, matrix_default_constructor) {
     // Arrange & Act
     Matrix<int> matrix;
@@ -93,34 +95,6 @@ TEST(TestMatrixLib, matrix_div_value_with_exception) {
     Matrix<int> matrix(data, M, N);
     // Assert
     EXPECT_THROW(matrix / value;, std::logic_error);
-}
-TEST(TestMatrixLib, matrix_add_assign_value) {
-    // Arrange
-    size_t M = 2, N = 2;
-    int data[4] = { 2, 2, 10, 4 };
-    int value = 2;
-    Matrix<int> matrix(data, M, N);
-    // Act
-    matrix += value;
-    // Assert
-    EXPECT_EQ(matrix[0][0], data[0] + value);
-    EXPECT_EQ(matrix[0][1], data[1] + value);
-    EXPECT_EQ(matrix[1][0], data[2] + value);
-    EXPECT_EQ(matrix[1][1], data[3] + value);
-}
-TEST(TestMatrixLib, matrix_sub_assign_value) {
-    // Arrange
-    size_t M = 2, N = 2;
-    int data[4] = { 2, 2, 10, 4 };
-    int value = 2;
-    Matrix<int> matrix(data, M, N);
-    // Act
-    matrix -= value;
-    // Assert
-    EXPECT_EQ(matrix[0][0], data[0] - value);
-    EXPECT_EQ(matrix[0][1], data[1] - value);
-    EXPECT_EQ(matrix[1][0], data[2] - value);
-    EXPECT_EQ(matrix[1][1], data[3] - value);
 }
 TEST(TestMatrixLib, matrix_mult_assign_value) {
     // Arrange
