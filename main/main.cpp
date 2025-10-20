@@ -139,12 +139,10 @@ void printMainMenu() {
     std::cout << " 1. Matrix addition\n";
     std::cout << " 2. Matrix subtraction\n";
     std::cout << " 3. Matrix multiplication\n";
-    std::cout << " 4. Add scalar to matrix\n";
-    std::cout << " 5. Subtract scalar from matrix\n";
-    std::cout << " 6. Multiply matrix by scalar\n";
-    std::cout << " 7. Division by scalar\n";
-    std::cout << " 8. Multiply matrix by vector\n";
-    std::cout << " 9. Exit\n";
+    std::cout << " 4. Multiply matrix by scalar\n";
+    std::cout << " 5. Division by scalar\n";
+    std::cout << " 7. Multiply matrix by vector\n";
+    std::cout << " 8. Exit\n";
 }
 
 template<typename T>
@@ -248,27 +246,11 @@ int main() {
                 int scalar;
                 std::cout << "Enter scalar: ";
                 std::cin >> scalar;
-                Matrix<int> result = matrix1 + scalar;
-                std::cout << "Result:\n" << result;
-                break;
-            }
-            case 5: {
-                int scalar;
-                std::cout << "Enter scalar: ";
-                std::cin >> scalar;
-                Matrix<int> result = matrix1 - scalar;
-                std::cout << "Result:\n" << result;
-                break;
-            }
-            case 6: {
-                int scalar;
-                std::cout << "Enter scalar: ";
-                std::cin >> scalar;
                 Matrix<int> result = matrix1 * scalar;
                 std::cout << "Result:\n" << result;
                 break;
             }
-            case 7: {
+            case 5: {
                 int scalar;
                 std::cout << "Enter scalar: ";
                 std::cin >> scalar;
@@ -281,7 +263,7 @@ int main() {
                 }
                 break;
             }
-            case 8: {
+            case 6: {
                 size_t size;
                 std::cout << "Enter vector size (must be " << N << "): ";
                 std::cin >> size;
