@@ -156,7 +156,6 @@ MathVector<T> Matrix<T>::operator * (const MathVector<T>& vector) const {
     MathVector<T> result(_M);
     for (size_t i = 0; i < _M; ++i) {
         result[i] = (*this)[i] * vector;
-
     }
     return result;
 }
@@ -165,9 +164,7 @@ Matrix<T>& Matrix<T>::operator += (const Matrix<T>& other_matrix) {
     if (_M != other_matrix.getM() || _N != other_matrix.getN()) {
         throw std::logic_error("The matrices have different sizes!");
     }
-    for (size_t i = 0; i < _M; ++i) {
-        (*this)[i] += other_matrix[i];
-    }
+    (*this) = (*this) + other_matrix;
     return *this;
 }
 template <class T>
@@ -175,16 +172,16 @@ Matrix<T>& Matrix<T>::operator -= (const Matrix<T>& other_matrix) {
     if (_M != other_matrix.getM() || _N != other_matrix.getN()) {
         throw std::logic_error("The matrices have different sizes!");
     }
-    for (size_t i = 0; i < _M; ++i) {
-        (*this)[i] -= other_matrix[i];
-    }
+    (*this) = (*this) - other_matrix;
     return *this;
 }
 template <class T>
 Matrix<T>& Matrix<T>::operator=(const Matrix<T>& other) {
+    (if this != &other) {
     MathVector<MathVector<T>>::operator=(other);
     _M = other._M;
     _N = other._N;
+}
     return *this;
 }
 template <class U>
