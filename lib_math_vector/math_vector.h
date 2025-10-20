@@ -174,7 +174,7 @@ T& MathVector<T>::at(size_t index) {
 template <class T>
 const T& MathVector<T>::at(size_t index) const {
     if (index < _start_index || index >= _start_index + this->get_size()) {
-        throw std::std::logic_error("MathVector index out of range");
+        throw std::logic_error("MathVector index out of range");
     }
     return this->Tvector<T>::operator[](index - _start_index);
 }
