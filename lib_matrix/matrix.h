@@ -73,9 +73,9 @@ Matrix<T>::Matrix(T* data, size_t M, size_t N) : MathVector<MathVector<T>>(M) {
     }
 }
 template <class T>
-Matrix<T>::Matrix(const TriangleMatrix<T>& triangle): Matrix<T>(triangle.getM(), triangle.getN()) {
-    for (size_t i = 0; i < triangle.getM(); ++i) {
-        for (size_t j = 0; j < triangle.getN(); ++j) {
+Matrix<T>::Matrix(const TriangleMatrix<T>& triangle): Matrix<T>(triangle.getSize(), triangle.getSize()) {
+    for (size_t i = 0; i < triangle.getSize(); ++i) {
+        for (size_t j = 0; j < triangle.getSize(); ++j) {
             if (i <= j) {
                 (*this)[i][j] = triangle[i][j];
             }
