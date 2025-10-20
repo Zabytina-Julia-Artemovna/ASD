@@ -1,6 +1,5 @@
 #pragma once 
 #include "../lib_matrix/matrix.h"
-
 template <class T>
 class TriangleMatrix : public Matrix<T> {
 public:
@@ -9,19 +8,12 @@ public:
     TriangleMatrix(T* data, size_t size);
     TriangleMatrix(const TriangleMatrix& other);
     ~TriangleMatrix();
-
-
-    size_t getSize() const {
+    size_t getSize() const noexcept {
         return this->_M;
     }
-
-    TriangleMatrix<T> operator + (T value) const;
-    TriangleMatrix<T> operator - (T value) const;
     TriangleMatrix<T> operator * (T value) const;
     TriangleMatrix<T> operator / (T value) const;
 
-    TriangleMatrix<T>& operator += (T value);
-    TriangleMatrix<T>& operator -= (T value);
     TriangleMatrix<T>& operator *= (T value);
     TriangleMatrix<T>& operator /= (T value);
 
@@ -68,26 +60,6 @@ TriangleMatrix<T>& TriangleMatrix<T>::operator= (const TriangleMatrix<T>& other)
     return *this;
 }
 template<class T>
-TriangleMatrix<T> TriangleMatrix<T>::operator + (T value) const {
-    TriangleMatrix<T> result(this->getSize());
-    for (size_t i = 0; i < result.getSize(); ++i) {
-        for (size_t j = i; j < result.getSize(); ++j) {
-            result[i][j] = (*this)[i][j] + value;
-        }
-    }
-    return result;
-}
-template<class T>
-TriangleMatrix<T> TriangleMatrix<T>::operator - (T value) const {
-    TriangleMatrix<T> result(this->getSize());
-    for (size_t i = 0; i < result.getSize(); ++i) {
-        for (size_t j = i; j < result.getSize(); ++j) {
-            result[i][j] = (*this)[i][j] - value;
-        }
-    }
-    return result;
-}
-template<class T>
 TriangleMatrix<T> TriangleMatrix<T>::operator * (T value) const {
     TriangleMatrix<T> result(this->getSize());
     for (size_t i = 0; i < result.getSize(); ++i) {
@@ -110,24 +82,7 @@ TriangleMatrix<T> TriangleMatrix<T>::operator / (T value) const {
     }
     return result;
 }
-template<class T>
-TriangleMatrix<T>& TriangleMatrix<T>::operator += (T value) {
-    for (size_t i = 0; i < this->getSize(); ++i) {
-        for (size_t j = i; j < this->getSize(); ++j) {
-            (*this)[i][j] += value;
-        }
-    }
-    return *this;
-}
-template<class T>
-TriangleMatrix<T>& TriangleMatrix<T>::operator -= (T value) {
-    for (size_t i = 0; i < this->getSize(); ++i) {
-        for (size_t j = i; j < this->getSize(); ++j) {
-            (*this)[i][j] -= value;
-        }
-    }
-    return *this;
-}
+
 template<class T>
 TriangleMatrix<T>& TriangleMatrix<T>::operator *= (T value) {
     for (size_t i = 0; i < this->getSize(); ++i) {
