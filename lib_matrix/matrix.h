@@ -1,6 +1,8 @@
 #pragma once
 #include <stdexcept>
 #include "../lib_math_vector/math_vector.h"
+template <class T> class TriangleMatrix;
+
 template <class T>
 class Matrix : public MathVector<MathVector<T>> {
 protected:
@@ -19,6 +21,7 @@ public:
     Matrix();
     Matrix(size_t M, size_t N);
     Matrix(T* data, size_t M, size_t N);
+    Matrix(const TriangleMatrix<T>& triangle);
     Matrix(const Matrix& other);
     virtual ~Matrix();
     size_t getM() const noexcept;
@@ -67,6 +70,19 @@ Matrix<T>::Matrix(T* data, size_t M, size_t N) : MathVector<MathVector<T>>(M) {
     _N = N;
     for (size_t i = 0; i < _M; ++i) {
         (*this)[i] = MathVector<T>(data + i * _N, _N);
+    }
+}
+template <class T>
+Matrix<T>::Matrix(const TriangleMatrix<T>& triangle): Matrix<T>(triangle.getM(), triangle.getN()) {
+    for (size_t i = 0; i < triangle.getM(); ++i) {
+        for (size_t j = 0; j < triangle.getN(); ++j) {
+            if (i <= j) {
+                (*this)[i][j] = triangle[i][j];
+            }
+            else {
+                (*this)[i][j] = T();
+            }
+        }
     }
 }
 template <class T>
