@@ -59,7 +59,7 @@ TEST(TestTriangleMatrixLib, tr_matrix_mult_value) {
     int data[6] = { 1, 2, 3, 4, 5, 6 };
     int value = 10;
     TriangleMatrix<int> matrix(data, size);
-    TriangleMatrix<int> result(size);
+    Matrix<int> result(size);
     //Act
     result = matrix * value;
     // Assert
@@ -76,7 +76,7 @@ TEST(TestTriangleMatrixLib, tr_matrix_div_value) {
     int data[6] = { 2, 2, 4, 4, 8, 6 };
     int value = 2;
     TriangleMatrix<int> matrix(data, size);
-    TriangleMatrix<int> result(size);
+    Matrix<int> result(size);
     //Act
     result = matrix / value;
     // Assert
