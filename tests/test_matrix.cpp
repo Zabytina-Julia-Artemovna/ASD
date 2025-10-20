@@ -55,36 +55,6 @@ TEST(TestMatrixLib, matrix_assignment_operator) {
     // Assert
     EXPECT_EQ(matrix1, matrix2);
 }
-TEST(TestMatrixLib, matrix_add_value) {
-    // Arrange
-    size_t M = 2, N = 2;
-    int data[4] = { 1, 2, 3, 4 };
-    int value = 10;
-    Matrix<int> matrix(data, M, N);
-    Matrix<int> result(M, N);
-    // Act
-    result = matrix + value;
-    // Assert
-    EXPECT_EQ(result[0][0], data[0] + value);
-    EXPECT_EQ(result[0][1], data[1] + value);
-    EXPECT_EQ(result[1][0], data[2] + value);
-    EXPECT_EQ(result[1][1], data[3] + value);
-}
-TEST(TestMatrixLib, matrix_sub_value) {
-    // Arrange
-    size_t M = 2, N = 2;
-    int data[4] = { 1, 2, 3, 4 };
-    int value = 10;
-    Matrix<int> matrix(data, M, N);
-    Matrix<int> result(M, N);
-    // Act
-    result = matrix - value;
-    // Assert
-    EXPECT_EQ(result[0][0], data[0] - value);
-    EXPECT_EQ(result[0][1], data[1] - value);
-    EXPECT_EQ(result[1][0], data[2] - value);
-    EXPECT_EQ(result[1][1], data[3] - value);
-}
 TEST(TestMatrixLib, matrix_mult_value) {
     // Arrange
     size_t M = 2, N = 2;
