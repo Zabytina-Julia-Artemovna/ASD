@@ -27,8 +27,6 @@ public:
     Matrix<T> operator * (T value) const;
     Matrix<T> operator / (T value) const;
 
-    Matrix<T>& operator += (T value);
-    Matrix<T>& operator -= (T value);
     Matrix<T>& operator *= (T value);
     Matrix<T>& operator /= (T value);
 
@@ -94,24 +92,6 @@ Matrix<T> Matrix<T>::operator / (T value) const {
         result[i] = (*this)[i] / value;
     }
     return result;
-}
-template <class T>
-Matrix<T>& Matrix<T>::operator += (T value) {
-    for (size_t i = 0; i < _M; ++i) {
-        for (size_t j = 0; j < _N; ++j) {
-            (*this)[i][j] += value;
-        }
-    }
-    return *this;
-}
-template <class T>
-Matrix<T>& Matrix<T>::operator -= (T value) {
-    for (size_t i = 0; i < _M; ++i) {
-        for (size_t j = 0; j < _N; ++j) {
-            (*this)[i][j] -=  value;
-        }
-    }
-    return *this;
 }
 template <class T>
 Matrix<T>& Matrix<T>::operator *= (T value) {
