@@ -1,5 +1,6 @@
 #pragma once
 #include "../lib_matrix/matrix.h"
+#include "../lib_stack/stack.h"
 #include <random>
 #include <utility> 
 template <class T>
@@ -52,4 +53,27 @@ T find_local_minimum(const Matrix<T>& matrix) {
         x = new_x;
         y = new_y;
     }
+}
+bool check_brackets(std::string str) {
+    Stack<char> stack(str.length());
+    stack.clear();
+    for (char c : str) {
+        if (c == '(' || c == '[' || c == '{') {
+            stack.push(c);
+        }
+        else if (c == ')' || c == ']' || c == '}') {
+            if (stack.is_empty()) {
+                return false;  
+            }
+            char top = stack.top();
+            stack.pop();
+
+            if ((c == ')' && top != '(') ||
+                (c == ']' && top != '[') ||
+                (c == '}' && top != '{')) {
+                return false; 
+            }
+        }
+    }
+    return stack.is_empty();
 }

@@ -66,3 +66,48 @@ TEST(TestAlgoritmLib, test_5x5_matrix) {
     EXPECT_TRUE(result == 1 || result == 10 || result == 14 || result == 19 
                || result == 23 || result == 29 || result == 33);
 }
+TEST(TestAlgorithmLib, test_check_brackets_false1) {
+    std::string string = ")";
+    EXPECT_EQ(check_brackets(string), false);
+
+}
+TEST(TestAlgorithmLib, test_check_brackets_false2) {
+    std::string string = "[";
+    EXPECT_EQ(check_brackets(string), false);
+}
+TEST(TestAlgorithmLib, test_check_brackets_false3) {
+    std::string string = "())";
+    EXPECT_EQ(check_brackets(string), false);
+}
+TEST(TestAlgorithmLib, test_check_brackets_false4) {
+    std::string string = "({)";
+    EXPECT_EQ(check_brackets(string), false);
+}
+TEST(TestAlgorithmLib, test_check_brackets_false5) {
+    std::string string = "({})]";
+    EXPECT_EQ(check_brackets(string), false);
+}
+TEST(TestAlgorithmLib, test_check_brackets_true1) {
+    std::string string = "()";
+    EXPECT_EQ(check_brackets(string), true);
+}
+TEST(TestAlgorithmLib, test_check_brackets_true2) {
+    std::string string = "{}";
+    EXPECT_EQ(check_brackets(string), true);
+}
+TEST(TestAlgorithmLib, test_check_brackets_true3) {
+    std::string string = "[()]";
+    EXPECT_EQ(check_brackets(string), true);
+}
+TEST(TestAlgorithmLib, test_check_brackets_true4) {
+    std::string string = "{[()]}";
+    EXPECT_EQ(check_brackets(string), true);
+}
+TEST(TestAlgorithmLib, test_check_brackets_true5) {
+    std::string string = "()[]{}";
+    EXPECT_EQ(check_brackets(string), true);
+}
+TEST(TestAlgorithmLib, test_check_brackets_true6) {
+    std::string string = "";
+    EXPECT_EQ(check_brackets(string), true);
+}
