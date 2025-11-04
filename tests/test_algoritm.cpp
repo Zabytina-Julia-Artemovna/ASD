@@ -111,19 +111,20 @@ TEST(TestAlgorithmLib, test_check_brackets_true6) {
     std::string string = "";
     EXPECT_EQ(check_brackets(string), true);
 }
+
 TEST(TestAlgorithmLib, test_read_expression_empty_brackets) {
     std::string expression = "a + b - ()";
-    EXPECT_THROW(expression, std::invalid_argument);
+    EXPECT_THROW(read_expression(expression), std::invalid_argument);
 }
 TEST(TestAlgorithmLib, test_read_expression_operator_in_wrong_position1) {
     std::string expression = "a + * b";
-    EXPECT_THROW(expression, std::invalid_argument);
+    EXPECT_THROW(read_expression(expression), std::invalid_argument);
 }
 TEST(TestAlgorithmLib, test_read_expression_operator_in_wrong_position2) {
     std::string expression = "+ a * b";
-    EXPECT_THROW(expression, std::invalid_argument);
+    EXPECT_THROW(read_expression(expression), std::invalid_argument);
 }
 TEST(TestAlgorithmLib, test_read_expression_operator_in_wrong_position3) {
     std::string expression = "(* a)";
-    EXPECT_THROW(expression, std::invalid_argument);
+    EXPECT_THROW(read_expression(expression), std::invalid_argument);
 }
