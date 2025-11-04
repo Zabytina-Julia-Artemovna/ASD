@@ -128,3 +128,22 @@ TEST(TestAlgorithmLib, test_read_expression_operator_in_wrong_position3) {
     std::string expression = "(* a)";
     EXPECT_THROW(read_expression(expression), std::invalid_argument);
 }
+TEST(TestAlgorithmLib, test_read_expression_operands_without_operator1) {
+    std::string expression = "(a b)";
+    EXPECT_THROW(read_expression(expression), std::invalid_argument);
+}
+TEST(TestAlgorithmLib, test_read_expression_operands_without_operator2) {
+    std::string expression = "a  b";
+    EXPECT_THROW(read_expression(expression), std::invalid_argument);
+}
+TEST(TestAlgorithmLib, test_read_expression_operands_without_operator3) {
+    std::string expression = "a + b c";
+    EXPECT_THROW(read_expression(expression), std::invalid_argument);
+}
+TEST(TestAlgorithmLib, test_read_expression_invalid_character) {
+    std::string expression = "(a@b)";
+    EXPECT_THROW(read_expression(expression), std::invalid_argument);
+}
+
+
+
