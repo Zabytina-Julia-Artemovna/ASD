@@ -3,6 +3,9 @@
 #include "../lib_stack/stack.h"
 #include <random>
 #include <utility> 
+#include <stdexcept>
+#include <string>
+#include <cctype>
 template <class T>
 std::pair<size_t, size_t> find_min_neighbor_coords(const Matrix<T>& matrix, size_t x, size_t y) {
     T min_val = matrix[x][y];
@@ -76,4 +79,75 @@ bool check_brackets(std::string str) {
         }
     }
     return stack.is_empty();
+}
+void read_expression(std::string expression) {
+    std::string brackets;
+    enum State {
+        EXPECT_OPERAND,
+        EXPECT_OPERATOR,
+        EXPECT_OPERAND_OR_UNARY
+    };
+    State current_state = EXPECT_OPERAND;
+    bool has_operand = false;
+    for (size_t i = 0; i < expression.length(); ++i) {
+        char c = expression[i];
+        if (std::isspace(c)) {
+            continue;
+        }
+        // обработка скобок
+        if (c == '(' || c == '{' || c == '[' || c == ')' || c == '}' || c == ']') {
+            brackets += c;
+            if (c == '(' || c == '{' || c == '[') {
+                if (current_state != EXPECT_OPERAND && current_state != EXPECT_OPERAND_OR_UNARY) {
+                    throw std::invalid_argument("Operand expected before opening bracket");
+                }
+                current_state = EXPECT_OPERAND;
+            }
+            else { // закрывающая скобка
+                if (current_state == EXPECT_OPERAND) {
+                    throw std::invalid_argument("Empty brackets");
+                }
+                current_state = EXPECT_OPERATOR;
+            }
+        }
+        // обработка операторов
+        else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
+            if ((c == '+' || c == '-') &&
+                (current_state == EXPECT_OPERAND || current_state == EXPECT_OPERAND_OR_UNARY)) {
+                // унарный оператор - ожидаем операнд
+                current_state = EXPECT_OPERAND;
+                continue;
+            }
+            if (current_state != EXPECT_OPERATOR) {
+                throw std::invalid_argument("Operator '" + std::string(1, c) + "' in wrong position");
+            }
+            current_state = EXPECT_OPERAND_OR_UNARY;
+        }
+        // обработка операндов
+        else if (std::isalnum(c)) {
+            if (current_state != EXPECT_OPERAND && current_state != EXPECT_OPERAND_OR_UNARY) {
+                throw std::invalid_argument("Operator expected before operand");
+            }
+            has_operand = true;
+            // пропускаем операнд
+            while (i < expression.length() && std::isalnum(expression[i])) {
+                i++;
+            }
+            i--;
+            current_state = EXPECT_OPERATOR;
+        }
+        else {
+            throw std::invalid_argument("Invalid character '" + std::string(1, c) + "' in expression");
+        }
+    }
+    // проверка скобок
+    if (!check_brackets(brackets)) {
+        throw std::invalid_argument("Unbalanced brackets");
+    }
+    if (current_state == EXPECT_OPERAND || current_state == EXPECT_OPERAND_OR_UNARY) {
+        throw std::invalid_argument("Missing operand at the end of expression");
+    }
+    if (!has_operand) {
+        throw std::invalid_argument("No operands in expression");
+    }
 }
