@@ -28,3 +28,25 @@ public:
     void erase(size_t position);
     void erase(Node<T>* node);
 };
+template <class T>
+List<T>::List() {
+    _head = nullptr;
+    _tail = nullptr;
+}
+template <class T>
+List<T>::~List() {
+    while (_head != nullptr) {
+        Node<T>* temporary = _head;
+        _head = _head->next;
+        delete temporary;
+    }
+}
+template <class T>
+List<T>::List(const List<T>& other_list) : _head(nullptr), _tail(nullptr) {
+    Node<T>* current = other_list._head;
+    while (current != nullptr) {
+        this->push_back(current->value);
+        current = current->next;
+    }
+}
+
