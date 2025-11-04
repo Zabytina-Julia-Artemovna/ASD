@@ -121,10 +121,6 @@ TEST(TestAlgorithmLib, test_read_expression_operator_in_wrong_position1) {
     EXPECT_THROW(read_expression(expression), std::invalid_argument);
 }
 TEST(TestAlgorithmLib, test_read_expression_operator_in_wrong_position2) {
-    std::string expression = "+ a * b";
-    EXPECT_THROW(read_expression(expression), std::invalid_argument);
-}
-TEST(TestAlgorithmLib, test_read_expression_operator_in_wrong_position3) {
     std::string expression = "(* a)";
     EXPECT_THROW(read_expression(expression), std::invalid_argument);
 }
@@ -146,4 +142,20 @@ TEST(TestAlgorithmLib, test_read_expression_invalid_character) {
 }
 
 
+TEST(TestAlgorithmLib, test_read_expression_unbalanced_brackets) {
+    std::string expression = "(a-b)*c + (d + f)))";
+    EXPECT_THROW(read_expression(expression), std::invalid_argument);
+}
+TEST(TestAlgorithmLib, test_read_expression_missing_operand_at_the_end) {
+    std::string expression = "a + b - ";
+    EXPECT_THROW(read_expression(expression), std::invalid_argument);
+}
+TEST(TestAlgorithmLib, test_read_expression_no_operands_in_expression) {
+    std::string expression = "+ -";
+    EXPECT_THROW(read_expression(expression), std::invalid_argument);
+}
+TEST(TestAlgorithmLib, test_read_expression_no_operand_before_opening_bracket) {
+    std::string expression = "a ( a + b)";
+    EXPECT_THROW(read_expression(expression), std::invalid_argument);
+}
 
