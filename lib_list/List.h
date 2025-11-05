@@ -15,6 +15,9 @@ public:
     ~List();
     List(const List<T>& other_list);
 
+    Node<T>* get_head() const noexcept;
+    Node<T>* get_tail() const noexcept;
+
     bool operator==(const List<T>& other) const;
     List<T>& operator=(const List<T>& other);
 
@@ -29,10 +32,7 @@ public:
     void erase(Node<T>* node);
 };
 template <class T>
-List<T>::List() {
-    _head = nullptr;
-    _tail = nullptr;
-}
+List<T>::List() : _head(nullptr), _tail(nullptr) {}
 template <class T>
 List<T>::~List() {
     while (_head != nullptr) {
@@ -50,3 +50,39 @@ List<T>::List(const List<T>& other_list) : _head(nullptr), _tail(nullptr) {
     }
 }
 
+
+
+template <class T>
+Node<T>* List<T>::get_head() const noexcept {
+    return _head;
+}
+template <class T>
+Node<T>* List<T>::get_tail() const noexcept {
+    return _tail;
+}
+
+template <class T>
+bool List<T>::is_empty() const noexcept {
+    return _head == nullptr && _tail == nullptr;
+}
+template <class T>
+void List<T>::push_front(const T& value) noexcept {
+    Node<T>* node = new Node<T>(value);
+    if (is_empty()) {
+        _head = node;
+        _tail = node;
+    }
+    node->next = _head;
+    _head = node;
+}
+
+template <class T>
+void List<T>::push_back(const T& value) noexcept{
+    Node<T>* node = new Node<T>(value);
+    if (is_empty()) {
+        _head = node;
+        _tail = node;
+    }
+    _tail->next = node;
+    _tail = node;
+}
