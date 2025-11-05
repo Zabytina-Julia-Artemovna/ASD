@@ -150,3 +150,77 @@ TEST(TestListLib, pop_front_with_several_elements_list) {
     EXPECT_EQ(list.get_head()->value, 40);
     EXPECT_EQ(list.get_size(), 4);
 }
+TEST(TestListLib, list_operator_equal_true) {
+    // Arrange & Act
+    List<int> list1;
+    List<int> list2;
+    list1.push_back(10);
+    list1.push_back(20);
+    list1.push_back(30);
+
+    list2.push_back(10);
+    list2.push_back(20);
+    list2.push_back(30);
+    // Assert
+    EXPECT_TRUE(list1 == list2);
+}
+TEST(TestListLib, list_operator_equal_false) {
+    // Arrange & Act
+    List<int> list1;
+    List<int> list2;
+    list1.push_back(30);
+    list1.push_back(40);
+    list1.push_back(50);
+    list1.push_back(100);
+
+    list2.push_back(30);
+    list2.push_back(40);
+    list2.push_back(50);
+    // Assert
+    EXPECT_FALSE(list1 == list2);
+}
+TEST(TestListLib, list_operator_not_equal_true) {
+    // Arrange & Act
+    List<int> list1;
+    List<int> list2;
+    list1.push_back(70);
+    list1.push_back(80);
+    list1.push_back(90);
+    list1.push_back(100);
+
+    list2.push_back(10);
+    list2.push_back(20);
+    list2.push_back(30);
+    // Assert
+    EXPECT_TRUE(list1 != list2);
+}
+TEST(TestListLib, list_operator_not_equal_false) {
+    // Arrange & Act
+    List<int> list1;
+    List<int> list2;
+    list1.push_back(80);
+    list1.push_back(80);
+    list1.push_back(80);
+
+    list2.push_back(80);
+    list2.push_back(80);
+    list2.push_back(80);
+    // Assert
+    EXPECT_FALSE(list1 != list2);
+}
+TEST(TestListLib, list_operator_assign) {
+    // Arrange & Act
+    List<int> list1;
+    List<int> list2;
+    list1.push_back(100);
+    list1.push_back(800);
+    list1.push_back(900);
+    list1.push_back(600);
+
+    list2.push_back(10);
+    list2.push_back(20);
+    list2.push_back(30);
+    list2 = list1;
+    // Assert
+    EXPECT_TRUE(list1 == list2);
+}
