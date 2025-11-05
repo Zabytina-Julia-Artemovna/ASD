@@ -1,4 +1,5 @@
 #pragma once
+#include <stdexcept>
 template <class T>
 struct Node {
     T value;
@@ -26,8 +27,8 @@ public:
     void push_front(const T& value) noexcept;
     void insert(size_t position, const T& value);
     void insert(Node<T>* node, const T& value);
-    void pop_front() noexcept;
-    void pop_back() noexcept;
+    void pop_front();
+    void pop_back();
     void erase(size_t position);
     void erase(Node<T>* node);
 };
@@ -49,9 +50,6 @@ List<T>::List(const List<T>& other_list) : _head(nullptr), _tail(nullptr) {
         current = current->next;
     }
 }
-
-
-
 template <class T>
 Node<T>* List<T>::get_head() const noexcept {
     return _head;
@@ -60,7 +58,6 @@ template <class T>
 Node<T>* List<T>::get_tail() const noexcept {
     return _tail;
 }
-
 template <class T>
 bool List<T>::is_empty() const noexcept {
     return _head == nullptr && _tail == nullptr;
@@ -75,7 +72,6 @@ void List<T>::push_front(const T& value) noexcept {
     node->next = _head;
     _head = node;
 }
-
 template <class T>
 void List<T>::push_back(const T& value) noexcept{
     Node<T>* node = new Node<T>(value);
@@ -85,4 +81,39 @@ void List<T>::push_back(const T& value) noexcept{
     }
     _tail->next = node;
     _tail = node;
+}
+template <class T>
+void List<T>::pop_front() {
+    if (is_empty()) {
+        throw std::logic_error("Can't pop the first element at empty list!");
+    }
+    if (_head == _tail) {
+        delete _head;
+        _head = nullptr;
+        _tail = nullptr;
+        return;
+    }
+    Node<T>* temporary = _head;
+    _head = _head->next;
+    delete temporary;
+}
+template <class T>
+void List<T>::pop_back() {
+    if (is_empty()) {
+        throw std::logic_error("Can't pop the last element at empty list!");
+    }
+    if (_head == _tail) {
+        delete _head;
+        _tail = nullptr;
+        _head = nullptr;
+        return;
+    }
+    Node<T>* current = _head;
+    while (current->next != _tail) {
+        current = current->next;
+    }
+    Node<T>* temporary = current->next;
+    _tail = current;  
+    delete temporary;
+    
 }
