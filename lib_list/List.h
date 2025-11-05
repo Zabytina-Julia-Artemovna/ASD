@@ -11,11 +11,13 @@ class List {
 private:
     Node<T>* _head;
     Node<T>* _tail;
+    size_t _count_elements;
 public:
     List();
     ~List();
     List(const List<T>& other_list);
 
+    size_t get_size() const noexcept;
     Node<T>* get_head() const noexcept;
     Node<T>* get_tail() const noexcept;
 
@@ -33,7 +35,7 @@ public:
     void erase(Node<T>* node);
 };
 template <class T>
-List<T>::List() : _head(nullptr), _tail(nullptr) {}
+List<T>::List() : _head(nullptr), _tail(nullptr), _count_elements(0) {}
 template <class T>
 List<T>::~List() {
     while (_head != nullptr) {
@@ -43,12 +45,16 @@ List<T>::~List() {
     }
 }
 template <class T>
-List<T>::List(const List<T>& other_list) : _head(nullptr), _tail(nullptr) {
+List<T>::List(const List<T>& other_list) : _head(nullptr), _tail(nullptr), _count_elements(0) {
     Node<T>* current = other_list._head;
     while (current != nullptr) {
         this->push_back(current->value);
         current = current->next;
     }
+}
+template <class T>
+size_t List<T>::get_size() const noexcept { 
+    return _count_elements; 
 }
 template <class T>
 Node<T>* List<T>::get_head() const noexcept {
@@ -68,9 +74,12 @@ void List<T>::push_front(const T& value) noexcept {
     if (is_empty()) {
         _head = node;
         _tail = node;
+        _count_elements++;
+        return;
     }
     node->next = _head;
     _head = node;
+    _count_elements++;
 }
 template <class T>
 void List<T>::push_back(const T& value) noexcept{
@@ -78,9 +87,12 @@ void List<T>::push_back(const T& value) noexcept{
     if (is_empty()) {
         _head = node;
         _tail = node;
+        _count_elements++;
+        return;
     }
     _tail->next = node;
     _tail = node;
+    _count_elements++;
 }
 template <class T>
 void List<T>::pop_front() {
@@ -91,11 +103,13 @@ void List<T>::pop_front() {
         delete _head;
         _head = nullptr;
         _tail = nullptr;
+        _count_elements--;
         return;
     }
     Node<T>* temporary = _head;
     _head = _head->next;
     delete temporary;
+    _count_elements--;
 }
 template <class T>
 void List<T>::pop_back() {
@@ -106,6 +120,7 @@ void List<T>::pop_back() {
         delete _head;
         _tail = nullptr;
         _head = nullptr;
+        _count_elements--;
         return;
     }
     Node<T>* current = _head;
@@ -113,7 +128,8 @@ void List<T>::pop_back() {
         current = current->next;
     }
     Node<T>* temporary = current->next;
-    _tail = current;  
+    _tail = current; 
+    _tail->next = nullptr;
     delete temporary;
-    
+    _count_elements--;  
 }
