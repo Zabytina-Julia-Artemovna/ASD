@@ -22,6 +22,7 @@ public:
     Node<T>* get_tail() const noexcept;
 
     bool operator==(const List<T>& other) const;
+    bool operator!=(const List<T>& other) const;
     List<T>& operator=(const List<T>& other);
 
     bool is_empty() const noexcept;
@@ -132,4 +133,50 @@ void List<T>::pop_back() {
     _tail->next = nullptr;
     delete temporary;
     _count_elements--;  
+}
+template <class T>
+bool List<T>::operator==(const List<T>& other) const {
+    if (this->get_size() != other.get_size()) {
+        return false;
+    }
+    Node<T>* current_this = this->get_head();
+    Node<T>* current_other = other.get_head();
+    while (current_this != nullptr && current_other != nullptr) {
+        if (current_this->value != current_other->value) {
+            return false;
+        }
+        current_this = current_this->next;
+        current_other = current_other->next;
+    }
+    return true;
+}
+template <class T>
+bool List<T>::operator!=(const List<T>& other) const {
+    return !(*this == other);
+}
+template <class T>
+List<T>& List<T>::operator=(const List<T>& other) {
+    if (this != &other) {
+        while (_head != nullptr) {
+            Node<T>* temporary = _head;
+            _head = _head->next;
+            delete temporary;
+        }
+        _tail = nullptr;
+        _count_elements = 0;
+        Node<T>* current = other._head;
+        while (current != nullptr) {
+            push_back(current->value);
+            current = current->next;
+        }
+    }
+    return *this;
+}
+template <class T>
+void List<T>::insert(size_t position, const T& value) {
+
+}
+template <class T>
+void List<T>::insert(Node<T>* node, const T& value) {
+
 }
