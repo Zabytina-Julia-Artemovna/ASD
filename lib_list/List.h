@@ -72,7 +72,7 @@ bool List<T>::is_empty() const noexcept {
 template <class T>
 void List<T>::push_front(const T& value) noexcept {
     Node<T>* node = new Node<T>(value);
-    if (is_empty()) {
+    if (this->is_empty()) {
         _head = node;
         _tail = node;
         _count_elements++;
@@ -83,9 +83,9 @@ void List<T>::push_front(const T& value) noexcept {
     _count_elements++;
 }
 template <class T>
-void List<T>::push_back(const T& value) noexcept{
+void List<T>::push_back(const T& value) noexcept {
     Node<T>* node = new Node<T>(value);
-    if (is_empty()) {
+    if (this->is_empty()) {
         _head = node;
         _tail = node;
         _count_elements++;
@@ -97,7 +97,7 @@ void List<T>::push_back(const T& value) noexcept{
 }
 template <class T>
 void List<T>::pop_front() {
-    if (is_empty()) {
+    if (this->is_empty()) {
         throw std::logic_error("Can't pop the first element at empty list!");
     }
     if (_head == _tail) {
@@ -114,7 +114,7 @@ void List<T>::pop_front() {
 }
 template <class T>
 void List<T>::pop_back() {
-    if (is_empty()) {
+    if (this->is_empty()) {
         throw std::logic_error("Can't pop the last element at empty list!");
     }
     if (_head == _tail) {
@@ -129,17 +129,17 @@ void List<T>::pop_back() {
         current = current->next;
     }
     Node<T>* temporary = current->next;
-    _tail = current; 
+    _tail = current;
     _tail->next = nullptr;
     delete temporary;
-    _count_elements--;  
+    _count_elements--;
 }
 template <class T>
 bool List<T>::operator==(const List<T>& other) const {
     if (this->get_size() != other.get_size()) {
         return false;
     }
-    Node<T>* current_this = this->get_head();
+    Node<T>* current_this = _head;
     Node<T>* current_other = other.get_head();
     while (current_this != nullptr && current_other != nullptr) {
         if (current_this->value != current_other->value) {
@@ -162,11 +162,10 @@ List<T>& List<T>::operator=(const List<T>& other) {
             _head = _head->next;
             delete temporary;
         }
-        _tail = nullptr;
         _count_elements = 0;
         Node<T>* current = other._head;
         while (current != nullptr) {
-            push_back(current->value);
+            this->push_back(current->value);
             current = current->next;
         }
     }
@@ -174,9 +173,86 @@ List<T>& List<T>::operator=(const List<T>& other) {
 }
 template <class T>
 void List<T>::insert(size_t position, const T& value) {
-
+    if (position == 0) {
+        this->push_front(value);
+        return;
+    }
+    if (position == _count_elements - 1) {
+        this->push_back(value);
+        return;
+    }
+    Node<T>* current = _head;
+    size_t current_position = 0;
+    while (current != nullptr && current_position != position-1) {
+        current = current->next;
+        current_position++;
+    }
+    if (current == nullptr) {
+        throw std::invalid_argument("Uncorrect position");
+    }
+    this->insert(current, value);
 }
 template <class T>
 void List<T>::insert(Node<T>* node, const T& value) {
-
+    if (node == nullptr || this->is_empty()) {
+        throw std::logic_error("The transmitted node or/and the list can't be empty!");
+    }
+    Node<T>* new_node = new Node<T>(value);
+    new_node->next = node->next;
+    node->next = new_node;
+    if (node == _tail) {
+        _tail = new_node;
+    }
+    _count_elements++;
+}
+template <class T>
+void List<T>::erase(size_t position) {
+    if (position == 0) {
+        this->pop_front();
+        return;
+    }
+    if (position == _count_elements - 1) {
+        this->pop_back();
+        return;
+    }
+    Node<T>* current = _head;
+    size_t current_position = 0;
+    while (current != nullptr) {
+        if (current_position == position-1) {
+            break;
+        }
+        current = current->next;
+        current_position++;
+    }
+    if (current == nullptr) {
+        throw std::invalid_argument("Uncorrect position");
+    }
+    Node<T>* temporary = current->next;
+    current->next = temporary->next;
+    delete temporary;
+    _count_elements--;
+}
+template <class T>
+void List<T>::erase(Node<T>* node) {
+    if (node == nullptr || this->is_empty()) {
+        throw std::logic_error("The transmitted node or/and the list can't be empty!");
+    }
+    if (node == _head) {
+        this->pop_front();
+        return;
+    }
+    if (node == _tail) {
+        this->pop_back();
+        return;
+    }
+    Node<T>* current = _head;
+    while (current != nullptr && current->next != node) {
+        current = current->next;
+    }
+    if (current == nullptr) {
+        throw std::invalid_argument("Uncorrect position");
+    }
+    current->next = node->next;
+    delete node;
+    _count_elements--;
 }
