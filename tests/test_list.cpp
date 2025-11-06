@@ -110,8 +110,6 @@ TEST(TestListLib, pop_back_with_several_elements_list) {
     EXPECT_EQ(list.get_tail()->value, 30);
     EXPECT_EQ(list.get_size(), 3);
 }
-
-
 TEST(TestListLib, pop_front_with_empty_list_exception) {
     // Arrange & Act
     List<int> list;
@@ -318,4 +316,127 @@ TEST(TestListLib, list_position_insert_with_exception) {
     size_t position = 10;
     // Act & Assert
     ASSERT_THROW(list.insert(position, 500), std::invalid_argument);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEST(TestListLib, list_position_erase_in_begin) {
+    // Arrange
+    List<int> list;
+    list.push_back(60);
+    list.push_back(70);
+    list.push_back(80);
+    list.push_back(90);
+    list.push_back(20);
+    size_t position = 0;
+    // Act
+    list.erase(position);
+    // Assert
+    EXPECT_EQ(list.get_size(), 4);
+    EXPECT_EQ(list.get_head()->value, 70);
+    EXPECT_EQ(list.get_head()->next->value, 80);
+    EXPECT_EQ(list.get_head()->next->next->value, 90);
+    EXPECT_EQ(list.get_head()->next->next->next->value, 20);
+}
+TEST(TestListLib, list_erase_erase_in_end) {
+    // Arrange
+    List<int> list;
+    list.push_back(680);
+    list.push_back(70);
+    list.push_back(80);
+    list.push_back(920);
+    list.push_back(20);
+    size_t position = 4;
+    // Act
+    list.erase(position);
+    // Assert
+    EXPECT_EQ(list.get_size(), 4);
+    EXPECT_EQ(list.get_head()->value, 680);
+    EXPECT_EQ(list.get_head()->next->value, 70);
+    EXPECT_EQ(list.get_head()->next->next->value, 80);
+    EXPECT_EQ(list.get_head()->next->next->next->value, 920);
+}
+TEST(TestListLib, list_position_erase) {
+    // Arrange
+    List<int> list;
+    list.push_back(320);
+    list.push_back(840);
+    list.push_back(30);
+    list.push_back(40);
+    list.push_back(550);
+    size_t position = 3;
+    // Act
+    list.erase(position);
+    // Assert
+    EXPECT_EQ(list.get_size(), 4);
+    EXPECT_EQ(list.get_head()->value, 320);
+    EXPECT_EQ(list.get_head()->next->value, 840);
+    EXPECT_EQ(list.get_head()->next->next->value, 30);
+    EXPECT_EQ(list.get_head()->next->next->next->value, 550);
+}
+TEST(TestListLib, list_position_erase_with_exception1) {
+    // Arrange
+    List<int> list;
+    size_t position = 2;
+    // Act & Assert
+    ASSERT_THROW(list.erase(position), std::logic_error);
+}
+TEST(TestListLib, list_position_erase_with_exception2) {
+    // Arrange
+    List<int> list;
+    list.push_back(32000);
+    list.push_back(8220);
+    list.push_back(320);
+    list.push_back(40);
+    list.push_back(50);
+    size_t position = 10;
+    // Act & Assert
+    ASSERT_THROW(list.erase(position), std::invalid_argument);
+}
+TEST(TestListLib, list_node_erase) {
+    // Arrange
+    List<int> list;
+    list.push_back(3270);
+    list.push_back(840);
+    list.push_back(30);
+    list.push_back(40);
+    list.push_back(55770);
+    Node<int>* node = list.get_head()->next;
+    // Act
+    list.erase(node);
+    // Assert
+    EXPECT_EQ(list.get_size(), 4);
+    EXPECT_EQ(list.get_head()->value, 3270);
+    EXPECT_EQ(list.get_head()->next->value, 30);
+    EXPECT_EQ(list.get_head()->next->next->value, 40);
+    EXPECT_EQ(list.get_head()->next->next->next->value, 55770);
+}
+TEST(TestListLib, list_node_erase_with_exception1) {
+    // Arrange
+    List<int> list;
+    Node<int>* node = list.get_head();
+    // Act & Assert
+    ASSERT_THROW(list.erase(node), std::logic_error);
+}
+TEST(TestListLib, list_node_erase_with_exception2) {
+    // Arrange
+    List<int> list;
+    list.push_back(32000);
+    list.push_back(8220);
+    list.push_back(32100);
+    list.push_back(10);
+    list.push_back(10);
+    Node<int>* node = new Node<int>(2300);
+    // Act & Assert
+    ASSERT_THROW(list.erase(node), std::invalid_argument);
 }
