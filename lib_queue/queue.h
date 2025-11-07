@@ -12,8 +12,8 @@ public:
     explicit Queue(size_t size);
     Queue(const Queue<T>& other);
     ~Queue();
-    inline T head() const noexcept;
-    inline T tail() const noexcept;
+    inline T head() const;
+    inline T tail() const;
     size_t size() const noexcept;
     size_t count() const noexcept;
     bool is_empty() const noexcept;
@@ -39,14 +39,14 @@ Queue<T>::~Queue() {
     _data = nullptr;
 }
 template <class T>
-inline T Queue<T>::head() const noexcept {
+inline T Queue<T>::head() const {
     if (this->is_empty()) {
         throw std::runtime_error("Can't get head: queue is empty");
     }
     return _data[_head];
 }
 template <class T>
-inline T Queue<T>::tail() const noexcept {
+inline T Queue<T>::tail() const {
     if (this->is_empty()) {
         throw std::runtime_error("Can't get tail: queue is empty");
     }
@@ -86,6 +86,8 @@ void  Queue<T>::pop() {
     _count--;
 }
 template <class T>
-void  Queue<T>::clear() noexcept {
-    
+void Queue<T>::clear() noexcept {
+    _head = 0;
+    _tail = 0;
+    _count = 0;
 }
