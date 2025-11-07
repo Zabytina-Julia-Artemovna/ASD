@@ -40,11 +40,17 @@ Queue<T>::~Queue() {
 }
 template <class T>
 inline T Queue<T>::head() const noexcept {
+    if (this->is_empty()) {
+        throw std::runtime_error("Can't get head: queue is empty");
+    }
     return _data[_head];
 }
 template <class T>
 inline T Queue<T>::tail() const noexcept {
-    return _data[(_tail+ _size-1) % _size];
+    if (this->is_empty()) {
+        throw std::runtime_error("Can't get tail: queue is empty");
+    }
+    return _data[(_tail + _size - 1) % _size];
 }
 template <class T>
 size_t Queue<T>::size() const noexcept {
@@ -61,4 +67,25 @@ bool Queue<T>::is_empty() const noexcept {
 template <class T>
 bool Queue<T>::is_full() const noexcept {
     return _count == _size;
+}
+template <class T>
+void  Queue<T>::push(T value) {
+    if (this->is_full()) {
+        throw std::logic_error("The queue is full, you can't push the element");
+    }
+    _data[_tail] = value;
+    _tail = (_tail + 1) % _size;
+    _count++;
+}
+template <class T>
+void  Queue<T>::pop() {
+    if (this->is_empty()) {
+        throw std::logic_error("The queue is empty, you can't pop the element");
+    }
+    _head = (_head + 1) % _size;
+    _count--;
+}
+template <class T>
+void  Queue<T>::clear() noexcept {
+    
 }
