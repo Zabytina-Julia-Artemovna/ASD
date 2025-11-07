@@ -127,7 +127,7 @@ TEST(TestQueueLib, queue_push) {
 }
 TEST(TestQueueLib, queue_pop) {
     // Arrange
-    Queue<int> queue(5);
+    Queue<int> queue(8);
     // Act
     queue.push(88);
     queue.push(54);
@@ -138,4 +138,36 @@ TEST(TestQueueLib, queue_pop) {
     EXPECT_EQ(queue.head(), queue.tail());
     EXPECT_EQ(queue.head(), 27);
     EXPECT_EQ(queue.count(), 1);
+}
+TEST(TestQueueLib, queue_push_exception) {
+    // Arrange
+    Queue<int> queue(3);
+    // Act
+    queue.push(20);
+    queue.push(11);
+    queue.push(37);
+    // Assert
+    ASSERT_THROW(queue.push(10), std::logic_error);
+}
+TEST(TestQueueLib, queue_pop_exception) {
+    // Arrange & Act
+    Queue<int> queue(10);
+    // Assert
+    ASSERT_THROW(queue.pop(), std::logic_error);
+}
+TEST(TestQueueLib, queue_clear) {
+    // Arrange
+    Queue<int> queue(10);
+    queue.push(88);
+    queue.push(44);
+    queue.push(57);
+    queue.push(25);
+    queue.push(41);
+    queue.push(20);
+    queue.push(3);
+    queue.push(9);
+    // Act
+    queue.clear();
+    // Assert
+    EXPECT_EQ(queue.count(), 0);
 }
