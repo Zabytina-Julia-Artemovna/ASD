@@ -113,3 +113,29 @@ TEST(TestQueueLib, queue_circular_behavior) {
     EXPECT_EQ(queue.head(), 2);
     EXPECT_EQ(queue.tail(), 4);
 }
+TEST(TestQueueLib, queue_push) {
+    // Arrange
+    Queue<int> queue(5);
+    // Act
+    queue.push(22);
+    queue.push(44);
+    queue.push(77);
+    // Assert
+    EXPECT_EQ(queue.head(), 22);
+    EXPECT_EQ(queue.tail(), 77);
+    EXPECT_EQ(queue.count(), 3);
+}
+TEST(TestQueueLib, queue_pop) {
+    // Arrange
+    Queue<int> queue(5);
+    // Act
+    queue.push(88);
+    queue.push(54);
+    queue.push(27);
+    queue.pop();
+    queue.pop();
+    // Assert
+    EXPECT_EQ(queue.head(), queue.tail());
+    EXPECT_EQ(queue.head(), 27);
+    EXPECT_EQ(queue.count(), 1);
+}
