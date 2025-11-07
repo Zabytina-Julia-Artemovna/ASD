@@ -64,3 +64,52 @@ TEST(TestQueueLib, queue_is_full_false) {
     // Assert
     EXPECT_FALSE(queue.is_full());
 }
+TEST(TestQueueLib, queue_get_head) {
+    // Arrange
+    size_t size = 6;
+    Queue<int> queue(size);
+    // Act
+    queue.push(10);
+    queue.push(20);
+    queue.push(30);
+    // Assert
+    EXPECT_EQ(queue.head(), 10);
+}
+TEST(TestQueueLib, queue_get_tail) {
+    // Arrange
+    size_t size = 6;
+    Queue<int> queue(size);
+    // Act
+    queue.push(70);
+    queue.push(230);
+    queue.push(50);
+    // Assert
+    EXPECT_EQ(queue.tail(), 50);
+}
+TEST(TestQueueLib, queue_empty_get_head_exception) {
+    // Arrange & Act
+    size_t size = 5;
+    Queue<int> queue(size);
+    // Assert
+    ASSERT_THROW(queue.head(), std::runtime_error);
+}
+TEST(TestQueueLib, queue_empty_get_tail_exception) {
+    // Arrange & Act
+    size_t size = 9;
+    Queue<int> queue(size);
+    // Assert
+    ASSERT_THROW(queue.tail(), std::runtime_error);
+}
+TEST(TestQueueLib, queue_circular_behavior) {
+    // Arrange
+    Queue<int> queue(3);
+    // Act
+    queue.push(1);
+    queue.push(2);
+    queue.push(3);
+    queue.pop();
+    queue.push(4); 
+    // Assert
+    EXPECT_EQ(queue.head(), 2);
+    EXPECT_EQ(queue.tail(), 4);
+}
