@@ -68,7 +68,7 @@ public:
     Iterator end() {
         return Iterator(nullptr);
     }
-    Iterator begin() const {
+      Iterator begin() const {
         return Iterator(_head);
     }
     Iterator end() const {
@@ -198,14 +198,14 @@ bool List<T>::operator==(const List<T>& other) const {
     if (this->get_size() != other.get_size()) {
         return false;
     }
-    Node<T>* current_this = _head;
-    Node<T>* current_other = other.get_head();
-    while (current_this != nullptr && current_other != nullptr) {
-        if (current_this->value != current_other->value) {
+    auto it_this = this->begin();
+    auto it_other = other.begin();
+    while (it_this != this->end() && it_other != other.end()) {
+        if (*it_this != *it_other) {
             return false;
         }
-        current_this = current_this->next;
-        current_other = current_other->next;
+        ++it_this;
+        ++it_other;
     }
     return true;
 }
@@ -222,10 +222,8 @@ List<T>& List<T>::operator=(const List<T>& other) {
             delete temporary;
         }
         _count_elements = 0;
-        Node<T>* current = other._head;
-        while (current != nullptr) {
-            this->push_back(current->value);
-            current = current->next;
+        for (auto it = other.begin(); it != other.end(); ++it) {
+            this->push_back(*it);
         }
     }
     return *this;
