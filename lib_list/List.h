@@ -17,24 +17,32 @@ public:
     private:
         Node<T>* _current;
     public:
-        Iterator();
-        Iterator(Node<T>* node);
-        Iterator(const Iterator& other);
+        Iterator() : _current(nullptr) {}
+        Iterator(Node<T>* node): _current(node) {}
+        Iterator(const Iterator& other): _current(other._current) {}
+        Iterator& operator=(const Iterator& other) {
+            _current = other._current;
+            return *this;
+        }
+        Iterator& operator+=(size_t n) {}
+        Iterator& operator++() {}
+        Iterator operator++(int) {}
 
-        Iterator& operator =(const Iterator& it);
-        Iterator& operator ++();
-        Iterator& operator ++(int);
-        Iterator& operator +=(const Iterator& it);
-        bool operator == (const Iterator& it);
-        bool operator != (const Iterator& it);
-        T& operator*();
+        bool operator==(const Iterator& it) const {}
+        bool operator!=(const Iterator& it) const {}
+
+        T& operator*() {}
+        const T& operator*() const {}
     };
-    Iterator begin();
-    Iterator end();
+    Iterator begin() {
+        return Iterator(_head);
+    }
+    Iterator end() {
+        return Iterator(nullptr);
+    }
     List();
     ~List();
     List(const List<T>& other_list);
-
     size_t get_size() const noexcept;
     Node<T>* get_head() const noexcept;
     Node<T>* get_tail() const noexcept;
@@ -54,15 +62,8 @@ public:
     void erase(Node<T>* node);
 };
 template <class T>
-typename List<T>::Iterator List<T>::begin() {
-    return Iterator(_head);
-}
-template <class T>
-typename List<T>::Iterator List<T>::end() {
-    return Iterator(nullptr);
-}
-template <class T>
 List<T>::List() : _head(nullptr), _tail(nullptr), _count_elements(0) {}
+
 template <class T>
 List<T>::~List() {
     while (_head != nullptr) {
@@ -72,7 +73,8 @@ List<T>::~List() {
     }
 }
 template <class T>
-List<T>::List(const List<T>& other_list) : _head(nullptr), _tail(nullptr), _count_elements(0) {
+List<T>::List(const List<T>& other_list) : _head(nullptr), _tail(nullptr),
+_count_elements(0) {
     Node<T>* current = other_list._head;
     while (current != nullptr) {
         this->push_back(current->value);
@@ -80,8 +82,8 @@ List<T>::List(const List<T>& other_list) : _head(nullptr), _tail(nullptr), _coun
     }
 }
 template <class T>
-size_t List<T>::get_size() const noexcept { 
-    return _count_elements; 
+size_t List<T>::get_size() const noexcept {
+    return _count_elements;
 }
 template <class T>
 Node<T>* List<T>::get_head() const noexcept {
@@ -209,7 +211,7 @@ void List<T>::insert(size_t position, const T& value) {
     }
     Node<T>* current = _head;
     size_t current_position = 0;
-    while (current != nullptr && current_position != position-1) {
+    while (current != nullptr && current_position != position - 1) {
         current = current->next;
         current_position++;
     }
@@ -244,7 +246,7 @@ void List<T>::erase(size_t position) {
     Node<T>* current = _head;
     size_t current_position = 0;
     while (current != nullptr) {
-        if (current_position == position-1) {
+        if (current_position == position - 1) {
             break;
         }
         current = current->next;
