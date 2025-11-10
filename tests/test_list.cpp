@@ -440,3 +440,48 @@ TEST(TestListLib, list_node_erase_with_exception2) {
     // Act & Assert
     ASSERT_THROW(list.erase(node), std::invalid_argument);
 }
+TEST(TestListLib, list_iterator_read) {
+    // Arrange
+    List<int> list;
+    list.push_back(80);
+    list.push_back(320);
+    list.push_back(107);
+    // Act 
+    auto it = list.begin();
+    it += 2;
+    // Assert
+    EXPECT_EQ(107, *it);
+}
+TEST(TestListLib, list_iterator_write) {
+    // Arrange
+    List<int> list;
+    list.push_back(50);
+    list.push_back(20);
+    list.push_back(7);
+    list.push_back(1);
+    list.push_back(300);
+    // Act 
+    auto it = list.begin();
+    it += 3;
+    *it = 900;
+    // Assert
+    EXPECT_EQ(900, *it);
+}
+TEST(TestListLib, list_iterator_empty_list) {
+    // Arrange
+    List<int> list; 
+    // Act & Assert
+    EXPECT_EQ(list.begin(), list.end());
+
+    auto it = list.begin();
+    ++it;
+    EXPECT_EQ(it, list.end());
+
+    auto end_it = list.end();
+    ++end_it;
+    EXPECT_EQ(end_it, list.end());
+
+    auto it2 = list.begin();
+    it2 += 5; 
+    EXPECT_EQ(it2, list.end());
+}
