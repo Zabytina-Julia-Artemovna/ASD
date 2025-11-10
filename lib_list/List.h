@@ -24,7 +24,12 @@ public:
             _current = other._current;
             return *this;
         }
-        Iterator& operator+=(size_t n) {}
+        Iterator& operator+=(size_t n) {
+            for (size_t i = 0; i < n && _current != nullptr; ++i) {
+                _current = _current->next;
+            }
+            return *this;
+        }
         Iterator& operator++() {}
         Iterator operator++(int) {}
 
