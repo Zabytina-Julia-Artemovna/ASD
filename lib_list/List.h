@@ -50,9 +50,15 @@ public:
             return !(*this == it);
         }
         T& operator*() {
+            if (_current == nullptr) {
+                throw std::runtime_error("Dereferencing end iterator");
+            }
             return _current->value;
         }
         const T& operator*() const {
+            if (_current == nullptr) {
+                throw std::runtime_error("Dereferencing end iterator");
+            }
             return _current->value;
         }
     };
@@ -60,6 +66,12 @@ public:
         return Iterator(_head);
     }
     Iterator end() {
+        return Iterator(nullptr);
+    }
+    Iterator begin() const {
+        return Iterator(_head);
+    }
+    Iterator end() const {
         return Iterator(nullptr);
     }
     List();
@@ -85,7 +97,6 @@ public:
 };
 template <class T>
 List<T>::List() : _head(nullptr), _tail(nullptr), _count_elements(0) {}
-
 template <class T>
 List<T>::~List() {
     while (_head != nullptr) {
@@ -97,10 +108,8 @@ List<T>::~List() {
 template <class T>
 List<T>::List(const List<T>& other_list) : _head(nullptr), _tail(nullptr),
 _count_elements(0) {
-    Node<T>* current = other_list._head;
-    while (current != nullptr) {
-        this->push_back(current->value);
-        current = current->next;
+    for (auto it = other_list.begin(); it != other_list.end(); ++it) {
+        this->push_back(*it);
     }
 }
 template <class T>
