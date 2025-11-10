@@ -28,12 +28,16 @@ public:
         Iterator& operator++() {}
         Iterator operator++(int) {}
 
-        bool operator==(const Iterator& it) const {}
-        bool operator!=(const Iterator& it) const {}
-
+        bool operator==(const Iterator& it) const {
+            return this->_current == it._current;
+        }
+        bool operator!=(const Iterator& it) const {
+            return !(*this == it);
+        }
         T& operator*() {}
         const T& operator*() const {}
     };
+
     Iterator begin() {
         return Iterator(_head);
     }
