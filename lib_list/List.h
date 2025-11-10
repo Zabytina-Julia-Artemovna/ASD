@@ -13,6 +13,24 @@ private:
     Node<T>* _tail;
     size_t _count_elements;
 public:
+    class Iterator {
+    private:
+        Node<T>* _current;
+    public:
+        Iterator();
+        Iterator(Node<T>* node);
+        Iterator(const Iterator& other);
+
+        Iterator& operator =(const Iterator& it);
+        Iterator& operator ++();
+        Iterator& operator ++(int);
+        Iterator& operator +=(const Iterator& it);
+        bool operator == (const Iterator& it);
+        bool operator != (const Iterator& it);
+        T& operator*();
+    };
+    Iterator begin();
+    Iterator end();
     List();
     ~List();
     List(const List<T>& other_list);
@@ -35,6 +53,14 @@ public:
     void erase(size_t position);
     void erase(Node<T>* node);
 };
+template <class T>
+typename List<T>::Iterator List<T>::begin() {
+    return Iterator(_head);
+}
+template <class T>
+typename List<T>::Iterator List<T>::end() {
+    return Iterator(nullptr);
+}
 template <class T>
 List<T>::List() : _head(nullptr), _tail(nullptr), _count_elements(0) {}
 template <class T>
