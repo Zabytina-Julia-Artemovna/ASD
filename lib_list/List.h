@@ -37,7 +37,11 @@ public:
             return *this;
         }
         Iterator operator++(int) {
-            
+            Iterator it = *this;
+            if (_current != nullptr) {
+                _current = _current->next;
+            }
+            return it;
         }
         bool operator==(const Iterator& it) const {
             return this->_current == it._current;
