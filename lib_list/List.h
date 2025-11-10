@@ -30,19 +30,28 @@ public:
             }
             return *this;
         }
-        Iterator& operator++() {}
-        Iterator operator++(int) {}
-
+        Iterator& operator++() {
+            if (_current != nullptr) {
+                _current = _current->next;
+            }
+            return *this;
+        }
+        Iterator operator++(int) {
+            
+        }
         bool operator==(const Iterator& it) const {
             return this->_current == it._current;
         }
         bool operator!=(const Iterator& it) const {
             return !(*this == it);
         }
-        T& operator*() {}
-        const T& operator*() const {}
+        T& operator*() {
+            return _current->value;
+        }
+        const T& operator*() const {
+            return _current->value;
+        }
     };
-
     Iterator begin() {
         return Iterator(_head);
     }
