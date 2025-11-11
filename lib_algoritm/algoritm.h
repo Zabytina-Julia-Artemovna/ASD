@@ -1,6 +1,7 @@
 #pragma once
 #include "../lib_matrix/matrix.h"
 #include "../lib_stack/stack.h"
+#include "../lib_list/List.h"
 #include <random>
 #include <utility> 
 #include <stdexcept>
@@ -151,3 +152,23 @@ void read_expression(std::string expression) {
         throw std::invalid_argument("No operands in expression");
     }
 }
+template <class T> 
+bool is_looped(const List<T>& list) {
+    auto it1_fast = list.begin();
+    auto it2_slow = list.begin();
+    while (it1_fast != list.end()) {
+        if (list.is_empty()) {
+            return false;
+        }
+        it2_slow++;
+        it1_fast++;
+        if (it1_fast != list.end()) {
+            it1_fast++;
+        }
+        if (it1_fast == it2_slow) {
+            return true;
+        }
+    }
+    return false;
+}
+
