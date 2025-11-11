@@ -158,4 +158,31 @@ TEST(TestAlgorithmLib, test_read_expression_no_operand_before_opening_bracket) {
     std::string expression = "a ( a + b)";
     EXPECT_THROW(read_expression(expression), std::invalid_argument);
 }
-
+TEST(TestAlgorithmLib, test_find_loop_in_list_1_false) {
+    // Arrange & Act
+    List<int> list;
+    list.push_back(90);
+    list.push_back(30);
+    list.push_back(100);
+    // Assert
+    EXPECT_FALSE(is_looped(list));
+}
+TEST(TestAlgorithmLib, test_find_loop_in_list_1_true) {
+    // Arrange & Act
+    List<int> list;
+    list.push_back(10);
+    list.push_back(20);
+    list.push_back(30);
+    list.push_back(40);
+    list.push_back(30);
+    list.get_tail()->next = list.get_head();
+    // Assert
+    EXPECT_TRUE(is_looped(list));
+    list.get_tail()->next = nullptr;
+}
+TEST(TestAlgorithmLib, test_find_loop_in_list_1_with_empty_list) {
+    // Arrange & Act
+    List<int> list;
+    // Assert
+    EXPECT_FALSE(is_looped(list));
+}
