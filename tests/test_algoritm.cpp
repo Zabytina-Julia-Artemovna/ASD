@@ -165,7 +165,7 @@ TEST(TestAlgorithmLib, test_find_loop_in_list_1_false) {
     list.push_back(30);
     list.push_back(100);
     // Assert
-    EXPECT_FALSE(is_looped(list));
+    EXPECT_FALSE(is_looped1(list));
 }
 TEST(TestAlgorithmLib, test_find_loop_in_list_1_true) {
     // Arrange & Act
@@ -177,12 +177,43 @@ TEST(TestAlgorithmLib, test_find_loop_in_list_1_true) {
     list.push_back(30);
     list.get_tail()->next = list.get_head();
     // Assert
-    EXPECT_TRUE(is_looped(list));
+    EXPECT_TRUE(is_looped1(list));
     list.get_tail()->next = nullptr;
 }
 TEST(TestAlgorithmLib, test_find_loop_in_list_1_with_empty_list) {
     // Arrange & Act
     List<int> list;
     // Assert
-    EXPECT_FALSE(is_looped(list));
+    EXPECT_FALSE(is_looped1(list));
 }
+
+TEST(TestAlgorithmLib, test_find_loop_in_list_2_false) {
+    // Arrange & Act
+    List<int> list;
+    list.push_back(8);
+    list.push_back(5);
+    list.push_back(100);
+    list.push_back(1);
+    // Assert
+    EXPECT_FALSE(is_looped2(list));
+}
+TEST(TestAlgorithmLib, test_find_loop_in_list_2_true) {
+    // Arrange & Act
+    List<int> list;
+    list.push_back(103);
+    list.push_back(2);
+    list.push_back(304);
+    list.push_back(70);
+    list.get_tail()->next = list.get_head();
+    // Assert
+    EXPECT_TRUE(is_looped2(list));
+    list.get_tail()->next = nullptr;
+}
+
+TEST(TestAlgorithmLib, test_find_loop_in_list_2_with_empty_list) {
+    // Arrange & Act
+    List<int> list;
+    // Assert
+    EXPECT_FALSE(is_looped2(list));
+}
+
