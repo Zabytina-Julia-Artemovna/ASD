@@ -153,13 +153,13 @@ void read_expression(std::string expression) {
     }
 }
 template <class T> 
-bool is_looped(const List<T>& list) {
+bool is_looped1(const List<T>& list) {
+    if (list.is_empty()) {
+        return false;
+    }
     auto it1_fast = list.begin();
     auto it2_slow = list.begin();
     while (it1_fast != list.end()) {
-        if (list.is_empty()) {
-            return false;
-        }
         it2_slow++;
         it1_fast++;
         if (it1_fast != list.end()) {
@@ -171,4 +171,32 @@ bool is_looped(const List<T>& list) {
     }
     return false;
 }
+template <class T>
+bool is_looped2(List<T>& list) {
+    if (list.is_empty()) {
+        return false;
+    }
+    Node<T>* original_head = list.get_head();
+    Node<T>* current = list.get_head();
+    Node<T>* prev = nullptr;
+    while (current != nullptr) {
+        Node<T>* next_temp = current->next;
+        current->next = prev;
 
+        prev = current;
+        current = next_temp;
+    }
+    bool has_cycle = (prev == original_head);
+    
+    current = prev; 
+    prev = nullptr;
+    while (current != nullptr) {
+        Node<T>* next_temp = current->next;
+        current->next = prev;
+        prev = current;
+        current = next_temp;
+
+    }
+    return has_cycle;
+}
+    
