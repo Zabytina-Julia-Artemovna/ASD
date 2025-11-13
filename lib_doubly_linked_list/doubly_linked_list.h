@@ -32,7 +32,7 @@ public:
             return *this;
         }
         Iterator& operator-=(size_t n) {
-            for (size_t i = 0; i < n && _current != nullptr; --i) {
+            for (size_t i = 0; i < n && _current != nullptr; ++i) {
                 _current = _current->previous;
             }
             return *this;
@@ -118,7 +118,7 @@ public:
 template <class T>
 DoublyLinkedList<T>::DoublyLinkedList(): _head(nullptr), _tail(nullptr), _count_elements(0) {}
 template <class T>
-DoublyLinkedList<T>::DoublyLinkedList(const DoublyLinkedList<T>& other_list): _head(nullptr), _tail(nullptr), _count_elements(nullptr) {
+DoublyLinkedList<T>::DoublyLinkedList(const DoublyLinkedList<T>& other_list): _head(nullptr), _tail(nullptr), _count_elements(0) {
     for (auto it = other_list.begin(); it != other_list.end(); ++it) {
         this->push_back(*it);
     }
@@ -142,4 +142,39 @@ Node<T>* DoublyLinkedList<T>::get_head() const noexcept {
 template <class T>
 Node<T>* DoublyLinkedList<T>::get_tail() const noexcept {
     return _tail;
+}
+template <class T>
+bool DoublyLinkedList<T>::operator==(const DoublyLinkedList<T>& other) const {
+    if (this->get_size() != other.get_size()) {
+        return false;
+    }
+    auto it_this = this->begin();
+    auto it_other = other.begin();
+    while (it_this != this->end() && it_other != other.end()) {
+        if (*it_this != *it_other) {
+            return false;
+        }
+        ++it_this;
+        ++it_other;
+    }
+    return true;
+}
+template <class T>
+bool DoublyLinkedList<T>::operator!=(const DoublyLinkedList<T>& other) const {
+    return !(*this == other);
+}
+template <class T>
+DoublyLinkedList<T>& DoublyLinkedList<T>::operator=(const DoublyLinkedList<T>& other) {
+    if (this != &other) {
+        while (_head != nullptr) {
+            Node<T>* temporary = _head;
+            _head = _head->next;
+            delete temporary;
+        }
+        _count_elements = 0;
+        for (auto it = other.begin(); it != other.end(); ++it) {
+            this->push_back(*it);
+        }
+    }
+    return *this;
 }
