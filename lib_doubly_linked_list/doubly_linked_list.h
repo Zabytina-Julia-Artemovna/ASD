@@ -115,3 +115,31 @@ public:
     void erase(size_t position);
     void erase(Node<T>* node);
 };
+template <class T>
+DoublyLinkedList<T>::DoublyLinkedList(): _head(nullptr), _tail(nullptr), _count_elements(0) {}
+template <class T>
+DoublyLinkedList<T>::DoublyLinkedList(const DoublyLinkedList<T>& other_list): _head(nullptr), _tail(nullptr), _count_elements(nullptr) {
+    for (auto it = other_list.begin(); it != other_list.end(); ++it) {
+        this->push_back(*it);
+    }
+}
+template <class T>
+DoublyLinkedList<T>::~DoublyLinkedList() {
+    while (_head != nullptr) {
+        Node<T>* temporary = _head;
+        _head = _head->next;
+        delete temporary;
+    }
+}
+template <class T>
+size_t DoublyLinkedList<T>::get_size() const noexcept {
+    return _count_elements;
+}
+template <class T>
+Node<T>* DoublyLinkedList<T>::get_head() const noexcept {
+    return _head;
+}
+template <class T>
+Node<T>* DoublyLinkedList<T>::get_tail() const noexcept {
+    return _tail;
+}
