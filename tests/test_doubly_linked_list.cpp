@@ -201,3 +201,67 @@ TEST(TestDoublyLinkedListLib, push_front_check_boundary_conditions_doubly_linked
     EXPECT_EQ(list.get_head()->previous, nullptr);
     EXPECT_EQ(list.get_tail()->next, nullptr);
 }
+TEST(TestDoublyLinkedListLib, pop_back_with_empty_doubly_linked_list_exception) {
+    // Arrange & Act
+    DoublyLinkedList<int> list;
+    // Assert
+    ASSERT_THROW(list.pop_back(), std::logic_error);
+}
+TEST(TestDoublyLinkedListLib, pop_back_with_one_doubly_linked_list_list) {
+    // Arrange & Act
+    DoublyLinkedList<int> list;
+    list.push_back(30);
+    list.pop_back();
+    // Assert
+    EXPECT_EQ(list.get_head(), nullptr);
+    EXPECT_EQ(list.get_tail(), nullptr);
+    EXPECT_EQ(list.get_size(), 0);
+}
+TEST(TestDoublyLinkedListLib, pop_back_with_several_elements_doubly_linked_list) {
+    // Arrange & Act
+    DoublyLinkedList<int> list;
+    list.push_back(40);
+    list.push_back(44);
+    list.push_back(43);
+    list.push_back(1);
+    list.push_back(5);
+    list.pop_back();
+    list.pop_back();
+    // Assert
+    EXPECT_EQ(list.get_tail()->value, 43);
+    EXPECT_EQ(list.get_size(), 3);
+}
+TEST(TestDoublyLinkedListLib, pop_front_with_empty_doubly_linked_list_exception) {
+    // Arrange & Act
+    DoublyLinkedList<int> list;
+    // Assert
+    ASSERT_THROW(list.pop_front(), std::logic_error);
+}
+TEST(TestDoublyLinkedListLib, pop_front_with_one_element_doubly_linked_list) {
+    // Arrange & Act
+    DoublyLinkedList<int> list;
+    list.push_back(79);
+    list.pop_front();
+    // Assert
+    EXPECT_EQ(list.get_head(), nullptr);
+    EXPECT_EQ(list.get_tail(), nullptr);
+    EXPECT_EQ(list.get_size(), 0);
+}
+TEST(TestDoublyLinkedListLib, pop_front_with_several_elements_doubly_linked_list) {
+    // Arrange & Act
+    DoublyLinkedList<int> list;
+    list.push_back(1110);
+    list.push_back(20);
+    list.push_back(52);
+    list.push_back(4);
+    list.push_back(5220);
+    list.push_back(50);
+    list.push_back(50);
+
+    list.pop_front();
+    list.pop_front();
+    list.pop_front();
+    // Assert
+    EXPECT_EQ(list.get_head()->value, 4);
+    EXPECT_EQ(list.get_size(), 4);
+}
