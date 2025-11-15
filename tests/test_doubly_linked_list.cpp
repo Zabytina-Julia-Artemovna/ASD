@@ -265,3 +265,82 @@ TEST(TestDoublyLinkedListLib, pop_front_with_several_elements_doubly_linked_list
     EXPECT_EQ(list.get_head()->value, 4);
     EXPECT_EQ(list.get_size(), 4);
 }
+TEST(TestDoublyLinkedListLib, doubly_linked_list_position_insert_in_end) {
+    // Arrange
+    DoublyLinkedList<int> list;
+    list.push_back(320);
+    list.push_back(22);
+    list.push_back(1000);
+    list.push_back(42);
+    list.push_back(520);
+    size_t position = 4;
+    // Act
+    list.insert(position, 900);
+    // Assert
+    EXPECT_EQ(list.get_size(), 6);
+    EXPECT_EQ(list.get_head()->value, 320);
+    EXPECT_EQ(list.get_head()->next->value, 22);
+    EXPECT_EQ(list.get_head()->next->next->value, 1000);
+    EXPECT_EQ(list.get_head()->next->next->next->value, 42);
+    EXPECT_EQ(list.get_head()->next->next->next->next->value, 520);
+    EXPECT_EQ(list.get_head()->next->next->next->next->next->value, 900);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_position_insert) {
+    // Arrange
+    DoublyLinkedList<int> list;
+    list.push_back(30);
+    list.push_back(4);
+    list.push_back(30);
+    list.push_back(2);
+    list.push_back(3);
+    size_t position = 2;
+    // Act
+    list.insert(position, 250);
+    // Assert
+    EXPECT_EQ(list.get_size(), 6);
+    EXPECT_EQ(list.get_head()->value, 30);
+    EXPECT_EQ(list.get_head()->next->value, 4);
+    EXPECT_EQ(list.get_head()->next->next->value, 250);
+    EXPECT_EQ(list.get_head()->next->next->next->value, 30);
+    EXPECT_EQ(list.get_head()->next->next->next->next->value, 2);
+    EXPECT_EQ(list.get_head()->next->next->next->next->next->value, 3);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_position_insert_with_exception) {
+    // Arrange
+    DoublyLinkedList<int> list;
+    list.push_back(1);
+    list.push_back(50);
+    list.push_back(30);
+    list.push_back(40);
+    list.push_back(1);
+    size_t position = 10;
+    // Act & Assert
+    ASSERT_THROW(list.insert(position, 500), std::invalid_argument);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_node_insert) {
+    // Arrange
+    DoublyLinkedList<int> list;
+    list.push_back(10);
+    list.push_back(2);
+    list.push_back(30);
+    list.push_back(77);
+    list.push_back(50);
+    // Act
+    Node<int>* node = list.get_head()->next;
+    list.insert(node, 700);
+    // Assert
+    EXPECT_EQ(list.get_size(), 6);
+    EXPECT_EQ(list.get_head()->value, 10);
+    EXPECT_EQ(list.get_head()->next->value, 2);
+    EXPECT_EQ(list.get_head()->next->next->value, 700);
+    EXPECT_EQ(list.get_head()->next->next->next->value, 30);
+    EXPECT_EQ(list.get_head()->next->next->next->next->value, 77);
+    EXPECT_EQ(list.get_head()->next->next->next->next->next->value, 50);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_node_insert_with_exception) {
+    // Arrange 
+    DoublyLinkedList<int> list;
+    Node<int>* node = list.get_head();
+    // Act & Assert
+    ASSERT_THROW(list.insert(node, 1), std::logic_error);
+}
