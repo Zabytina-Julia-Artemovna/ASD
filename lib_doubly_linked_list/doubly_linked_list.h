@@ -189,7 +189,7 @@ void DoublyLinkedList<T>::push_back(const T& value) noexcept {
         _head = node;
         _tail = node;
     }
-    else {
+    else {  
         node->previous = _tail;
         _tail->next = node;
         _tail = node;
@@ -210,4 +210,78 @@ void DoublyLinkedList<T>::push_front(const T& value) noexcept {
     }
     _count_elements++;
 }
- 
+template <class T>
+void DoublyLinkedList<T>::insert(size_t position, const T& value) {
+    if (position == 0) {
+        this->push_front(value);
+        return;
+    }
+    if (position == _count_elements - 1) {
+        this->push_back(value);
+        return;
+    }
+    Node<T>* current = _head;
+    size_t current_position = 0;
+    while (current != nullptr && current_position != position - 1) {
+        current = current->next;
+        current_position++;
+    }
+    if (current == nullptr) {
+        throw std::invalid_argument("Uncorrect position");
+    }
+    this->insert(current, value);
+}
+template <class T>
+void DoublyLinkedList<T>::insert(Node<T>* node, const T& value) {
+    if (node == nullptr || this->is_empty()) {
+        throw std::logic_error("The transmitted node or/and the list can't be empty!");
+    }
+    Node<T>* new_node = new Node<T>(value);
+    new_node->previous = node;
+    new_node->next = node->next;
+
+    node->next = new_node;
+    if (new_node->next != nullptr) {  
+        new_node->next->previous = new_node;
+    }
+    if (node == _tail) {
+        _tail = new_node;
+    }
+    _count_elements++;
+}
+template <class T>
+void DoublyLinkedList<T>::pop_front() {
+    if (this->is_empty()) {
+        throw std::logic_error("Can't pop the first element at empty list!");
+    }
+    if (_head == _tail) {
+        delete _head;
+        _head = nullptr;
+        _tail = nullptr;
+        _count_elements--;
+        return;
+    }
+    Node<T>* temporary = _head;
+    _head = _head->next;
+    _head->previous = nullptr;
+    delete temporary;
+    _count_elements--;
+}
+template <class T>
+void DoublyLinkedList<T>::pop_back() {
+    if (this->is_empty()) {
+        throw std::logic_error("Can't pop the last element at empty list!");
+    }
+    if (_head == _tail) {
+        delete _head;
+        _tail = nullptr;
+        _head = nullptr;
+        _count_elements--;
+        return;
+    }
+    Node<T>* temporary = _tail;
+    _tail = _tail->previous;
+    _tail->next = nullptr;
+    delete temporary;
+    _count_elements--;
+}
