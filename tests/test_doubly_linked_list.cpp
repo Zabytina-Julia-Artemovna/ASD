@@ -39,7 +39,7 @@ TEST(TestDoublyLinkedListLib, doubly_linked_list_is_empty_true) {
 TEST(TestDoublyLinkedListLib, push_back_with_empty_doubly_linked_list) {
     // Arrange & Act
     DoublyLinkedList<int> list;
-    list.push_back(30);
+    list.push_back(19);
     // Assert
     EXPECT_EQ(list.get_size(), 1);
     EXPECT_EQ(list.get_head(), list.get_tail());
@@ -48,13 +48,87 @@ TEST(TestDoublyLinkedListLib, push_back_with_several_elements_doubly_linked_list
     // Arrange & Act
     DoublyLinkedList<int> list;
     list.push_back(300);
-    list.push_back(400);
+    list.push_back(0);
     list.push_back(500);
-    list.push_back(600);
-    list.push_back(700);
+    list.push_back(3);
+    list.push_back(5);
     list.push_back(800);
-    list.push_back(900);
+    list.push_back(2);
     // Assert
-    EXPECT_EQ(list.get_tail()->value, 900);
+    EXPECT_EQ(list.get_tail()->value, 2);
     EXPECT_EQ(list.get_size(), 7);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_operator_equal_true) {
+    // Arrange & Act
+    DoublyLinkedList<int> list1;
+    DoublyLinkedList<int> list2;
+    list1.push_back(20);
+    list1.push_back(20);
+    list1.push_back(20);
+
+    list2.push_back(20);
+    list2.push_back(20);
+    list2.push_back(20);
+    // Assert
+    EXPECT_TRUE(list1 == list2);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_operator_equal_false) {
+    // Arrange & Act
+    DoublyLinkedList<int> list1;
+    DoublyLinkedList<int> list2;
+    list1.push_back(29);
+    list1.push_back(40);
+    list1.push_back(22);
+    list1.push_back(100);
+
+    list2.push_back(30);
+    list2.push_back(88);
+    list2.push_back(66);
+    // Assert
+    EXPECT_FALSE(list1 == list2);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_operator_not_equal_true) {
+    // Arrange & Act
+    DoublyLinkedList<int> list1;
+    DoublyLinkedList<int> list2;
+    list1.push_back(70);
+    list1.push_back(80);
+    list1.push_back(90);
+    list1.push_back(700);
+
+    list2.push_back(1);
+    list2.push_back(2);
+    list2.push_back(3);
+    // Assert
+    EXPECT_TRUE(list1 != list2);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_operator_not_equal_false) {
+    // Arrange & Act
+    DoublyLinkedList<int> list1;
+    DoublyLinkedList<int> list2;
+    list1.push_back(70);
+    list1.push_back(70);
+    list1.push_back(70);
+
+    list2.push_back(70);
+    list2.push_back(70);
+    list2.push_back(70);
+    // Assert
+    EXPECT_FALSE(list1 != list2);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_operator_assign) {
+    // Arrange & Act
+    DoublyLinkedList<int> list1;
+    DoublyLinkedList<int> list2;
+    list1.push_back(30);
+    list1.push_back(800);
+    list1.push_back(70);
+    list1.push_back(600);
+
+    list2.push_back(30);
+    list2.push_back(20);
+    list2.push_back(30);
+    list2 = list1;
+    // Assert
+    EXPECT_TRUE(list1 == list2);
 }
