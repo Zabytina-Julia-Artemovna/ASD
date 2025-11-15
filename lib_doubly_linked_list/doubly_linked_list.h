@@ -188,10 +188,26 @@ void DoublyLinkedList<T>::push_back(const T& value) noexcept {
     if (this->is_empty()) {
         _head = node;
         _tail = node;
-        _count_elements++;
-        return;
     }
-    _tail->next = node;
-    _tail = node;
+    else {
+        node->previous = _tail;
+        _tail->next = node;
+        _tail = node;
+    }
     _count_elements++;
 }
+template <class T>
+void DoublyLinkedList<T>::push_front(const T& value) noexcept {
+    Node<T>* node = new Node<T>(value);
+    if (this->is_empty()) {
+        _head = node;
+        _tail = node;
+    }
+    else {
+        _head->previous = node;
+        node->next = _head;
+        _head = node;
+    }
+    _count_elements++;
+}
+ 
