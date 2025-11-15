@@ -178,3 +178,20 @@ DoublyLinkedList<T>& DoublyLinkedList<T>::operator=(const DoublyLinkedList<T>& o
     }
     return *this;
 }
+template <class T>
+bool DoublyLinkedList<T>::is_empty() const noexcept {
+    return _head == nullptr && _tail == nullptr;
+}
+template <class T>
+void DoublyLinkedList<T>::push_back(const T& value) noexcept {
+    Node<T>* node = new Node<T>(value);
+    if (this->is_empty()) {
+        _head = node;
+        _tail = node;
+        _count_elements++;
+        return;
+    }
+    _tail->next = node;
+    _tail = node;
+    _count_elements++;
+}
