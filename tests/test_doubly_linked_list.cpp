@@ -132,3 +132,72 @@ TEST(TestDoublyLinkedListLib, doubly_linked_list_operator_assign) {
     // Assert
     EXPECT_TRUE(list1 == list2);
 }
+TEST(TestDoublyLinkedListLib, push_front_with_empty_doubly_linked_list) {
+    // Arrange & Act
+    DoublyLinkedList<int> list;
+    list.push_front(10);
+    // Assert
+    EXPECT_EQ(list.get_size(), 1);
+    EXPECT_EQ(list.get_head(), list.get_tail());
+}
+TEST(TestDoublyLinkedListLib, push_front_with_several_elements_doubly_linked_list) {
+    // Arrange & Act
+    DoublyLinkedList<int> list;
+    list.push_front(100);
+    list.push_front(550);
+    list.push_front(39);
+    list.push_front(400);
+    list.push_front(30);
+    // Assert
+    EXPECT_EQ(list.get_head()->value, 30);
+    EXPECT_EQ(list.get_size(), 5);
+}
+TEST(TestDoublyLinkedListLib, push_back_check_ñonnections_between_nodes_doubly_linked_list) {
+    // Arrange & Act
+    DoublyLinkedList<int> list;
+    list.push_back(10);
+    list.push_back(20);
+    list.push_back(30);
+    // Assert
+    EXPECT_EQ(list.get_head()->value, 10);
+    EXPECT_EQ(list.get_head()->next->value, 20);
+    EXPECT_EQ(list.get_head()->next->next->value, 30);
+
+    EXPECT_EQ(list.get_tail()->value, 30);
+    EXPECT_EQ(list.get_tail()->previous->value, 20);
+    EXPECT_EQ(list.get_tail()->previous->previous->value, 10);
+}
+TEST(TestDoublyLinkedListLib, push_back_check_boundary_conditions_doubly_linked_list) {
+    // Arrange & Act
+    DoublyLinkedList<int> list;
+    list.push_back(10);
+    list.push_back(20);
+    list.push_back(30);
+    // Assert
+    EXPECT_EQ(list.get_head()->previous, nullptr);
+    EXPECT_EQ(list.get_tail()->next, nullptr);
+}
+TEST(TestDoublyLinkedListLib, push_front_check_ñonnections_between_nodes_doubly_linked_list) {
+    DoublyLinkedList<int> list; 
+    list.push_front(10);
+    list.push_front(20); 
+    list.push_front(30);
+
+    EXPECT_EQ(list.get_head()->value, 30);
+    EXPECT_EQ(list.get_head()->next->value, 20);
+    EXPECT_EQ(list.get_head()->next->next->value, 10);
+
+    EXPECT_EQ(list.get_tail()->value, 10);
+    EXPECT_EQ(list.get_tail()->previous->value, 20);
+    EXPECT_EQ(list.get_tail()->previous->previous->value, 30);
+}
+TEST(TestDoublyLinkedListLib, push_front_check_boundary_conditions_doubly_linked_list) {
+    // Arrange & Act
+    DoublyLinkedList<int> list;
+    list.push_front(10);
+    list.push_front(20);
+    list.push_front(30);
+    // Assert
+    EXPECT_EQ(list.get_head()->previous, nullptr);
+    EXPECT_EQ(list.get_tail()->next, nullptr);
+}
