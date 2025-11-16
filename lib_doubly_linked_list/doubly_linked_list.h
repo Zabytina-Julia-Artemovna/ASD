@@ -205,27 +205,23 @@ void DoublyLinkedList<T>::push_front(const T& value) noexcept {
 template <class T>
 void DoublyLinkedList<T>::insert(size_t position, const T& value) {
     if (position == 0) {
-        push_front(value);
+        this->push_front(value);
         return;
     }
-    if (position >= _count_elements) {
-        push_back(value);
+    if (position == _count_elements - 1) {
+        this->push_back(value);
         return;
     }
-    Node<T>* current;
-    if (position <= _count_elements / 2) {
-        current = _head;
-        for (size_t i = 0; i < position - 1; ++i) {
-            current = current->next;
-        }
+    Node<T>* current = _head;
+    size_t current_position = 0;
+    while (current != nullptr && current_position != position - 1) {
+        current = current->next;
+        current_position++;
     }
-    else {
-        current = _tail;
-        for (size_t i = _count_elements - 1; i > position - 1; --i) {
-            current = current->previous;
-        }
+    if (current == nullptr) {
+        throw std::invalid_argument("Uncorrect position");
     }
-    insert(current, value);
+    this->insert(current, value);
 }
 template <class T>
 void DoublyLinkedList<T>::insert(Node<T>* node, const T& value) {
