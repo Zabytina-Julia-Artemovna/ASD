@@ -31,6 +31,74 @@
         void reserve(size_t new_capacity);
         void compact_storage();
     public:
+        class Iterator {
+        private:
+            T* _current;
+        public:
+            Iterator() : _current(nullptr) {}
+            Iterator(T* ptr) : _current(ptr) {}
+            Iterator(const Iterator& other) : _current(other._current) {}
+            Iterator& operator=(const Iterator& other) {
+                _current = other._current;
+                return *this;
+            }
+            Iterator& operator+=(size_t n) {
+                if (_current != nullptr) {
+                    _current += n;
+               }
+                return *this;
+            }
+            Iterator& operator-=(size_t n) {
+                if (_current != nullptr) {
+                    _current -= n;
+                }
+                return *this;
+            }
+            Iterator& operator--() {
+                if (_current != nullptr) {
+                    _current --;
+                }
+                return *this;
+            }
+            Iterator operator--(int) {
+                Iterator it = *this;
+                if (_current != nullptr) {
+                    _current --;
+                }
+                return it;
+            }
+            Iterator& operator++() {
+                if (_current != nullptr) {
+                    _current ++;
+                }
+                return *this;
+            }
+            Iterator operator++(int) {
+                Iterator it = *this;
+                if (_current != nullptr) {
+                    _current ++;
+                }
+                return it;
+            }
+            bool operator==(const Iterator& it) const {
+                return this->_current == it._current;
+            }
+            bool operator!=(const Iterator& it) const {
+                return !(*this == it);
+            }
+            T& operator*() {
+                if (_current == nullptr) {
+                    throw std::runtime_error("Dereferencing nullptr");
+                }
+                return *_current;
+            }
+            const T& operator*() const {
+                if (_current == nullptr) {
+                    throw std::runtime_error("Dereferencing nullptr");
+                }
+                return *_current;
+            }
+        };
         Tvector() noexcept;
         Tvector(size_t size);
         Tvector(T* data, size_t size);
