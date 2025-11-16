@@ -344,3 +344,150 @@ TEST(TestDoublyLinkedListLib, doubly_linked_list_node_insert_with_exception) {
     // Act & Assert
     ASSERT_THROW(list.insert(node, 1), std::logic_error);
 }
+
+
+TEST(TestDoublyLinkedListLib, doubly_linked_list_position_erase_in_begin) {
+    // Arrange
+    DoublyLinkedList<int> list;
+    list.push_back(3);
+    list.push_back(7);
+    list.push_back(830);
+    list.push_back(1);
+    list.push_back(20);
+    size_t position = 0;
+    // Act
+    list.erase(position);
+    // Assert
+    EXPECT_EQ(list.get_size(), 4);
+    EXPECT_EQ(list.get_head()->value, 7);
+    EXPECT_EQ(list.get_head()->next->value, 830);
+    EXPECT_EQ(list.get_head()->next->next->value, 1);
+    EXPECT_EQ(list.get_head()->next->next->next->value, 20);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_position_erase_in_end) {
+    // Arrange
+    DoublyLinkedList<int> list;
+    list.push_back(60);
+    list.push_back(2);
+    list.push_back(80);
+    list.push_back(90);
+    list.push_back(20);
+    size_t position = 4;
+    // Act
+    list.erase(position);
+    // Assert
+    EXPECT_EQ(list.get_size(), 4);
+    EXPECT_EQ(list.get_head()->value, 60);
+    EXPECT_EQ(list.get_head()->next->value, 2);
+    EXPECT_EQ(list.get_head()->next->next->value, 80);
+    EXPECT_EQ(list.get_head()->next->next->next->value, 90);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_position_erase) {
+    // Arrange
+    DoublyLinkedList<int> list;
+    list.push_back(320);
+    list.push_back(4);
+    list.push_back(0);
+    list.push_back(40);
+    list.push_back(570);
+    size_t position = 3;
+    // Act
+    list.erase(position);
+    // Assert
+    EXPECT_EQ(list.get_size(), 4);
+    EXPECT_EQ(list.get_head()->value, 320);
+    EXPECT_EQ(list.get_head()->next->value, 4);
+    EXPECT_EQ(list.get_head()->next->next->value, 0);
+    EXPECT_EQ(list.get_head()->next->next->next->value, 570);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_position_erase_with_exception1) {
+    // Arrange
+    DoublyLinkedList<int> list;
+    size_t position = 100;
+    // Act & Assert
+    ASSERT_THROW(list.erase(position), std::invalid_argument);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_position_erase_with_exception2) {
+    // Arrange
+    DoublyLinkedList<int> list;
+    list.push_back(32000);
+    list.push_back(8220);
+    list.push_back(320);
+    list.push_back(40);
+    list.push_back(50);
+    size_t position = 20;
+    // Act & Assert
+    ASSERT_THROW(list.erase(position), std::invalid_argument);
+}
+
+TEST(TestDoublyLinkedListLib, doubly_linked_list_node_erase) {
+    // Arrange
+    DoublyLinkedList<int> list;
+    list.push_back(1);
+    list.push_back(840007);
+    list.push_back(3);
+    list.push_back(40);
+    list.push_back(55770);
+    Node<int>* node = list.get_head()->next;
+    // Act
+    list.erase(node);
+    // Assert
+    EXPECT_EQ(list.get_size(), 4);
+    EXPECT_EQ(list.get_head()->value, 1);
+    EXPECT_EQ(list.get_head()->next->value, 3);
+    EXPECT_EQ(list.get_head()->next->next->value, 40);
+    EXPECT_EQ(list.get_head()->next->next->next->value, 55770);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_node_erase_with_exception) {
+    // Arrange
+    DoublyLinkedList<int> list;
+    Node<int>* node = list.get_head();
+    // Act & Assert
+    ASSERT_THROW(list.erase(node), std::logic_error);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_iterator_read) {
+    // Arrange
+    DoublyLinkedList<int> list;
+    list.push_back(1);
+    list.push_back(3);
+    list.push_back(17);
+    // Act 
+    auto it = list.begin();
+    it += 2;
+    // Assert
+    EXPECT_EQ(17, *it);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_iterator_write) {
+    // Arrange
+    DoublyLinkedList<int> list;
+    list.push_back(50);
+    list.push_back(1);
+    list.push_back(79876);
+    list.push_back(12);
+    list.push_back(300);
+    // Act 
+    auto it = list.begin();
+    it += 3;
+    // Assert
+    EXPECT_EQ(12, *it);
+    *it = 900;
+    EXPECT_EQ(900, *it);
+}
+TEST(TestDoublyLinkedListLib, doubly_linked_list_iterator_empty_list) {
+    // Arrange
+    DoublyLinkedList<int> list;
+    // Act & Assert
+    EXPECT_EQ(list.begin(), list.end());
+
+    auto it = list.begin();
+    ++it;
+    EXPECT_EQ(it, list.end());
+
+    auto end_it = list.end();
+    ++end_it;
+    EXPECT_EQ(end_it, list.end());
+
+    auto it2 = list.begin();
+    it2 += 5;
+    EXPECT_EQ(it2, list.end());
+}
