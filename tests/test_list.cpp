@@ -317,19 +317,6 @@ TEST(TestListLib, list_position_insert_with_exception) {
     // Act & Assert
     ASSERT_THROW(list.insert(position, 500), std::invalid_argument);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 TEST(TestListLib, list_position_erase_in_begin) {
     // Arrange
     List<int> list;
@@ -348,7 +335,7 @@ TEST(TestListLib, list_position_erase_in_begin) {
     EXPECT_EQ(list.get_head()->next->next->value, 90);
     EXPECT_EQ(list.get_head()->next->next->next->value, 20);
 }
-TEST(TestListLib, list_erase_erase_in_end) {
+TEST(TestListLib, list_position_erase_in_end) {
     // Arrange
     List<int> list;
     list.push_back(680);
