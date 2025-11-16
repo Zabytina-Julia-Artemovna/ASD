@@ -103,7 +103,7 @@ public:
 
     bool operator==(const DoublyLinkedList<T>& other) const;
     bool operator!=(const DoublyLinkedList<T>& other) const;
-    DoublyLinkedList<T>& operator=(const DoublyLinkedList<T>& other);
+    DoublyLinkedList<T>& operator=(const DoublyLinkedList<T> other);
 
     bool is_empty() const noexcept;
     void push_back(const T& value) noexcept;
@@ -164,18 +164,10 @@ bool DoublyLinkedList<T>::operator!=(const DoublyLinkedList<T>& other) const {
     return !(*this == other);
 }
 template <class T>
-DoublyLinkedList<T>& DoublyLinkedList<T>::operator=(const DoublyLinkedList<T>& other) {
-    if (this != &other) {
-        while (_head != nullptr) {
-            Node<T>* temporary = _head;
-            _head = _head->next;
-            delete temporary;
-        }
-        _count_elements = 0;
-        for (auto it = other.begin(); it != other.end(); ++it) {
-            this->push_back(*it);
-        }
-    }
+DoublyLinkedList<T>& DoublyLinkedList<T>::operator=(DoublyLinkedList<T> other) { 
+    std::swap(_head, other._head);
+    std::swap(_tail, other._tail);
+    std::swap(_count_elements, other._count_elements);
     return *this;
 }
 template <class T>
@@ -213,23 +205,27 @@ void DoublyLinkedList<T>::push_front(const T& value) noexcept {
 template <class T>
 void DoublyLinkedList<T>::insert(size_t position, const T& value) {
     if (position == 0) {
-        this->push_front(value);
+        push_front(value);
         return;
     }
-    if (position == _count_elements - 1) {
-        this->push_back(value);
+    if (position >= _count_elements) {
+        push_back(value);
         return;
     }
-    Node<T>* current = _head;
-    size_t current_position = 0;
-    while (current != nullptr && current_position != position - 1) {
-        current = current->next;
-        current_position++;
+    Node<T>* current;
+    if (position <= _count_elements / 2) {
+        current = _head;
+        for (size_t i = 0; i < position - 1; ++i) {
+            current = current->next;
+        }
     }
-    if (current == nullptr) {
-        throw std::invalid_argument("Uncorrect position");
+    else {
+        current = _tail;
+        for (size_t i = _count_elements - 1; i > position - 1; --i) {
+            current = current->previous;
+        }
     }
-    this->insert(current, value);
+    insert(current, value);
 }
 template <class T>
 void DoublyLinkedList<T>::insert(Node<T>* node, const T& value) {
