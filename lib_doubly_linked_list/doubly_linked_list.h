@@ -285,3 +285,51 @@ void DoublyLinkedList<T>::pop_back() {
     delete temporary;
     _count_elements--;
 }
+template <class T>
+void DoublyLinkedList<T>::erase(size_t position) {
+    if (position == 0) {
+        this->pop_front();
+        return;
+    }
+    if (position == _count_elements - 1) {
+        this->pop_back();
+        return;
+    }
+    Node<T>* current = _head;
+    size_t current_position = 0;
+    while (current != nullptr) {
+        if (current_position == position) {
+            break;
+        }
+        current = current->next;
+        current_position++;
+    }
+    if (current == nullptr) {
+        throw std::invalid_argument("Uncorrect position");
+    }
+
+    Node<T>* temporary = current;
+    current->previous->next = current->next;
+    current->next->previous = current->previous;
+    delete temporary;
+    _count_elements--;
+}
+template <class T>
+void DoublyLinkedList<T>::erase(Node<T>* node) {
+    if (node == nullptr || this->is_empty()) {
+        throw std::logic_error("The transmitted node or/and the list can't be empty!");
+    }
+    if (node == _head) {
+        this->pop_front();
+        return;
+    }
+    if (node == _tail) {
+        this->pop_back();
+        return;
+    } // 10 20 <- 30 -> 40 50
+    Node<T>* temporary = node;
+    temporary->previous->next = temporary->next;
+    temporary->next->previous = temporary->previous;
+    delete temporary;
+    _count_elements--;
+}
