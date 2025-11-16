@@ -119,28 +119,6 @@ TEST(TestVectorLib, get_capacity) {
     size_t expected_result = capacity;
     EXPECT_EQ(expected_result, actual_result);
 }
-TEST(TestVectorLib, get_begin) {
-    // Arrange
-    int data[3] = { 1,2,3 };
-    size_t size = 3;
-    Tvector<int> vector(data, size);
-    // Act
-    int* actual_result = vector.begin();
-    // Assert
-    int* expected_result = &(vector.get_data()[0]);
-    EXPECT_EQ(expected_result, actual_result);
-}
-TEST(TestVectorLib, get_end) {
-    // Arrange
-    int data[3] = { 1,2,3 };
-    size_t size = 3;
-    Tvector<int> vector(data, size);
-    // Act
-    int* actual_result = vector.end();
-    // Assert
-    int* expected_result = &(vector.get_data()[0]) + size;
-    EXPECT_EQ(expected_result, actual_result);
-}
 TEST(TestVectorLib, comparison_operator_true) {
     // Arrange
     int data[3] = { 1,2,3 };
@@ -516,4 +494,52 @@ TEST(TestVectorLib, find_count_of_suitable_elements) {
     // Assert
     size_t expected_result = 4;
     EXPECT_EQ(expected_result, actual_result);
+}
+TEST(TestVectorLib, vector_iterator_read) {
+    // Arrange
+    Tvector<int> vector;
+    vector.push_back(3);
+    vector.push_back(400);
+    vector.push_back(109);
+    vector.push_back(1);
+    vector.push_back(2);
+    // Act 
+    auto it = vector.begin();
+    it += 3;
+    // Assert
+    EXPECT_EQ(1, *it);
+}
+TEST(TestVectorLib, vector_iterator_write) {
+    // Arrange
+    Tvector<int> vector;
+    vector.push_back(1);
+    vector.push_back(34);
+    vector.push_back(17);
+    vector.push_back(12);
+    vector.push_back(3);
+    // Act 
+    auto it = vector.begin();
+    it += 3;
+    // Assert
+    EXPECT_EQ(12, *it);
+    *it = 900;
+    EXPECT_EQ(900, *it);
+}
+TEST(TestVectorLib, vector_iterator_empty_list) {
+    // Arrange
+    Tvector<int> vector;
+    // Act & Assert
+    EXPECT_EQ(vector.begin(), vector.end());
+
+    auto it = vector.begin();
+    ++it;
+    EXPECT_EQ(it, vector.end());
+
+    auto end_it = vector.end();
+    ++end_it;
+    EXPECT_EQ(end_it, vector.end());
+
+    auto it2 = vector.begin();
+    it2 += 7;
+    EXPECT_EQ(it2, vector.end());
 }
