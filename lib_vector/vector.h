@@ -96,6 +96,7 @@
                 if (_current == nullptr) {
                     throw std::runtime_error("Dereferencing nullptr");
                 }
+                return *_current;
             }
         };
         Tvector() noexcept;
@@ -134,11 +135,11 @@
         size_t get_capacity() const noexcept {
             return _capacity;
         }
-        inline Iterator* begin() const noexcept {
-            return Iterator(_head);
+        inline Iterator begin() const noexcept {
+            return Iterator(_data);
         }
-        inline Iterator* end() const noexcept {
-            return Iterator(nullptr);
+        inline Iterator end() const noexcept {
+            return Iterator(_data + _size);
         }
         bool operator==(const Tvector<T>& vector) const;
         bool operator!=(const Tvector<T>& vector) const;
