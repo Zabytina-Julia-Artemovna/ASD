@@ -169,7 +169,7 @@ bool is_looped1(const List<T>& list) {
             return true;
         }
     }
-    return false;
+    return false; 
 }
 template <class T>
 bool is_looped2(List<T>& list) {
@@ -199,4 +199,29 @@ bool is_looped2(List<T>& list) {
     }
     return has_cycle;
 }
-    
+template <class T>
+Node<T>* find_loop_start(List<T>& list) {
+    if (list.is_empty()) {
+        return nullptr;
+    }
+    Node<T>* slow = list.get_head();
+    Node<T>* fast = list.get_head();
+
+    while (fast != nullptr && fast->next != nullptr) {
+        slow = slow->next;
+        fast = fast->next->next;
+
+        if (slow == fast) {
+            break;
+        }
+    }
+    if (fast == nullptr || fast->next == nullptr) {
+        return nullptr;
+    }
+    slow = list.get_head();
+    while (slow != fast) {
+        slow = slow->next;
+        fast = fast->next;
+    }
+    return slow;
+}
