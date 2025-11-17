@@ -204,24 +204,24 @@ Node<T>* find_loop_start(List<T>& list) {
     if (list.is_empty()) {
         return nullptr;
     }
-    Node<T>* slow = list.get_head();
-    Node<T>* fast = list.get_head();
+    Node<T>* it2_slow = list.get_head();
+    Node<T>* it1_fast = list.get_head();
 
-    while (fast != nullptr && fast->next != nullptr) {
-        slow = slow->next;
-        fast = fast->next->next;
+    while (it1_fast != nullptr && it1_fast->next != nullptr) {
+        it2_slow = it2_slow->next;
+        it1_fast = it1_fast->next->next;
 
-        if (slow == fast) {
+        if (it2_slow == it1_fast) {
             break;
         }
     }
-    if (fast == nullptr || fast->next == nullptr) {
+    if (it1_fast == nullptr || it1_fast->next == nullptr) {
         return nullptr;
     }
-    slow = list.get_head();
-    while (slow != fast) {
-        slow = slow->next;
-        fast = fast->next;
+    it2_slow = list.get_head();
+    while (it2_slow != it1_fast) {
+        it2_slow = it2_slow->next;
+        it1_fast = it1_fast->next;
     }
-    return slow;
+    return it2_slow;
 }
