@@ -4,10 +4,11 @@ template <class T>
 class QueueOnList {
 private:
     List<T> _list;
-    size_t _size;
+    size_t _max_size;  
+    bool _has_max_size = false;
 public:
-    QueueOnList(size_t size = 0) : _size(size) {};
-    QueueOnList(const QueueOnList<T>& other): _list(other._list){}
+    QueueOnList(size_t size = 0);
+    QueueOnList(const QueueOnList<T>& other);
     ~QueueOnList() = default;
     inline T head() const;
     inline T tail() const;
@@ -15,8 +16,22 @@ public:
     bool is_empty() const noexcept;
     void push(T value);
     void pop();
+    inline bool is_full() const noexcept;
     void clear() noexcept;
 };
+template <class T>
+QueueOnList<T>::QueueOnList(size_t size) {
+    _max_size = size;
+    if (_max_size != 0) {
+        _has_max_size = true;
+    }
+}
+template <class T>
+QueueOnList<T>::QueueOnList(const QueueOnList<T>& other) {
+    _list = other._list;
+    _max_size = other._max_size;
+    _has_max_size = other._has_max_size;
+}
 template <class T>
 T QueueOnList<T>::head() const {
     if (_list.is_empty()) {
@@ -41,6 +56,9 @@ bool QueueOnList<T>::is_empty() const noexcept {
 }
 template <class T>
 void QueueOnList<T>::push(T value) {
+    if (is_full()) {
+        throw std::logic_error("Can't push element: queue is full");
+    }
     _list.push_back(value);
 }
 template <class T>
@@ -49,6 +67,13 @@ void QueueOnList<T>::pop() {
         throw std::logic_error("Can't pop from empty queue");
     }
     _list.pop_front();
+}
+template <class T>
+bool QueueOnList<T>::is_full() const noexcept {
+    if (_has_max_size == false) {
+        return false;
+    }
+    return _max_size == _list.get_size();
 }
 template <class T>
 void QueueOnList<T>::clear() noexcept {
