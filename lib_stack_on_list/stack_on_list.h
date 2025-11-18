@@ -17,7 +17,6 @@ public:
     void pop();
     inline T top() const;
     inline bool is_empty() const noexcept;
-    inline bool is_full() const noexcept;
     void clear() noexcept;
     size_t size() const noexcept;
 };
