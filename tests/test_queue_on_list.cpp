@@ -168,3 +168,65 @@ TEST(TestQueueOnListLib, queue_clear) {
     EXPECT_TRUE(queue.is_empty());
     EXPECT_EQ(queue.max_size(), 10);
 }
+TEST(TestQueueOnListLib, queue_operator_assign) {
+    // Arrange 
+    QueueOnList<int> queue1(10);
+    queue1.push(2);
+    queue1.push(3);
+    queue1.push(4);
+    QueueOnList<int> queue2;
+    // Act
+    queue1 = queue2;
+    // Assert
+    EXPECT_TRUE(queue1 == queue2);
+}
+TEST(TestQueueOnListLib, queue_operator_equal_true) {
+    // Arrange & Act
+    QueueOnList<int> queue1;
+    queue1.push(2);
+    queue1.push(3);
+    queue1.push(4);
+    QueueOnList<int> queue2;
+    queue2.push(2);
+    queue2.push(3);
+    queue2.push(4);
+    // Assert
+    EXPECT_TRUE(queue1 == queue2);
+}
+TEST(TestQueueOnListLib, queue_operator_equal_false) {
+    // Arrange & Act
+    QueueOnList<int> queue1;
+    queue1.push(2);
+    queue1.push(3);
+    queue1.push(4);
+    QueueOnList<int> queue2;
+    queue2.push(2);
+    queue2.push(4);
+    queue2.push(4);
+    // Assert
+    EXPECT_FALSE(queue1 == queue2);
+}
+TEST(TestQueueOnListLib, queue_operator_not_equal_true) {
+    // Arrange & Act
+    QueueOnList<int> queue1;
+    queue1.push(2);
+    queue1.push(3);
+    queue1.push(4);
+    QueueOnList<int> queue2;
+    queue2.push(10);
+    // Assert
+    EXPECT_TRUE(queue1 != queue2);
+}
+TEST(TestQueueOnListLib, queue_operator_not_equal_false) {
+    // Arrange & Act
+    QueueOnList<int> queue1;
+    queue1.push(2);
+    queue1.push(2);
+    queue1.push(2);
+    QueueOnList<int> queue2;
+    queue2.push(2);
+    queue2.push(2);
+    queue2.push(2);
+    // Assert
+    EXPECT_FALSE(queue1 != queue2);
+}
