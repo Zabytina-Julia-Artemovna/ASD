@@ -18,10 +18,16 @@ public:
 };
 template <class T>
 T QueueOnList<T>::head() const {
+    if (_list.is_empty()) {
+        throw std::runtime_error("Can't get head: queue is empty");
+    }
     return *(_list.begin());
 }
 template <class T>
 T QueueOnList<T>::tail() const {
+    if (this->is_empty()) {
+        throw std::runtime_error("Can't get tail: queue is empty");
+    }
     return _list.get_last_element();
 }
 template <class T>
