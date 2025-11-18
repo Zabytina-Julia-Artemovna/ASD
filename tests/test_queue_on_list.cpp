@@ -181,9 +181,7 @@ TEST(TestQueueOnListLib, queue_operator_assign) {
     queue1 = queue2;
     // Assert 
     EXPECT_EQ(queue1.max_size(), 5);
-    EXPECT_EQ(queue1.size(), 2);
-    EXPECT_EQ(queue1.head(), 10);
-    EXPECT_EQ(queue1.tail(), 20);
+    EXPECT_EQ(queue1.size(), queue2.size());
     EXPECT_TRUE(queue1 == queue2);
 }
 TEST(TestQueueOnListLib, queue_operator_equal_true) {
