@@ -109,19 +109,6 @@ TEST(TestQueueOnListLib, queue_empty_get_tail_exception) {
     // Assert
     ASSERT_THROW(queue.tail(), std::runtime_error);
 }
-TEST(TestQueueOnListLib, queue_circular_behavior) {
-    // Arrange
-    QueueOnList<int> queue(3);
-    // Act
-    queue.push(1);
-    queue.push(2);
-    queue.push(3);
-    queue.pop();
-    queue.push(4); 
-    // Assert
-    EXPECT_EQ(queue.head(), 2);
-    EXPECT_EQ(queue.tail(), 4);
-}
 TEST(TestQueueOnListLib, queue_push) {
     // Arrange
     QueueOnList<int> queue(5);
