@@ -19,10 +19,12 @@ public:
     inline bool is_empty() const noexcept;
     inline bool is_full() const noexcept;
     void clear() noexcept;
-    size_t size() const noexcept {
-        return _list.get_size();
-    }
+    size_t size() const noexcept;
 };
+template <class T>
+size_t StackOnList<T>::size() const noexcept {
+    return _list.get_size();
+}
 template <class T>
 StackOnList<T>& StackOnList<T>::operator=(const StackOnList<T>& other) {
     if (this != &other) {
