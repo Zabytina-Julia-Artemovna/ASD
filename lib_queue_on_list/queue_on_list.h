@@ -10,6 +10,9 @@ public:
     QueueOnList(size_t size = 0);
     QueueOnList(const QueueOnList<T>& other);
     ~QueueOnList() = default;
+    QueueOnList<T>& operator=(const QueueOnList<T>& other);
+    bool operator ==(const QueueOnList<T>& other) const;
+    bool operator !=(const QueueOnList<T>& other) const;
     inline T head() const;
     inline T tail() const;
     size_t size() const noexcept;
@@ -90,4 +93,21 @@ void QueueOnList<T>::clear() noexcept {
     while (!_list.is_empty()) {
         _list.pop_front();
     }
+}
+template <class T>
+QueueOnList<T>& QueueOnList<T>::operator=(const QueueOnList<T>& other) {
+    if (this != &other) {
+        _list = other._list;
+        _max_size = other._max_size;
+        _has_max_size = other._has_max_size;
+    }
+    return *this;
+}
+template <class T>
+bool QueueOnList<T>::operator ==(const QueueOnList<T>& other) const {
+    return this->_list == other._list;
+}
+template <class T>
+bool QueueOnList<T>::operator !=(const QueueOnList<T>& other) const {
+    return !(this->_list == other._list);
 }
