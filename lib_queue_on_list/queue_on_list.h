@@ -45,7 +45,7 @@ void QueueOnList<T>::push(T value) {
 template <class T>
 void QueueOnList<T>::pop() {
     if (_list.is_empty()) {
-        throw std::logic_error("Can't pop from empty stack");
+        throw std::logic_error("Can't pop from empty queue");
     }
     _list.pop_front();
 }
