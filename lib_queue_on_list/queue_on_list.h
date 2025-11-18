@@ -13,6 +13,8 @@ public:
     inline T head() const;
     inline T tail() const;
     size_t size() const noexcept;
+    size_t max_size() const noexcept;
+    bool has_max_size() const noexcept;
     bool is_empty() const noexcept;
     void push(T value);
     void pop();
@@ -49,6 +51,14 @@ T QueueOnList<T>::tail() const {
 template <class T>
 size_t QueueOnList<T>::size() const noexcept {
     return _list.get_size();
+}
+template <class T>
+size_t QueueOnList<T>::max_size() const noexcept {
+    return _max_size;
+}
+template <class T>
+bool QueueOnList<T>::has_max_size() const noexcept {
+    return _has_max_size;
 }
 template <class T>
 bool QueueOnList<T>::is_empty() const noexcept {
