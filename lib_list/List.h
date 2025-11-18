@@ -77,9 +77,27 @@ public:
     List();
     ~List();
     List(const List<T>& other_list);
-    size_t get_size() const noexcept;
-    Node<T>* get_head() const noexcept;
-    Node<T>* get_tail() const noexcept;
+    size_t get_size() const noexcept {
+        return _count_elements;
+    }
+    Node<T>* get_head() const noexcept {
+        return _head;
+    }
+    Node<T>* get_tail() const noexcept {
+        return _tail;
+    }
+    T& get_last_element() {
+        if (_tail == nullptr) {
+            throw std::runtime_error("List is empty");
+        }
+        return _tail->value;
+    }
+    const T& get_last_element() const {
+        if (_tail == nullptr) {
+            throw std::runtime_error("List is empty");
+        }
+        return _tail->value;
+    }
 
     bool operator==(const List<T>& other) const;
     bool operator!=(const List<T>& other) const;
@@ -111,18 +129,6 @@ _count_elements(0) {
     for (auto it = other_list.begin(); it != other_list.end(); ++it) {
         this->push_back(*it);
     }
-}
-template <class T>
-size_t List<T>::get_size() const noexcept {
-    return _count_elements;
-}
-template <class T>
-Node<T>* List<T>::get_head() const noexcept {
-    return _head;
-}
-template <class T>
-Node<T>* List<T>::get_tail() const noexcept {
-    return _tail;
 }
 template <class T>
 bool List<T>::is_empty() const noexcept {
