@@ -4,8 +4,9 @@ template <class T>
 class QueueOnList {
 private:
     List<T> _list;
+    size_t _size;
 public:
-    QueueOnList() = default;
+    QueueOnList(size_t size = 0) : _size(size) {};
     QueueOnList(const QueueOnList<T>& other): _list(other._list){}
     ~QueueOnList() = default;
     inline T head() const;
