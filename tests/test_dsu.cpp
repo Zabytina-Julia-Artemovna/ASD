@@ -26,17 +26,25 @@ TEST(TestDSULib, dsu_copy_constructor) {
         EXPECT_EQ(dsu1.rank()[i], dsu2.rank()[i]);
     }
 }
-TEST(TestDSULib, dsu_union) {
-    // Arrange & Act
-    size_t size = 4;
+TEST(TestDSULib, dsu_union1) {
+    // Arran & Act
+    size_t size = 5;
     DSU dsu(size);
     dsu.dsu_union(1, 2);
-    dsu.dsu_union(1, 3);
-    // Assert
-    EXPECT_EQ(dsu.size(), size);
-    EXPECT_EQ(dsu.rank()[1], 1);
-    EXPECT_EQ(dsu.parent()[2], 1);
-    EXPECT_EQ(dsu.parent()[3], 1);
+    dsu.dsu_union(4, 3);
+    EXPECT_EQ(dsu.dsu_find_recursive(1), dsu.dsu_find_recursive(2));
+    EXPECT_EQ(dsu.dsu_find_recursive(4), dsu.dsu_find_recursive(3));
+}
+TEST(TestDSULib, dsu_union2) {
+    DSU dsu(5);
+    dsu.dsu_union(0, 1);
+    dsu.dsu_union(1, 2);
+    EXPECT_EQ(dsu.dsu_find_recursive(0), dsu.dsu_find_recursive(2));
+}
+TEST(TestDSULib, dsu_union_same_element) {
+    DSU dsu(3);
+    dsu.dsu_union(1, 1);
+    EXPECT_EQ(dsu.dsu_find_recursive(1), 1);
 }
 TEST(TestDSULib, dsu_union_with_exception) {
     // Arrange & Act
@@ -54,6 +62,19 @@ TEST(TestDSULib, dsu_find_recursive) {
     // Assert
     EXPECT_EQ(dsu.dsu_find_recursive(6), 5);
     EXPECT_EQ(dsu.dsu_find_recursive(4), 5);
+}
+TEST(TestDSULib, dsu_find_path_compression) {
+    // Arrange
+    DSU dsu(5);
+    for (int i = 0; i < 4; i++) {
+        dsu.dsu_union(i, i + 1);
+    }
+    // Act
+    int root = dsu.dsu_find_recursive(4);
+    // Assert
+    for (int i = 0; i < 5; i++) {
+        EXPECT_EQ(dsu.parent()[i], root);
+    }
 }
 TEST(TestDSULib, dsu_find_recursive_with_exception) {
     // Arrange & Act
