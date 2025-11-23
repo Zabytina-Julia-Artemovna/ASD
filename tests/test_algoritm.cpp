@@ -217,3 +217,39 @@ TEST(TestAlgorithmLib, test_find_loop_in_list_2_with_empty_list) {
     EXPECT_FALSE(is_looped2(list));
 }
 
+TEST(TestAlgorithmLib, test_find_loop_start_in_list) {
+    // Arrange & Act
+    List<int> list;
+    list.push_back(10);
+    list.push_back(20);
+    list.push_back(30);
+    list.push_back(50);
+
+    list.push_back(70);
+    list.get_tail()->next = list.get_head();
+    // Assert
+    EXPECT_EQ(find_loop_start(list), list.get_head());
+    list.get_tail()->next = nullptr;
+}
+TEST(TestAlgorithmLib, test_find_loop_start_no_loop) {
+    List<int> list;
+    list.push_back(10);
+    list.push_back(20);
+    list.push_back(30);
+
+    EXPECT_EQ(find_loop_start(list), nullptr);
+}
+TEST(TestAlgorithmLib, test_find_loop_start_in_middle) {
+    List<int> list;
+    list.push_back(10);
+    list.push_back(20);
+    list.push_back(30);
+    list.push_back(40);
+    list.push_back(50);
+
+    list.get_tail()->next = list.get_head()->next->next;
+
+    EXPECT_EQ(find_loop_start(list), list.get_head()->next->next);  
+
+    list.get_tail()->next = nullptr;  
+}
