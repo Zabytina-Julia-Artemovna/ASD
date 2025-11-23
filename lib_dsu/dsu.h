@@ -13,7 +13,6 @@ public:
     int* parent() const noexcept;
     int* rank() const noexcept;
     void dsu_union(int x, int y);
-    int dsu_find(int x);
     int dsu_find_recursive(int x);
     DSU& operator=(const DSU& other);
 };
