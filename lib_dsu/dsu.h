@@ -58,6 +58,9 @@ void DSU::dsu_union(int x, int y) {
     }
     int parent_x = dsu_find_recursive(x);
     int parent_y = dsu_find_recursive(y);
+    if (parent_x == parent_y) {
+        return;
+    }
     if (_rank[parent_x] < _rank[parent_y]) {
         _parent[parent_x] = parent_y;
     } else if (_rank[parent_x] > _rank[parent_y]) {
