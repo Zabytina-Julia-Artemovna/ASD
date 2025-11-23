@@ -8,6 +8,9 @@ public:
     DSU(size_t size);
     DSU(const DSU& other);
     ~DSU();
+    size_t size() const noexcept;
+    int* parent() const noexcept;
+    int* rank() const noexcept;
     void dsu_union(int x, int y);
     int dsu_find(int x);
 };
@@ -34,4 +37,13 @@ DSU::~DSU() {
     delete[] _rank;
     _parent = nullptr;
     _rank = nullptr;
+}
+size_t DSU::size() const noexcept {
+    return _size;
+}
+int* DSU::parent() const noexcept {
+    return _parent;
+}
+int* DSU::rank() const noexcept {
+    return _rank;
 }
