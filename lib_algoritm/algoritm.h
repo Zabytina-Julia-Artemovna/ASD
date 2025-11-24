@@ -2,11 +2,13 @@
 #include "../lib_matrix/matrix.h"
 #include "../lib_stack/stack.h"
 #include "../lib_list/List.h"
+#include "../lib_dsu/dsu.h"
 #include <random>
 #include <utility> 
 #include <stdexcept>
 #include <string>
 #include <cctype>
+#include <unordered_set>
 template <class T>
 std::pair<size_t, size_t> find_min_neighbor_coords(const Matrix<T>& matrix, size_t x, size_t y) {
     T min_val = matrix[x][y];
@@ -224,4 +226,51 @@ Node<T>* find_loop_start(List<T>& list) {
         it1_fast = it1_fast->next;
     }
     return it2_slow;
+}
+size_t get_count_of_islands(Matrix<int>& matrix) {
+    if (matrix.is_empty()) {
+        return 0;
+    }
+    size_t N = matrix.getN();
+    size_t M = matrix.getM();
+    DSU islands(M*N);
+
+    for (size_t i = 0; i < M; i++) {
+        for (size_t j = 0; j < N; j++) {
+            if (matrix[i][j] == 1) {
+                if (i == 0 && j == 0) { // верхний левый угол   
+                
+                }
+                else if (i == 0) { //верхн€€ строка
+                    if (matrix[i][j - 1] == 1) {
+                        islands.dsu_union(i * N + j, i * N + j - 1);
+                    }
+                }
+                else if (j == 0) { //левый столбец 
+                    if (matrix[i - 1][j] == 1) {
+                        islands.dsu_union(i * N + j, (i - 1) * N + j);
+                    }
+                }
+                else {
+                    if (matrix[i - 1][j] == 1) {
+                        islands.dsu_union(i * N + j, (i - 1) * N + j);
+                        //соедин€ем этот элемент с [i][j] union
+                    }
+                    if (matrix[i][j - 1] == 1) {
+                        islands.dsu_union(i * N + j, i * N + j - 1);
+                        //соедин€ем этот элемент с [i][j] union
+                    }
+                }
+            }
+        }
+    }
+    std::unordered_set<int> unique_roots;
+    for (size_t i = 0; i < M; i++) {
+        for (size_t j = 0; j < N; j++) {
+            if (matrix[i][j] == 1) {
+                unique_roots.insert(  islands.dsu_find_recursive(i * N + j));
+            }
+        }
+    }
+    return unique_roots.size();
 }
