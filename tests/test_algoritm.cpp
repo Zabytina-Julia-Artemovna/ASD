@@ -253,3 +253,70 @@ TEST(TestAlgorithmLib, test_find_loop_start_in_middle) {
 
     list.get_tail()->next = nullptr;  
 }
+TEST(TestAlgorithmLib, test_dsu_find_count_of_islands1) {
+    // Arrange & Act
+    int data[] = { 1, 1,
+                  0, 0 };
+    Matrix<int> matrix(data, 2, 2);
+    // Assert
+    EXPECT_EQ(1, get_count_of_islands(matrix));
+}
+TEST(TestAlgorithmLib, test_dsu_find_count_of_islands2_empty_matrix) {
+    // Arrange & Act
+    Matrix<int> matrix(10, 10);
+    // Assert
+    EXPECT_EQ(0, get_count_of_islands(matrix));
+}
+TEST(TestAlgorithmLib, test_dsu_find_count_of_islands3) {
+    // Arrange & Act
+    int data[] = {1, 1,
+                  0, 1,
+                  1, 1,
+                  0, 1};
+    Matrix<int> matrix(data, 4, 2);
+    // Assert
+    EXPECT_EQ(1, get_count_of_islands(matrix));
+}
+TEST(TestAlgorithmLib, test_dsu_find_count_of_islands5) {
+    // Arrange & Act
+    int data[] = { 0,0,
+                  0, 0,
+                  0, 0,
+                  0, 0};
+    Matrix<int> matrix(data, 4, 2);
+    // Assert
+    EXPECT_EQ(0, get_count_of_islands(matrix));
+}
+TEST(TestAlgorithmLib, test_dsu_find_count_of_islands6_large_matrix) {
+    // Arrange & Act
+    int data[] = {
+        1, 1, 0, 0, 0, 0, 1, 0, 0, 0,
+        1, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+        0, 0, 1, 1, 1, 0, 0, 0, 0, 0,
+        0, 0, 1, 0, 0, 0, 0, 0, 1, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+        1, 1, 1, 0, 0, 0, 0, 0, 1, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 1, 0, 0
+    };
+
+    Matrix<int> matrix(data, 10, 10);
+
+    // Assert 
+    EXPECT_EQ(6, get_count_of_islands(matrix));
+}
+TEST(TestAlgorithmLib, test_dsu_find_count_of_islands7_diagonal) {
+    // Arrange & Act 
+    int data[] = {
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    };
+    Matrix<int> matrix(data, 4, 4);
+
+    // Assert
+    EXPECT_EQ(1, get_count_of_islands(matrix));
+}
