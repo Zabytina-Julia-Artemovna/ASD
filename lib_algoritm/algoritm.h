@@ -233,42 +233,38 @@ size_t get_count_of_islands(Matrix<int>& matrix) {
     }
     size_t N = matrix.getN();
     size_t M = matrix.getM();
-    DSU islands(M*N);
+    DSU islands(M * N);
+
+    // Все 8 направлений
+    int directions[8][2] = {
+        {-1, -1}, {-1, 0}, {-1, 1},  // верхние
+        {0, -1},           {0, 1},   // левый, правый  
+        {1, -1},  {1, 0},  {1, 1}    // нижние
+    };
 
     for (size_t i = 0; i < M; i++) {
         for (size_t j = 0; j < N; j++) {
             if (matrix[i][j] == 1) {
-                if (i == 0 && j == 0) { // верхний левый угол   
-                
-                }
-                else if (i == 0) { //верхняя строка
-                    if (matrix[i][j - 1] == 1) {
-                        islands.dsu_union(i * N + j, i * N + j - 1);
-                    }
-                }
-                else if (j == 0) { //левый столбец 
-                    if (matrix[i - 1][j] == 1) {
-                        islands.dsu_union(i * N + j, (i - 1) * N + j);
-                    }
-                }
-                else {
-                    if (matrix[i - 1][j] == 1) {
-                        islands.dsu_union(i * N + j, (i - 1) * N + j);
-                        //соединяем этот элемент с [i][j] union
-                    }
-                    if (matrix[i][j - 1] == 1) {
-                        islands.dsu_union(i * N + j, i * N + j - 1);
-                        //соединяем этот элемент с [i][j] union
+                // Проверяем всех 8 соседей
+                for (auto& dir : directions) {
+                    int ni = i + dir[0];
+                    int nj = j + dir[1];
+
+                    if (ni >= 0 && ni < M && nj >= 0 && nj < N) {
+                        if (matrix[ni][nj] == 1) {
+                            islands.dsu_union(i * N + j, ni * N + nj);
+                        }
                     }
                 }
             }
         }
     }
+
     std::unordered_set<int> unique_roots;
     for (size_t i = 0; i < M; i++) {
         for (size_t j = 0; j < N; j++) {
             if (matrix[i][j] == 1) {
-                unique_roots.insert(  islands.dsu_find_recursive(i * N + j));
+                unique_roots.insert(islands.dsu_find_recursive(i * N + j));
             }
         }
     }
