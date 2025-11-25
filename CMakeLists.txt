@@ -39,7 +39,7 @@ add_subdirectory(lib_doubly_linked_list)
 add_subdirectory(lib_algoritm)
 
 
-add_subdirectory(lib_easy_example)
+
 
 add_subdirectory(main)                # подключаем дополнительный CMakeLists.txt из подкаталога с именем main
 
