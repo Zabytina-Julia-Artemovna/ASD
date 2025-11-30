@@ -20,21 +20,12 @@ add_subdirectory(lib_math_vector)
 add_subdirectory(lib_matrix)
 add_subdirectory(lib_triangle_matrix)
 
-add_subdirectory(lib_list)
-add_subdirectory(lib_stack)
-add_subdirectory(lib_queue)
-add_subdirectory(lib_queue_on_list)
-add_subdirectory(lib_stack_on_list)
-
 add_subdirectory(lib_point)
 add_subdirectory(lib_point3d)
 add_subdirectory(lib_circle)
 add_subdirectory(lib_sphere)
 
-
 add_subdirectory(lib_dsu)
-
-add_subdirectory(lib_doubly_linked_list)
 
 add_subdirectory(lib_algoritm)
 
