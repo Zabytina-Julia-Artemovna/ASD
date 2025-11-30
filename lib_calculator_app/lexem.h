@@ -1,9 +1,10 @@
 #include "../lib_list/List.h"
+#include <string>
 enum TypeLexem { 
     Constant, 
     Variable, 
-    OpenBrecket, 
-    ClosedBrecket, 
+    OpenBracket, 
+    ClosedBracket, 
     Function, 
     Operator, 
     UnOperator, 
@@ -15,8 +16,18 @@ struct Lexem {
     double value;
     int priority;
     double (*function)(double);
-    Lexem(std::string _name, TypeLexem _type, double _value = DBL_MAX, int _priority = -1, double(*_function)(double) = nullptr);
-    Lexem(const Lexem& other);
+
+    Lexem(std::string _name, TypeLexem _type, double _value = DBL_MAX, 
+        int _priority = -1, double(*_function)(double) = nullptr):
+        name(_name), type(_type), value(_value), 
+        priority(_priority), function(_function){};
+
+    Lexem(const Lexem& other): name(other.name), type(other.type),
+        value(other.value), priority(other.priority), 
+        function(other.function){}
+
+    Lexem(double _value): name(std::to_string(_value)), type(Constant), 
+        value(_value), priority(-1), function(nullptr) {}
 
     std::string getName() const { 
         return name; 
@@ -33,5 +44,4 @@ struct Lexem {
     double (*getFunction() const)(double) {
         return function; 
     }
-    
 };
