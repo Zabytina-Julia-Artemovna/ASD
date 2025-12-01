@@ -21,7 +21,6 @@ public:
     Matrix();
     Matrix(size_t M, size_t N);
     Matrix(T* data, size_t M, size_t N);
-    Matrix(const TriangleMatrix<T>& triangle);
     Matrix(const Matrix& other);
     virtual ~Matrix();
     size_t getM() const noexcept;
@@ -73,53 +72,39 @@ Matrix<T>::Matrix(T* data, size_t M, size_t N) : MathVector<MathVector<T>>(M) {
     }
 }
 template <class T>
-Matrix<T>::Matrix(const TriangleMatrix<T>& triangle): Matrix<T>(triangle.getSize(), triangle.getSize()) {
-    for (size_t i = 0; i < triangle.getSize(); ++i) {
-        for (size_t j = 0; j < triangle.getSize(); ++j) {
-            if (i <= j) {
-                (*this)[i][j] = triangle[i][j];
-            }
-            else {
-                (*this)[i][j] = T();
-            }
-        }
-    }
-}
-template <class T>
 Matrix<T>::Matrix(const Matrix& other) :
     MathVector<MathVector<T>>(other), _M(other._M), _N(other._N) {}
 template <class T>
 Matrix<T>::~Matrix() = default;
 template <class T>
 Matrix<T> Matrix<T>::operator * (T value) const {
-    Matrix result(_M, _N);
-    for (size_t i = 0; i < _M; ++i) {
-        result[i] = (*this)[i] * value;
-    }
-    return result;
+    return Matrix<T>(*this) *= value;
 }
 template <class T>
 Matrix<T> Matrix<T>::operator / (T value) const {
     if (value == 0) {
         throw std::logic_error("Division by zero!");
     }
-    Matrix result(_M, _N);
-    for (size_t i = 0; i < _M; ++i) {
-        result[i] = (*this)[i] / value;
-    }
-    return result;
+    return Matrix<T>(*this) /= value;
 }
 template <class T>
 Matrix<T>& Matrix<T>::operator *= (T value) {
-    (*this) = (*this) * value;
-    return *this;
+    template <class T>
+    Matrix<T>& Matrix<T>::operator *= (T value) {
+        for (size_t i = 0; i < _M; ++i) {
+            (*this)[i] *= value;
+        }
+        return *this;
+    }
 }
 template <class T>
 Matrix<T>& Matrix<T>::operator /= (T value) {
     if (value == 0) {
         throw std::logic_error("Division by zero!");
     }
-    (*this) = (*this) / value;
+    for (size_t i = 0; i < _M; ++i) {
+        (*this)[i] /= value;
+    }
     return *this;
 }
 template <class T>
@@ -127,22 +112,14 @@ Matrix<T> Matrix<T>::operator + (const Matrix<T>& other_matrix) const {
     if (_M != other_matrix.getM() || _N != other_matrix.getN()) {
         throw std::logic_error("The matrices have different sizes!");
     }
-    Matrix<T> result(_M, _N);
-    for (size_t i = 0; i < _M; ++i) {
-        result[i] = (*this)[i] + other_matrix[i];
-    }
-    return result;
+    return Matrix<T>(*this) += other_matrix;
 }
 template <class T>
 Matrix<T> Matrix<T>::operator - (const Matrix<T>& other_matrix) const {
     if (_M != other_matrix.getM() || _N != other_matrix.getN()) {
         throw std::logic_error("The matrices have different sizes!");
     }
-    Matrix<T> result(_M, _N);
-    for (size_t i = 0; i < _M; ++i) {
-        result[i] = (*this)[i] - other_matrix[i];
-    }
-    return result;
+    return Matrix<T>(*this) -= other_matrix;
 }
 template <class T>
 Matrix<T> Matrix<T>::operator * (const Matrix<T>& other_matrix) const {
@@ -176,7 +153,9 @@ Matrix<T>& Matrix<T>::operator += (const Matrix<T>& other_matrix) {
     if (_M != other_matrix.getM() || _N != other_matrix.getN()) {
         throw std::logic_error("The matrices have different sizes!");
     }
-    (*this) = (*this) + other_matrix;
+    for (size_t i = 0; i < _M; ++i) {
+        (*this)[i] += other_matrix[i];
+    }
     return *this;
 }
 template <class T>
@@ -184,7 +163,9 @@ Matrix<T>& Matrix<T>::operator -= (const Matrix<T>& other_matrix) {
     if (_M != other_matrix.getM() || _N != other_matrix.getN()) {
         throw std::logic_error("The matrices have different sizes!");
     }
-    (*this) = (*this) - other_matrix;
+    for (size_t i = 0; i < _M; ++i) {
+        (*this)[i] -= other_matrix[i];
+    }
     return *this;
 }
 template <class T>
