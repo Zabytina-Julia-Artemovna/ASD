@@ -1,6 +1,10 @@
 #pragma once
 #include "../lib_list/List.h"
 #include "lexem.h"
+#include <cmath>
+#include <string>
+#include <algorithm>
+#include <stdexcept>
 namespace Parser { 
     List<Lexem> parse(std::string expression);
     double getSin(double value);
