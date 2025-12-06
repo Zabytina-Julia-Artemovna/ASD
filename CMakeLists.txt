@@ -24,7 +24,7 @@ add_subdirectory(lib_stack_on_list)
 add_subdirectory(lib_dsu)
 
 add_subdirectory(lib_doubly_linked_list)
-
+add_subdirectory(lib_calculator_app)
 add_subdirectory(lib_algoritm)
 
 
