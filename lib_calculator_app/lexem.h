@@ -2,14 +2,14 @@
 #include <string>
 enum TypeLexem { 
     Constant, 
-    Variable, 
-    OpenBracket, 
-    ClosedBracket, 
+    OpenBracket,
+    CloseBracket,
+    Variable,
     Function, 
     Operator, 
     UnOperator, 
-    OpenedAbs, 
-    ClosedAbs };
+    OpenAbs, 
+    CloseAbs };
 struct Lexem {
     std::string name;
     TypeLexem type;
