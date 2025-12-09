@@ -1,8 +1,11 @@
 #pragma once
 #include "../lib_list/List.h"
 #include "lexem.h"
+#include "parser.h"
 #include <string>
+#include <limits>
 #include <map>
+#include <cmath>
 class Expression {
 private:
     std::string _expression;
@@ -14,12 +17,15 @@ private:
 public:
     Expression(size_t id, std::string expression);
     Expression(size_t id, const List<Lexem>& list); 
-    // Геттеры
-    size_t get_id() const { 
-        return _expression_id; 
-    }
+
     const std::string& get_expression() const { 
         return _expression; 
+    }
+    size_t get_id() const {
+        return _expression_id;
+    }
+    const std::map<std::string, double>& get_variables() const {
+        return _variables_map;
     }
     const List<Lexem>& get_lexems() const { 
         return _lexems; 
@@ -27,13 +33,12 @@ public:
     const List<Lexem>& get_polish_record() const { 
         return _polish_record; 
     }
-    const std::map<std::string, double>& get_variables() const { 
-        return _variables_map;
-    }
     void set_variable(const std::string& name, double value);
     double get_variable(const std::string& name) const;
     bool has_variable(const std::string& name) const;
-    void clear_variables() { _variables_map.clear(); }
+    void clear_variables() { 
+        _variables_map.clear(); 
+    }
 
     double calculate();
   
