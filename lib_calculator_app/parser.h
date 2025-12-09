@@ -3,9 +3,12 @@
 #include "lexem.h"
 #include <cmath>
 #include <string>
-#include <algorithm>
+#include "parser.h"
 #include <stdexcept>
-namespace Parser { 
+#include <cctype>
+#include <sstream>
+#include <algorithm>
+namespace Parser {
     List<Lexem> parse(std::string expression);
     double getSin(double value);
     double getCos(double value);
@@ -19,5 +22,8 @@ namespace Parser {
     bool isValidVariableName(const std::string& name);
     bool isFunction(const std::string& name);
     bool isBinaryOperator(char c);
-    bool isUnaryOperator(char c, const Lexem* prevLexem);
+    bool isUnaryOperator(char c, bool lastWasOperatorOrBracket);
+    int getOperatorPriority(char c);
+    std::string formatError(const std::string& expression, size_t position, const std::string& message);
+    double (*getFunctionByName(const std::string& name))(double);
 }
