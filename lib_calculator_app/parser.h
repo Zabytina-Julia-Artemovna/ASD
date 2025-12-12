@@ -3,7 +3,6 @@
 #include "lexem.h"
 #include <cmath>
 #include <string>
-#include "parser.h"
 #include <stdexcept>
 #include <cctype>
 #include <sstream>
