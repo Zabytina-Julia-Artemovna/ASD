@@ -1,5 +1,8 @@
+#ifndef LEXEM_H     
+#define LEXEM_H 
 #include "../lib_list/List.h"
 #include <string>
+#include <cfloat>
 enum TypeLexem { 
     Constant, 
     OpenBracket,
@@ -45,3 +48,4 @@ struct Lexem {
         return function; 
     }
 };
+#endif
