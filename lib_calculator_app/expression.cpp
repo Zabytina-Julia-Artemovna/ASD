@@ -4,7 +4,6 @@ Expression::Expression(size_t id, std::string expression) :
     try {
         _lexems = Parser::parse(_expression);
         build_polish_notation();
-        extract_variables();
     }
     catch (const std::exception& ex) {
         throw std::logic_error(
@@ -17,20 +16,12 @@ Expression::Expression(size_t id, const List<Lexem>& list) :
     _expression("Constructed by lexems") {
     try {
         build_polish_notation();
-        extract_variables();
     }
     catch (const std::exception& ex) {
         throw std::logic_error(
             "Expression ID: " + std::to_string(id) + ": " + ex.what()
         );
     }
-}
-Expression::Expression(const Expression& other)
-    : _expression(other._expression),
-    _expression_id(other._expression_id),
-    _variables_map(other._variables_map),
-    _lexems(other._lexems),
-    _polish_record(other._polish_record) {
 }
 bool Expression::isOperatorOrFunction(const Lexem& lexem) {
     return lexem.getType() == Operator || lexem.getType() == Function;
@@ -89,4 +80,78 @@ void Expression::build_polish_notation() {
         stack.pop();
     }
     _polish_record = output;
+}
+double Expression::calculate() {
+
+
+    // Алгоритм:
+   // 1. Проверить, что все переменные заданы
+   // 2. Пройти по _polish_record
+   // 3. Использовать стек для вычислений
+   // 4. Вернуть результат
+
+
+
+
+}
+void Expression::print_variables() const {
+    std::vector<std::string> all_vars;
+    for (const auto& lexem : _lexems) {
+        if (lexem.type == TypeLexem::Variable) {
+            if (std::find(all_vars.begin(), all_vars.end(), lexem.name) == all_vars.end()) {
+                all_vars.push_back(lexem.name);
+            }
+        }
+    }
+    if (all_vars.empty()) {
+        std::cout << "Нет переменных\n";
+        return;
+    }
+    for (size_t i = 0; i < all_vars.size(); ++i) {
+        if (i > 0) {
+            std::cout << ", ";
+        }
+        if (has_variable(all_vars[i])) {
+            std::cout << all_vars[i] << " = " << _variables_map.at(all_vars[i]);
+        } else {
+            std::cout << all_vars[i] << " = ?";
+        }
+    }
+}
+bool Expression::has_variable(const std::string& name) const {
+    return _variables_map.find(name) != _variables_map.end();
+}
+void Expression::set_variable(const std::string& name, double value) {
+        _variables_map[name] = value;
+}
+void Expression::set_variables() {
+    std::string var_name;
+    double value;
+    // Показываем, какие переменные есть
+    std::cout << "Доступные переменные: ";
+    print_variables();
+    std::cout << std::endl;
+    std::cout << "Введите имя переменной (или 'stop' для выхода): ";
+    std::cin >> var_name;
+    while (var_name != "stop") {
+        // Проверяем, есть ли такая переменная
+        bool found = false;
+        for (const auto& lexem : _lexems) {
+            if (lexem.getType() == Variable && lexem.getName() == var_name) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            std::cout << "Ошибка: переменная '" << var_name
+                << "' не найдена в выражении\n";
+        }
+        else {
+            std::cout << "Введите значение для " << var_name << ": ";
+            std::cin >> value;
+            set_variable(var_name, value);
+        }
+        std::cout << "Введите имя переменной (или 'stop' для выхода): ";
+        std::cin >> var_name;
+    }
 }
