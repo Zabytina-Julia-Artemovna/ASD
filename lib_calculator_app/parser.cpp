@@ -58,8 +58,8 @@ List<Lexem> Parser::parse(std::string expression) {
                 lexems.push_back(lexem);
                 lastWasOperatorOrBracketOrFunction = true;
             }
-            i++; // функции, переменные и модуль
-        } else if (isLetter(c) || c == '_') { //это или функция или переменная
+            i++;
+        } else if (isLetter(c) || c == '_') { //function/variable
             std::string word = "";
             word += c;
             i++;
@@ -88,19 +88,15 @@ List<Lexem> Parser::parse(std::string expression) {
                 Lexem lexem(word, TypeLexem::Variable);
                 lexems.push_back(lexem);
                 lastWasOperatorOrBracketOrFunction = false;
-                
             } else {
                 size_t errorPos = i - word.length();
                 std::string errorMsg = formatError(expression, errorPos,
                     "Invalid variable/function format: '" + word + "'");
                 throw std::logic_error(errorMsg);
             }
-        } else if (c == '|') { //модуль
-            Lexem lexem(std::string(1,c), TypeLexem::OpenAbs);
-            
-            lexems.push_back(lexem);
-            lastWasOperatorOrBracketOrFunction = false;
-            i++;
+        }
+        else if (c == '|') {
+            throw std::logic_error("Module || not yet implemented");// TODO: implement module support
         }
         else {
             size_t errorPos = i;
@@ -108,10 +104,7 @@ List<Lexem> Parser::parse(std::string expression) {
                 "Unknown character: '" + std::string(1, c) + "'");
             throw std::logic_error(errorMsg);
         }
-
-
-    } // цикл while i < expr. lenght
-
+    } // cycle while i < expr. lenght
     if (lastWasOperatorOrBracketOrFunction && !(lexems.get_size() == 0) ) {
         size_t errorPos = expression.length() - 1;
         std::string errorMsg = formatError(expression, errorPos,
@@ -228,6 +221,9 @@ double (*Parser::getFunctionByName(const std::string& name))(double) {
     }
     if (name == "tg") {
         return Parser::getTg;
+    }
+    if (name == "abs") {
+        return Parser::getAbs;
     }
     return nullptr;
 }
