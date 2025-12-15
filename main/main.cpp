@@ -1,38 +1,40 @@
-// Copyright 2024 Julia Zabytia
+// Copyright 2025 Julia Zabytia
 //#define EASY_EXAMPLE
 //#define CIRCLES_AND_SPHERES
 
-#define MATRIX
+#define CALCULATOR
 #ifdef EASY_EXAMPLE
 #include <iostream>
 #include <iomanip>
 #include "../lib_easy_example/easy_example.h"
 
 int main() {
-  int a, b;
-  float result;
+    int a, b;
+    float result;
 
-  a = 1; b = 4;
+    a = 1; b = 4;
 
-  try {
-      result = division(a, b);
-      std::cout << a << " / " << b << " = "
-          << std::setprecision(2) << result << std::endl;
-  } catch (std::exception err) {
-      std::cerr << err.what() << std::endl;
-  }
+    try {
+        result = division(a, b);
+        std::cout << a << " / " << b << " = "
+            << std::setprecision(2) << result << std::endl;
+    }
+    catch (std::exception err) {
+        std::cerr << err.what() << std::endl;
+    }
 
-  a = 1; b = 0;
+    a = 1; b = 0;
 
-  try {
-      result = division(a, b);
-      std::cout << a << " / " << b << " = "
-          << std::setprecision(2) << result << std::endl;
-  } catch (std::exception err) {
-      std::cerr << err.what() << std::endl;
-  }
+    try {
+        result = division(a, b);
+        std::cout << a << " / " << b << " = "
+            << std::setprecision(2) << result << std::endl;
+    }
+    catch (std::exception err) {
+        std::cerr << err.what() << std::endl;
+    }
 
-  return 0;
+    return 0;
 }
 
 #endif
@@ -401,7 +403,7 @@ int main() {
             default: {
                 std::cout << "Invalid input! Please try again\n";
                 break;
-                }
+            }
             }
         }
         std::cout << "\nPress Enter to continue...";
@@ -410,6 +412,215 @@ int main() {
         system("cls");
 
     } while (true);
+    return 0;
+}
+#endif
+#ifdef CALCULATOR
+#include "../lib_calculator_app/expression.h"
+#include "../lib_vector/vector.h"
+#include <iostream>
+#include <iomanip>
+#include <limits>
+#include <locale.h>
+void print_table_header() {
+    std::cout << "+" << std::string(80, '-') << "+" << std::endl;
+    std::cout << "| " << std::left << std::setw(4) << "ID"
+        << "| " << std::setw(40) << "ВЫРАЖЕНИЯ"
+        << "| " << std::setw(30) << "ЗНАЧЕНИЯ ПЕРЕМЕННЫХ"
+        << " |" << std::endl;
+    std::cout << "+" << std::string(80, '-') << "+" << std::endl;
+}
+void show_all_expressions(Tvector<Expression>& expressions) {
+    if (expressions.get_size() == 0) {
+        std::cout << "| " << std::setw(78) << "Нет выражений" << " |" << std::endl;
+    }
+    else {
+        for (size_t i = 0; i < expressions.get_size(); ++i) {
+            std::cout << "| " << std::setw(4) << expressions[i].get_id()
+                << "| " << std::setw(40) << expressions[i].get_expression()
+                << "| ";
+            std::vector<std::string> vars;
+            for (auto& pair : expressions[i].variables_map()) {
+                std::stringstream ss;
+                ss << std::fixed << std::setprecision(3) << pair.second;
+                vars.push_back(pair.first + "=" + ss.str());
+            }
+            if (vars.empty()) {
+                std::cout << std::setw(30) << "Нет переменных";
+            }
+            else {
+                std::string vars_str;
+                for (size_t j = 0; j < vars.size(); ++j) {
+                    if (j > 0) vars_str += ", ";
+                    vars_str += vars[j];
+                }
+                std::cout << std::setw(30) << vars_str.substr(0, 30);
+            }
+            std::cout << " |" << std::endl;
+        }
+    }
+    std::cout << "+" << std::string(80, '-') << "+" << std::endl;
+}
+void create_new_expression(Tvector<Expression>& expressions, int& next_id) {
+    system("cls");
+    std::cout << "Введите новое выражение: ";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::string str;
+    std::getline(std::cin, str);
+    if (str.empty()) {
+        std::cout << "Ошибка: выражение не может быть пустым!\n";
+        system("pause");
+        return;
+    }
+    try {
+        Expression new_expression(next_id, str);
+        expressions.push_back(new_expression);
+        next_id++;
+
+        std::cout << "Выражение успешно создано!\n";
+        system("pause");
+    }
+    catch (const std::exception& ex) {
+        std::cout << "Ошибка создания выражения: " << ex.what() << "\n";
+        system("pause");
+    }
+}
+void delete_expression(Tvector<Expression>& expressions) {
+    system("cls");
+    if (expressions.get_size() == 0) {
+        std::cout << "Нет выражений для удаления.\n";
+        system("pause");
+        return;
+    }
+    std::cout << "Список выражений:\n";
+    for (size_t i = 0; i < expressions.get_size(); ++i) {
+        std::cout << i + 1 << ". ID: " << expressions[i].get_id()
+            << " - " << expressions[i].get_expression() << "\n";
+    }
+    std::cout << "\nВведите номер выражения для удаления\n";
+    size_t choice;
+    std::cin >> choice;
+    if (choice < 1 || choice > expressions.get_size()) {
+        std::cout << "Неверный номер\n";
+        system("pause");
+        return;
+    }
+    try {
+        expressions.erase(choice-1);
+        std::cout << "Выражение успешно удалено\n";
+        system("pause");
+    }
+    catch (const std::exception& ex) {
+        std::cout << "Ошибка: " << ex.what() << "\n";
+        system("pause");
+    }
+}
+void set_variables_for_expression(Tvector<Expression>& expressions) {
+    system("cls");
+    if (expressions.get_size() == 0) {
+        std::cout << "Нет выражений для задания переменных.\n";
+        system("pause");
+        return;
+    }
+    std::cout << "Список выражений:\n";
+    print_table_header();
+    show_all_expressions(expressions);
+    std::cout << "\nВведите ID выражения для задания переменных: ";
+    int id;
+    std::cin >> id;
+    if (id < 1 || id > static_cast<int>(expressions.get_size())) {
+        std::cout << "Неверный ID\n";
+        system("pause");
+        return;
+    }
+    try {
+        expressions[id - 1].set_variables();
+        std::cout << "Переменные успешно заданы\n";
+        system("pause");
+    }
+    catch (const std::exception& ex) {
+        std::cout << "Ошибка: " << ex.what() << "\n";
+        system("pause");
+    }
+}
+void calculate_expression(Tvector<Expression>& expressions) {
+    system("cls");
+    if (expressions.get_size() == 0) {
+        std::cout << "Нет выражений для вычисления\n";
+        system("pause");
+        return;
+    }
+    std::cout << "Список выражений:\n";
+    print_table_header();
+    show_all_expressions(expressions);
+    std::cout << "\nВведите ID выражения для вычисления: ";
+    int id;
+    std::cin >> id;
+    if (id < 1 || id > static_cast<int>(expressions.get_size())) {
+        std::cout << "Неверный ID\n";
+        system("pause");
+        return;
+    }
+    try {
+        double result = expressions[id - 1].calculate();
+        std::cout << "\nРезультат вычисления: " << result << "\n";
+        system("pause");
+    }
+    catch (const std::exception& ex) {
+        std::cout << "Ошибка при вычислении: " << ex.what() << "\n";
+        system("pause");
+    }
+}
+int main() {
+    setlocale(LC_ALL, "Russian");
+    Tvector<Expression> expressions;
+    int next_id = 1;
+    while (true) {
+        system("cls");
+        std::cout << "\n" << std::string(50, '=') << std::endl;
+        std::cout << "КАЛЬКУЛЯТОР АРИФМЕТИЧЕСКИХ ВЫРАЖЕНИЙ" << std::endl;
+        std::cout << std::string(50, '=') << std::endl;
+        print_table_header();
+        show_all_expressions(expressions);
+        std::cout << "\nМЕНЮ:" << std::endl;
+        std::cout << "1. Создать новое выражение" << std::endl;
+        std::cout << "2. Удалить выражение" << std::endl;
+        std::cout << "3. Задать переменные" << std::endl;
+        std::cout << "4. Вычислить значение выражения" << std::endl;
+        std::cout << "5. Выход" << std::endl;
+        std::cout << std::string(50, '-') << std::endl;
+        std::cout << "Ваш выбор: ";
+        int choice;
+        bool want_exit = false;
+        std::cin >> choice;
+        switch (choice) {
+        case 1:
+            create_new_expression(expressions, next_id);
+            break;
+        case 2:
+            delete_expression(expressions);
+            break;
+        case 3:
+            set_variables_for_expression(expressions);
+            break;
+        case 4:
+            calculate_expression(expressions);
+            break;
+        case 5:
+            want_exit = true;
+            break;
+        default:
+            std::cout << "\nНеверный выбор. Попробуйте снова." << std::endl;
+            std::cout << "\nНажмите Enter для продолжения...";
+            std::cin.ignore();
+            std::cin.get();
+            break;
+        }
+
+        if (want_exit) {
+            break;
+        }
+    }
     return 0;
 }
 #endif
