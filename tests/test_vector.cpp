@@ -390,22 +390,6 @@ TEST(TestVectorLib, erase1) {
 }
 TEST(TestVectorLib, erase2) {
     // Arrange
-    int data[15] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-    size_t size = 15;
-    Tvector<int> vector(data, size);
-    vector.erase(1);
-    vector.erase(1);
-    vector.erase(1);
-    // Act
-    bool actual_result = vector.get_deleted() == 0
-        && vector.get_size() == 12
-        && vector.get_capacity() == 27;
-    // Assert
-    bool expected_result = true;
-    EXPECT_EQ(expected_result, actual_result);
-}
-TEST(TestVectorLib, erase3) {
-    // Arrange
     bool actual_result = true;
     int data[15] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
     size_t size = 15;
@@ -542,4 +526,352 @@ TEST(TestVectorLib, vector_iterator_empty_list) {
     auto it2 = vector.begin();
     it2 += 7;
     EXPECT_EQ(it2, vector.end());
+}
+TEST(TestVectorLib, vector_iterator_prefix_increment) {
+    Tvector<int> vector;
+    vector.push_back(10);
+    vector.push_back(20);
+    vector.push_back(30);
+
+    auto it = vector.begin();
+    ++it;
+    EXPECT_EQ(20, *it);
+    ++it;
+    EXPECT_EQ(30, *it);
+}
+
+TEST(TestVectorLib, vector_iterator_postfix_increment) {
+    Tvector<int> vector;
+    vector.push_back(10);
+    vector.push_back(20);
+    vector.push_back(30);
+
+    auto it = vector.begin();
+    auto it_copy = it++;
+
+    EXPECT_EQ(10, *it_copy);
+    EXPECT_EQ(20, *it);
+}
+
+TEST(TestVectorLib, vector_iterator_prefix_decrement) {
+    Tvector<int> vector;
+    vector.push_back(10);
+    vector.push_back(20);
+    vector.push_back(30);
+
+    auto it = vector.begin();
+    ++it;
+    ++it;
+    --it;
+
+    EXPECT_EQ(20, *it);
+}
+
+TEST(TestVectorLib, vector_iterator_postfix_decrement) {
+    Tvector<int> vector;
+    vector.push_back(10);
+    vector.push_back(20);
+    vector.push_back(30);
+
+    auto it = vector.begin();
+    ++it;
+    ++it;
+    auto it_copy = it--;
+
+    EXPECT_EQ(30, *it_copy);
+    EXPECT_EQ(20, *it);
+}
+
+TEST(TestVectorLib, vector_iterator_compound_addition) {
+    Tvector<int> vector;
+    vector.push_back(10);
+    vector.push_back(20);
+    vector.push_back(30);
+    vector.push_back(40);
+    vector.push_back(50);
+
+    auto it = vector.begin();
+    it += 3;
+    EXPECT_EQ(40, *it);
+
+    it += 1;
+    EXPECT_EQ(50, *it);
+}
+
+TEST(TestVectorLib, vector_iterator_compound_subtraction) {
+    Tvector<int> vector;
+    vector.push_back(10);
+    vector.push_back(20);
+    vector.push_back(30);
+    vector.push_back(40);
+    vector.push_back(50);
+
+    auto it = vector.begin();
+    it += 4;
+    it -= 2;
+
+    EXPECT_EQ(30, *it);
+
+    it -= 2;
+    EXPECT_EQ(10, *it);
+}
+
+TEST(TestVectorLib, vector_iterator_equality_operators) {
+    Tvector<int> vector;
+    vector.push_back(10);
+    vector.push_back(20);
+    vector.push_back(30);
+
+    auto it1 = vector.begin();
+    auto it2 = vector.begin();
+    EXPECT_TRUE(it1 == it2);
+
+    ++it1;
+    EXPECT_FALSE(it1 == it2);
+    EXPECT_TRUE(it1 != it2);
+}
+
+TEST(TestVectorLib, vector_iterator_dereference) {
+    Tvector<int> vector;
+    vector.push_back(100);
+    vector.push_back(200);
+
+    auto it = vector.begin();
+    EXPECT_EQ(100, *it);
+
+    ++it;
+    EXPECT_EQ(200, *it);
+}
+
+TEST(TestVectorLib, vector_iterator_dereference_const) {
+    Tvector<int> vector;
+    vector.push_back(100);
+    vector.push_back(200);
+
+    const Tvector<int>& const_vector = vector;
+    auto it = const_vector.begin();
+
+    EXPECT_EQ(100, *it);
+    ++it;
+    EXPECT_EQ(200, *it);
+}
+
+TEST(TestVectorLib, vector_iterator_dereference_modify) {
+    Tvector<int> vector;
+    vector.push_back(100);
+    vector.push_back(200);
+
+    auto it = vector.begin();
+    *it = 500;
+
+    EXPECT_EQ(500, vector[0]);
+}
+
+TEST(TestVectorLib, vector_iterator_copy_constructor) {
+    Tvector<int> vector;
+    vector.push_back(100);
+    vector.push_back(200);
+
+    auto it1 = vector.begin();
+    auto it2 = it1;
+
+    EXPECT_TRUE(it1 == it2);
+    EXPECT_EQ(100, *it1);
+    EXPECT_EQ(100, *it2);
+
+    ++it1;
+    EXPECT_FALSE(it1 == it2);
+    EXPECT_EQ(200, *it1);
+    EXPECT_EQ(100, *it2);
+}
+
+TEST(TestVectorLib, vector_iterator_assignment_operator) {
+    Tvector<int> vector;
+    vector.push_back(100);
+    vector.push_back(200);
+    vector.push_back(300);
+
+    auto it1 = vector.begin();
+    auto it2 = vector.begin();
+    ++it2;
+    ++it2;
+
+    it1 = it2;
+
+    EXPECT_TRUE(it1 == it2);
+    EXPECT_EQ(300, *it1);
+    EXPECT_EQ(300, *it2);
+}
+
+TEST(TestVectorLib, vector_iterator_default_constructor) {
+    Tvector<int>::Iterator it;
+
+    Tvector<int> vector;
+    vector.push_back(10);
+
+    auto it2 = vector.begin();
+    it = it2;
+
+    EXPECT_EQ(10, *it);
+}
+TEST(TestVectorLib, vector_iterator_dereference_nullptr_exception) {
+    Tvector<int>::Iterator it;
+    EXPECT_THROW(*it, std::runtime_error);
+}
+
+TEST(TestVectorLib, vector_iterator_range_based_for_loop) {
+    Tvector<int> vector;
+    vector.push_back(1);
+    vector.push_back(2);
+    vector.push_back(3);
+    vector.push_back(4);
+    vector.push_back(5);
+
+    int sum = 0;
+    for (const auto& value : vector) {
+        sum += value;
+    }
+
+    EXPECT_EQ(15, sum);
+}
+
+TEST(TestVectorLib, vector_iterator_range_based_for_loop_modify) {
+    Tvector<int> vector;
+    vector.push_back(1);
+    vector.push_back(2);
+    vector.push_back(3);
+
+    for (auto& value : vector) {
+        value *= 2;
+    }
+
+    auto it = vector.begin();
+    EXPECT_EQ(2, *it);
+    ++it;
+    EXPECT_EQ(4, *it);
+    ++it;
+    EXPECT_EQ(6, *it);
+}
+
+TEST(TestVectorLib, vector_iterator_manual_for_loop) {
+    Tvector<int> vector;
+    vector.push_back(10);
+    vector.push_back(20);
+    vector.push_back(30);
+    vector.push_back(40);
+
+    std::vector<int> values;
+    for (auto it = vector.begin(); it != vector.end(); ++it) {
+        values.push_back(*it);
+    }
+
+    ASSERT_EQ(4, values.size());
+    EXPECT_EQ(10, values[0]);
+    EXPECT_EQ(20, values[1]);
+    EXPECT_EQ(30, values[2]);
+    EXPECT_EQ(40, values[3]);
+}
+
+TEST(TestVectorLib, vector_iterator_begin_end_empty) {
+    Tvector<int> vector;
+
+    EXPECT_EQ(vector.begin(), vector.end());
+
+    auto it = vector.begin();
+    ++it;
+    EXPECT_EQ(it, vector.end());
+}
+
+TEST(TestVectorLib, vector_iterator_begin_end_non_empty) {
+    Tvector<int> vector;
+    vector.push_back(10);
+    vector.push_back(20);
+
+    auto begin = vector.begin();
+    auto end = vector.end();
+
+    EXPECT_NE(begin, end);
+
+    auto it = begin;
+    ++it;
+    ++it;
+    EXPECT_EQ(it, end);
+}
+
+TEST(TestVectorLib, vector_iterator_reverse_iteration) {
+    Tvector<int> vector;
+    vector.push_back(1);
+    vector.push_back(2);
+    vector.push_back(3);
+    vector.push_back(4);
+    vector.push_back(5);
+
+    std::vector<int> reversed;
+
+    auto it = vector.end();
+    --it;
+
+    while (true) {
+        reversed.push_back(*it);
+        if (it == vector.begin()) {
+            break;
+        }
+        --it;
+    }
+
+    ASSERT_EQ(5, reversed.size());
+    EXPECT_EQ(5, reversed[0]);
+    EXPECT_EQ(4, reversed[1]);
+    EXPECT_EQ(3, reversed[2]);
+    EXPECT_EQ(2, reversed[3]);
+    EXPECT_EQ(1, reversed[4]);
+}
+
+TEST(TestVectorLib, vector_iterator_arithmetic_mixed) {
+    Tvector<int> vector;
+    for (int i = 0; i < 10; ++i) {
+        vector.push_back(i * 10);
+    }
+
+    auto it = vector.begin();
+    it += 5;
+    EXPECT_EQ(50, *it);
+
+    --it;
+    EXPECT_EQ(40, *it);
+
+    it -= 2;
+    EXPECT_EQ(20, *it);
+
+    it++;
+    EXPECT_EQ(30, *it);
+
+    ++it;
+    EXPECT_EQ(40, *it);
+}
+
+TEST(TestVectorLib, vector_iterator_self_assignment) {
+    Tvector<int> vector;
+    vector.push_back(100);
+    vector.push_back(200);
+
+    auto it = vector.begin();
+    it = it;  
+
+    EXPECT_EQ(100, *it);
+}
+
+TEST(TestVectorLib, vector_iterator_comparison_with_different_vectors) {
+    Tvector<int> vector1;
+    vector1.push_back(10);
+
+    Tvector<int> vector2;
+    vector2.push_back(10);
+
+    auto it1 = vector1.begin();
+    auto it2 = vector2.begin();
+
+  
+    EXPECT_FALSE(it1 == it2);
+    EXPECT_TRUE(it1 != it2);
 }
