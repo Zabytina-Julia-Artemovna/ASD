@@ -48,5 +48,14 @@ struct Lexem {
     double (*getFunction() const)(double) {
         return function; 
     }
+    char getOp() const {
+        if (type != Operator && type != UnOperator) {
+            throw std::logic_error("Лексема не является оператором");
+        }
+        if (name.empty()) {
+            return '\0';
+        }
+        return name[0]; 
+    }
 };
 #endif
