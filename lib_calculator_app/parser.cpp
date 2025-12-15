@@ -5,7 +5,7 @@ void Parser::handleAbsBracket(char c, List<Lexem>& lexems,
     if (c != '|') return;
 
     if (!absOpened) {
-        // Открывающая | - преобразуем в abs(
+        // Opened - abs(
         lexems.push_back(Lexem("abs", TypeLexem::Function, DBL_MAX, 4,
             getFunctionByName("abs")));
         lexems.push_back(Lexem("(", TypeLexem::OpenBracket));
@@ -13,7 +13,7 @@ void Parser::handleAbsBracket(char c, List<Lexem>& lexems,
         lastWasOperatorOrBracketOrFunction = true;
     }
     else {
-        // Закрывающая | - преобразуем в )
+        // closed - )
         lexems.push_back(Lexem(")", TypeLexem::CloseBracket));
         absOpened = false;
         lastWasOperatorOrBracketOrFunction = false;
