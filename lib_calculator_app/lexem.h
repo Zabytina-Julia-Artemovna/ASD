@@ -10,7 +10,6 @@ enum TypeLexem {
     Variable,
     Function, 
     Operator, 
-    UnOperator, 
     OpenAbs, 
     CloseAbs };
 struct Lexem {
@@ -49,7 +48,7 @@ struct Lexem {
         return function; 
     }
     char getOp() const {
-        if (type != Operator && type != UnOperator) {
+        if (type != Operator) {
             throw std::logic_error("Лексема не является оператором");
         }
         if (name.empty()) {
