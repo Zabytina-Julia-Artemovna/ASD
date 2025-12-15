@@ -1,10 +1,31 @@
 ﻿#include "parser.h"
+void Parser::handleAbsBracket(char c, List<Lexem>& lexems,
+    bool& lastWasOperatorOrBracketOrFunction,
+    bool& absOpened) {
+    if (c != '|') return;
+
+    if (!absOpened) {
+        // Открывающая | - преобразуем в abs(
+        lexems.push_back(Lexem("abs", TypeLexem::Function, DBL_MAX, 4,
+            getFunctionByName("abs")));
+        lexems.push_back(Lexem("(", TypeLexem::OpenBracket));
+        absOpened = true;
+        lastWasOperatorOrBracketOrFunction = true;
+    }
+    else {
+        // Закрывающая | - преобразуем в )
+        lexems.push_back(Lexem(")", TypeLexem::CloseBracket));
+        absOpened = false;
+        lastWasOperatorOrBracketOrFunction = false;
+    }
+}
 List<Lexem> Parser::parse(std::string expression) {
     if (expression.empty()) {
         throw std::logic_error("Expression is empty");
     }
     List<Lexem> lexems;
     bool lastWasOperatorOrBracketOrFunction = true;
+    bool absOpened = false;
     size_t i = 0;
     while (i < expression.length()) {
         char c = expression[i];
@@ -96,7 +117,8 @@ List<Lexem> Parser::parse(std::string expression) {
             }
         }
         else if (c == '|') {
-            throw std::logic_error("Module || not yet implemented");// TODO: implement module support
+            handleAbsBracket(c, lexems, lastWasOperatorOrBracketOrFunction, absOpened);
+            i++;
         }
         else {
             size_t errorPos = i;
@@ -161,7 +183,7 @@ bool Parser::isValidVariableName(const std::string& name) {
 }
 bool Parser::isFunction(const std::string& name) {
     const std::string functions[] = {
-        "sin", "cos", "tg"
+        "sin", "cos", "tg", "abs"  
     };
     for (const auto& function : functions) {
         if (name == function) {
