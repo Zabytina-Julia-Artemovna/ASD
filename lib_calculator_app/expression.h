@@ -34,5 +34,6 @@ public:
     void set_variable(const std::string& name, double value);
     void set_variables();
     double calculate();
+    double applyOperation(double a, double b, char op) const;
     void print_variables() const;
 };
