@@ -472,3 +472,193 @@ TEST(TestListLib, list_iterator_empty_list) {
     it2 += 5; 
     EXPECT_EQ(it2, list.end());
 }
+TEST(TestListLib, list_iterator_prefix_increment) {
+    // Arrange
+    List<int> list;
+    list.push_back(10);
+    list.push_back(20);
+    list.push_back(30);
+
+    // Act
+    auto it = list.begin();
+    ++it;
+
+    // Assert
+    EXPECT_EQ(20, *it);
+    ++it;
+    EXPECT_EQ(30, *it);
+}
+
+TEST(TestListLib, list_iterator_postfix_increment) {
+    // Arrange
+    List<int> list;
+    list.push_back(10);
+    list.push_back(20);
+    list.push_back(30);
+
+    // Act
+    auto it = list.begin();
+    auto it_copy = it++;
+
+    // Assert
+    EXPECT_EQ(10, *it_copy);  
+    EXPECT_EQ(20, *it);       
+}
+
+TEST(TestListLib, list_iterator_compound_addition) {
+    // Arrange
+    List<int> list;
+    list.push_back(10);
+    list.push_back(20);
+    list.push_back(30);
+    list.push_back(40);
+    list.push_back(50);
+
+    // Act
+    auto it = list.begin();
+    it += 2;
+
+    // Assert
+    EXPECT_EQ(30, *it);
+
+    it += 2;
+    EXPECT_EQ(50, *it);
+}
+
+TEST(TestListLib, list_iterator_equality_operators) {
+    // Arrange
+    List<int> list;
+    list.push_back(10);
+    list.push_back(20);
+    list.push_back(30);
+
+    // Act & Assert
+    auto it1 = list.begin();
+    auto it2 = list.begin();
+    EXPECT_TRUE(it1 == it2);
+
+    ++it1;
+    EXPECT_FALSE(it1 == it2);
+    EXPECT_TRUE(it1 != it2);
+}
+
+TEST(TestListLib, list_iterator_dereference_const) {
+    // Arrange
+    List<int> list;
+    list.push_back(100);
+    list.push_back(200);
+
+    // Act
+    const auto& const_list = list;
+    auto it = const_list.begin();
+
+    // Assert
+    EXPECT_EQ(100, *it);
+    ++it;
+    EXPECT_EQ(200, *it);
+}
+TEST(TestListLib, list_iterator_range_based_for_loop) {
+    // Arrange
+    List<int> list;
+    list.push_back(1);
+    list.push_back(2);
+    list.push_back(3);
+    list.push_back(4);
+    list.push_back(5);
+    // Act
+    std::vector<int> values;
+    for (const auto& value : list) {
+        values.push_back(value);
+    }
+    // Assert
+    ASSERT_EQ(5, values.size());
+    EXPECT_EQ(1, values[0]);
+    EXPECT_EQ(2, values[1]);
+    EXPECT_EQ(3, values[2]);
+    EXPECT_EQ(4, values[3]);
+    EXPECT_EQ(5, values[4]);
+}
+TEST(TestListLib, list_iterator_range_based_for_loop_modify) {
+    // Arrange
+    List<int> list;
+    list.push_back(1);
+    list.push_back(2);
+    list.push_back(3);
+
+    // Act
+    for (auto& value : list) {
+        value *= 2;
+    }
+    // Assert
+    auto it = list.begin();
+    EXPECT_EQ(2, *it);
+    ++it;
+    EXPECT_EQ(4, *it);
+    ++it;
+    EXPECT_EQ(6, *it);
+}
+TEST(TestListLib, list_iterator_manual_for_loop) {
+    // Arrange
+    List<int> list;
+    list.push_back(10);
+    list.push_back(20);
+    list.push_back(30);
+    list.push_back(40);
+
+    // Act
+    std::vector<int> values;
+    for (auto it = list.begin(); it != list.end(); ++it) {
+        values.push_back(*it);
+    }
+    // Assert
+    ASSERT_EQ(4, values.size());
+    EXPECT_EQ(10, values[0]);
+    EXPECT_EQ(20, values[1]);
+    EXPECT_EQ(30, values[2]);
+    EXPECT_EQ(40, values[3]);
+}
+TEST(TestListLib, list_iterator_dereference_end_exception) {
+    // Arrange
+    List<int> list;
+    list.push_back(10);
+    // Act & Assert
+    auto it = list.end();
+    EXPECT_THROW(*it, std::runtime_error);
+    auto begin_it = list.begin();
+    ++begin_it; 
+    EXPECT_THROW(*begin_it, std::runtime_error);
+}
+TEST(TestListLib, list_iterator_copy_constructor) {
+    // Arrange
+    List<int> list;
+    list.push_back(100);
+    list.push_back(200);
+    // Act
+    auto it1 = list.begin();
+    auto it2 = it1;  
+    // Assert
+    EXPECT_TRUE(it1 == it2);
+    EXPECT_EQ(100, *it1);
+    EXPECT_EQ(100, *it2);
+    ++it1;
+    EXPECT_FALSE(it1 == it2);
+    EXPECT_EQ(200, *it1);
+    EXPECT_EQ(100, *it2); 
+}
+TEST(TestListLib, list_iterator_assignment_operator) {
+    // Arrange
+    List<int> list;
+    list.push_back(100);
+    list.push_back(200);
+    list.push_back(300);
+    // Act
+    auto it1 = list.begin();
+    auto it2 = list.begin();
+    ++it2;
+    ++it2; 
+    it1 = it2; 
+    // Assert
+    EXPECT_TRUE(it1 == it2);
+    EXPECT_EQ(300, *it1);
+    EXPECT_EQ(300, *it2);
+}
