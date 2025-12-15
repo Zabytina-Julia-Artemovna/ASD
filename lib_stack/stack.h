@@ -7,6 +7,7 @@ private:
 public:
     Stack(size_t size);
     Stack(const Stack<T>& other);
+    size_t size();
     const Tvector<T>& getData() const;
     Stack<T>& operator=(const Stack<T>& other);
     bool operator ==(const Stack<T>& other) const;
@@ -18,6 +19,10 @@ public:
     inline bool is_full() const noexcept;
     void clear() noexcept; 
 };
+template <class T>
+size_t Stack<T>::size()  {
+    return _data.get_size();
+}
 template <class T>
 Stack<T>::Stack(size_t size): _data(size) {
 }
