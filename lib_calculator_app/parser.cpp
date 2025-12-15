@@ -22,7 +22,7 @@ List<Lexem> Parser::parse(std::string expression) {
         throw std::logic_error("Expression is empty");
     }
     List<Lexem> lexems;
-    bool lastWasOperatorOrBracketOrFunction = true;
+    bool lastWasOperatorOrBracketOrFunction = false;
     bool absOpened = false;
     size_t i = 0;
     while (i < expression.length()) {
@@ -63,22 +63,30 @@ List<Lexem> Parser::parse(std::string expression) {
             lexems.push_back(lexem);
             lastWasOperatorOrBracketOrFunction = false;
             i++;
-        } else if (isBinaryOperator(c)) {
+        }
+        else if (isBinaryOperator(c)) {
             bool isUnary = isUnaryOperator(c, lastWasOperatorOrBracketOrFunction);
-            if (isUnary && c != '+') {
-                Lexem lexem1(0.0);
-                Lexem lexem2("-", TypeLexem::Operator, DBL_MAX, 1);
-                lexems.push_back(lexem1);
-                lexems.push_back(lexem2);
-                lastWasOperatorOrBracketOrFunction = true;
-            } else {
+            if (isUnary) {
+                if (c == '-') {
+                    Lexem lexem1(0.0); 
+                    Lexem lexem2("-", TypeLexem::Operator, DBL_MAX, 1);
+                    lexems.push_back(lexem1);
+                    lexems.push_back(lexem2);
+                    lastWasOperatorOrBracketOrFunction = true;
+                }
+                else if (c == '+') {
+                    lastWasOperatorOrBracketOrFunction = true;
+                }
+            }
+            else {
                 int priority = getOperatorPriority(c);
                 Lexem lexem(std::string(1, c), TypeLexem::Operator, DBL_MAX, priority);
                 lexems.push_back(lexem);
                 lastWasOperatorOrBracketOrFunction = true;
             }
             i++;
-        } else if (isLetter(c) || c == '_') { //function/variable
+        }
+        else if (isLetter(c) || c == '_') { //function/variable
             std::string word = "";
             word += c;
             i++;

@@ -22,7 +22,6 @@ private:
 public:
     Expression() : _expression_id(0), _expression("") {}
     Expression(size_t id, std::string expression);
-    Expression(size_t id, const List<Lexem>& list);
     const std::string& get_expression() const {
         return _expression;
     }
@@ -32,7 +31,7 @@ public:
     void clear_variables() {
         _variables_map.clear();
     }
-    std::map<std::string, double> variables_map() {
+    const std::map<std::string, double>& variables_map() const {
         return _variables_map;
     }
     void set_variable(const std::string& name, double value);

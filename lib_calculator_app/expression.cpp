@@ -11,18 +11,6 @@ Expression::Expression(size_t id, std::string expression) :
         );
     }
 }
-Expression::Expression(size_t id, const List<Lexem>& list) :
-    _expression_id(id), _lexems(list),
-    _expression("Constructed by lexems") {
-    try {
-        build_polish_notation();
-    }
-    catch (const std::exception& ex) {
-        throw std::logic_error(
-            "Expression ID: " + std::to_string(id) + ": " + ex.what()
-        );
-    }
-}
 bool Expression::isOperatorOrFunction(const Lexem& lexem) {
     return lexem.getType() == Operator || lexem.getType() == Function;
 }
@@ -33,7 +21,7 @@ bool Expression::shouldPopFromStack(const Lexem& stackTop, const Lexem& current)
 }
 void Expression::build_polish_notation() {
     List<Lexem> output;
-    Stack<Lexem> stack(_lexems.get_size());
+    Stack<Lexem> stack(_polish_record.get_size());
     for (auto it = _lexems.begin(); it != _lexems.end(); ++it) {
         Lexem current = *it;
         switch (current.getType()) {
@@ -108,7 +96,7 @@ double Expression::calculate() {
             );
         }
     }
-    Stack<double> stack(_polish_record.get_size());
+    Stack<double> stack(0);
     for (Lexem lexem : _polish_record) {
         switch (lexem.getType()) {
         case Constant:
