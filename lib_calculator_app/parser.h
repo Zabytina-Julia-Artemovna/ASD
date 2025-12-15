@@ -23,7 +23,7 @@ namespace Parser {
     bool isValidVariableName(const std::string& name);
     bool isFunction(const std::string& name);
     bool isBinaryOperator(char c);
-    bool isUnaryOperator(char c, bool lastWasOperatorOrBracket);
+    bool isUnaryOperator(char c, bool lastWasOperatorOrBracket, size_t position);
     bool isValidNumberFormat(const std::string& number);
     int getOperatorPriority(char c);
     std::string formatError(const std::string& expression, size_t position, const std::string& message);

@@ -113,7 +113,7 @@ List<Lexem> Parser::parse(std::string expression) {
             i++;
         }
         else if (isBinaryOperator(c)) {
-            bool isUnary = isUnaryOperator(c, lastWasOperatorOrBracketOrFunction);
+            bool isUnary = isUnaryOperator(c, lastWasOperatorOrBracketOrFunction, i);
             if (isUnary) {
                 if (c == '-') {
                     Lexem lexem1(0.0); 
@@ -249,11 +249,11 @@ bool Parser::isFunction(const std::string& name) {
 bool Parser::isBinaryOperator(char c) {
     return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';
 }
-bool Parser::isUnaryOperator(char c, bool lastWasOperatorOrBracket) {
+bool Parser::isUnaryOperator(char c, bool lastWasOperatorOrBracket, size_t position) {
     if (c != '-') {
         return false;
     }
-    return lastWasOperatorOrBracket;
+    return position == 0 || lastWasOperatorOrBracket;
 }
 int Parser::getOperatorPriority(char c) {
     switch (c) {
