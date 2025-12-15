@@ -31,6 +31,9 @@ public:
     void clear_variables() {
         _variables_map.clear();
     }
+    std::map<std::string, double> variables_map() {
+        return _variables_map;
+    }
     void set_variable(const std::string& name, double value);
     void set_variables();
     double calculate();

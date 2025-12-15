@@ -25,7 +25,7 @@ namespace Parser {
     int getOperatorPriority(char c);
     std::string formatError(const std::string& expression, size_t position, const std::string& message);
     double (*getFunctionByName(const std::string& name))(double);
-    void Parser::handleAbsBracket(char c, List<Lexem>& lexems,
+    void handleAbsBracket(char c, List<Lexem>& lexems,
         bool& lastWasOperatorOrBracketOrFunction,
         bool& absOpened);
 }
