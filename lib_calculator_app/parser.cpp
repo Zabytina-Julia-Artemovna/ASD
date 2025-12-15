@@ -2,9 +2,7 @@
 void Parser::handleAbsBracket(char c, List<Lexem>& lexems,
     bool& lastWasOperatorOrBracketOrFunction,
     bool& absOpened) {
-    if (c != '|') return;
-
-    if (!absOpened) {
+   if (!absOpened) {
         // Opened - abs(
         lexems.push_back(Lexem("abs", TypeLexem::Function, DBL_MAX, 4,
             getFunctionByName("abs")));
