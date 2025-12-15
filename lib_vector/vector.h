@@ -641,11 +641,27 @@
         if (position >= _size) {
             throw std::out_of_range("Invalid position");
         }
-        size_t real_pos = get_real_position(position);
-        _states[real_pos] = State::deleted;
+        _states[position] = State::deleted;
         _deleted++;
         if (_deleted * 100 > _size * MAX_PERCENT_DELETED) {
-            compact_storage();
+            T* new_data = new T[_size - _deleted + RESERVE_MEMORY];
+            State* new_states = new State[_size - _deleted + RESERVE_MEMORY];
+            size_t new_index = 0;
+            for (size_t i = 0; i < _size; i++) {
+                if (_states[i] == State::busy) {
+                    new_data[new_index] = std::move(_data[i]);
+                    new_states[new_index] = State::busy;
+                    new_index++;
+                }
+            }
+            delete[] _data;
+            delete[] _states;
+
+            _data = new_data;
+            _states = new_states;
+            _size = new_index;
+            _capacity = _size + RESERVE_MEMORY;
+            _deleted = 0;
         }
     }
     template <class T>
