@@ -1,4 +1,27 @@
 ﻿#include "parser.h"
+bool Parser::check_brackets(std::string str) {
+    Stack<char> stack(str.length());
+    stack.clear();
+    for (char c : str) {
+        if (c == '(' || c == '[' || c == '{') {
+            stack.push(c);
+        }
+        else if (c == ')' || c == ']' || c == '}') {
+            if (stack.is_empty()) {
+                return false;
+            }
+            char top = stack.top();
+            stack.pop();
+
+            if ((c == ')' && top != '(') ||
+                (c == ']' && top != '[') ||
+                (c == '}' && top != '{')) {
+                return false;
+            }
+        }
+    }
+    return stack.is_empty();
+}
 void Parser::handleAbsBracket(char c, List<Lexem>& lexems,
     bool& lastWasOperatorOrBracketOrFunction,
     bool& absOpened) {
@@ -28,10 +51,14 @@ List<Lexem> Parser::parse(std::string expression) {
     if (expression.empty()) {
         throw std::logic_error("Expression is empty");
     }
+    if (check_brackets(expression) == false) {
+        throw std::logic_error("Mismatched brackets");
+    }
     List<Lexem> lexems;
     bool lastWasOperatorOrBracketOrFunction = false;
     bool absOpened = false;
     size_t i = 0;
+    
     while (i < expression.length()) {
         char c = expression[i];
         if (c == ' ') {

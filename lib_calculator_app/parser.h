@@ -1,5 +1,6 @@
 #pragma once
 #include "../lib_list/List.h"
+#include "../lib_stack/stack.h"
 #include "lexem.h"
 #include <cmath>
 #include <string>
@@ -9,6 +10,7 @@
 #include <algorithm>
 namespace Parser {
     List<Lexem> parse(std::string expression);
+    bool check_brackets(std::string str);
     double getSin(double value);
     double getCos(double value);
     double getTg(double value);
