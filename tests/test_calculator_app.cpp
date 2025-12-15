@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <gtest/gtest.h>
 #include "../lib_calculator_app/expression.h"
+
 TEST(TestCalculatorAppLib, parse_expression_empty) {
     // Arrange & Act
     std::string expression = "";
@@ -213,4 +214,83 @@ TEST(TestCalculatorAppLib, expression_variables_map) {
     ASSERT_EQ(vars.size(), 2);
     ASSERT_DOUBLE_EQ(vars["x"], 10.0);
     ASSERT_DOUBLE_EQ(vars["y"], 20.0);
+}
+TEST(TestCalculatorAppLib, expression_build_polish_notation_simple_addition) {
+    // Arrange
+    std::string expr_str = "a+b";
+    Expression expr(1, expr_str); 
+    // Act & Assert 
+    ASSERT_NO_THROW(Expression expr(1, expr_str));
+}
+TEST(TestCalculatorAppLib, expression_build_polish_notation_operator_priority) {
+    // Arrange & Act
+    Expression expr(1, "a+b*c"); 
+    // Assert
+    expr.set_variable("a", 1.0);
+    expr.set_variable("b", 2.0);
+    expr.set_variable("c", 3.0);
+    ASSERT_NO_THROW(expr.calculate());
+    ASSERT_DOUBLE_EQ(expr.calculate(), 7.0); 
+}
+TEST(TestCalculatorAppLib, expression_build_polish_notation_with_parentheses) {
+    // Arrange & Act
+    Expression expr(1, "(a+b)*c"); 
+    // Assert
+    expr.set_variable("a", 1.0);
+    expr.set_variable("b", 2.0);
+    expr.set_variable("c", 3.0);
+    ASSERT_DOUBLE_EQ(expr.calculate(), 9.0); 
+}
+TEST(TestCalculatorAppLib, expression_build_polish_notation_complex) {
+    // Arrange & Act
+    Expression expr(1, "a+b*(c-d)/e"); 
+    // Assert
+    expr.set_variable("a", 1.0);
+    expr.set_variable("b", 2.0);
+    expr.set_variable("c", 5.0);
+    expr.set_variable("d", 3.0);
+    expr.set_variable("e", 4.0);
+    ASSERT_DOUBLE_EQ(expr.calculate(), 2.0);
+}
+TEST(TestCalculatorAppLib, expression_build_polish_notation_power_operator) {
+    // Arrange & Act
+    Expression expr(1, "a^b*c"); 
+    // Assert
+    expr.set_variable("a", 2.0);
+    expr.set_variable("b", 3.0);
+    expr.set_variable("c", 4.0);
+    ASSERT_DOUBLE_EQ(expr.calculate(), 32.0);
+}
+TEST(TestCalculatorAppLib, expression_build_polish_notation_with_functions) {
+    // Arrange & Act
+    Expression expr(1, "sin(a)+cos(b)"); 
+    // Assert
+    expr.set_variable("a", 0.0);  
+    expr.set_variable("b", 0.0);
+    ASSERT_DOUBLE_EQ(expr.calculate(), 1.0);
+}
+TEST(TestCalculatorAppLib, expression_build_polish_notation_nested_functions) {
+    // Arrange & Act
+    Expression expr(1, "sin(cos(a))");
+    // Assert
+    expr.set_variable("a", 0.0); 
+    ASSERT_NEAR(expr.calculate(), 0.8414709848, 1e-9);
+}
+TEST(TestCalculatorAppLib, expression_build_polish_notation_with_abs_bars) {
+    // Arrange & Act
+    Expression expr(1, "|a-b|+c"); 
+    // Assert
+    expr.set_variable("a", 5.0);
+    expr.set_variable("b", 8.0);
+    expr.set_variable("c", 2.0);
+    // |5-8| + 2 = 3 + 2 = 5
+    ASSERT_DOUBLE_EQ(expr.calculate(), 5.0);
+}
+TEST(TestCalculatorAppLib, expression_build_polish_notation_unary_minus) {
+    // Arrange & Act
+    Expression expr(1, "-a+b"); 
+    // Assert
+    expr.set_variable("a", 5.0);
+    expr.set_variable("b", 3.0);
+    ASSERT_DOUBLE_EQ(expr.calculate(), -2.0);
 }
