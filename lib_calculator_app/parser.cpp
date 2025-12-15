@@ -17,6 +17,13 @@ void Parser::handleAbsBracket(char c, List<Lexem>& lexems,
         lastWasOperatorOrBracketOrFunction = false;
     }
 }
+bool  Parser::isValidNumberFormat(const std::string& number) {
+    int dotCount = 0;
+    for (char c : number) {
+        if (c == '.') dotCount++;
+    }
+    return dotCount <= 1;
+}
 List<Lexem> Parser::parse(std::string expression) {
     if (expression.empty()) {
         throw std::logic_error("Expression is empty");
@@ -39,6 +46,20 @@ List<Lexem> Parser::parse(std::string expression) {
                 (isDigit(expression[i]) || expression[i] == '.')) {
                 number += expression[i];
                 i++;
+            }
+            if (!isValidNumberFormat(number)) {
+                size_t errorPos = i - number.length();
+                std::string errorMsg = formatError(expression, errorPos,
+                    "Invalid number format: '" + number + "'");
+                throw std::logic_error(errorMsg);
+            }
+            if (i < expression.length() &&
+                (isLetter(expression[i]) || expression[i] == '_') &&
+                expression[i] != 'e' && expression[i] != 'E') { // исключаем научную запись
+                size_t errorPos = i - number.length();
+                std::string errorMsg = formatError(expression, errorPos,
+                    "Invalid variable/function format: '" + number + expression[i] + "'");
+                throw std::logic_error(errorMsg);
             }
             try {
                 double constant = std::stod(number);
