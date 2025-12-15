@@ -20,6 +20,7 @@ private:
 
     bool has_variable(const std::string& name) const;
 public:
+    Expression() : _expression_id(0), _expression("") {}
     Expression(size_t id, std::string expression);
     Expression(size_t id, const List<Lexem>& list);
     const std::string& get_expression() const {
