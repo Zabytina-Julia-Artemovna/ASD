@@ -1,5 +1,5 @@
 #pragma once
-//#include "../lib_matrix/matrix.h"
+#include "../lib_matrix/matrix.h"
 #include "../lib_stack/stack.h"
 #include "../lib_list/List.h"
 #include "../lib_dsu/dsu.h"
@@ -9,57 +9,57 @@
 #include <string>
 #include <cctype>
 #include <unordered_set>
-//template <class T>
-//std::pair<size_t, size_t> find_min_neighbor_coords(const Matrix<T>& matrix, size_t x, size_t y) {
-//    T min_val = matrix[x][y];
-//    size_t min_x = x;
-//    size_t min_y = y;
-//    if (x > 0 && matrix[x - 1][y] < min_val) {
-//        min_val = matrix[x - 1][y];
-//        min_x = x - 1;
-//        min_y = y;
-//    }
-//    if (x < matrix.getM() - 1 && matrix[x + 1][y] < min_val) {
-//        min_val = matrix[x + 1][y];
-//        min_x = x + 1;
-//        min_y = y;
-//    }
-//    if (y > 0 && matrix[x][y - 1] < min_val) {
-//        min_val = matrix[x][y - 1];
-//        min_x = x;
-//        min_y = y - 1;
-//    }
-//    if (y < matrix.getN() - 1 && matrix[x][y + 1] < min_val) {
-//        min_val = matrix[x][y + 1];
-//        min_x = x;
-//        min_y = y + 1;
-//    }
-//    return { min_x, min_y };
-//}
+template <class T>
+std::pair<size_t, size_t> find_min_neighbor_coords(const Matrix<T>& matrix, size_t x, size_t y) {
+    T min_val = matrix[x][y];
+    size_t min_x = x;
+    size_t min_y = y;
+    if (x > 0 && matrix[x - 1][y] < min_val) {
+        min_val = matrix[x - 1][y];
+        min_x = x - 1;
+        min_y = y;
+    }
+    if (x < matrix.getM() - 1 && matrix[x + 1][y] < min_val) {
+        min_val = matrix[x + 1][y];
+        min_x = x + 1;
+        min_y = y;
+    }
+    if (y > 0 && matrix[x][y - 1] < min_val) {
+        min_val = matrix[x][y - 1];
+        min_x = x;
+        min_y = y - 1;
+    }
+    if (y < matrix.getN() - 1 && matrix[x][y + 1] < min_val) {
+        min_val = matrix[x][y + 1];
+        min_x = x;
+        min_y = y + 1;
+    }
+    return { min_x, min_y };
+}
 size_t getRandomIndex(size_t max) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<size_t> dist(0, max - 1);
     return dist(gen);
 }
-//template <class T>
-//T find_local_minimum(const Matrix<T>& matrix) {
-//    size_t x = getRandomIndex(matrix.getM());
-//    size_t y = getRandomIndex(matrix.getN());
-//
-//    while (true) {
-//        std::pair<size_t, size_t> min_coords = find_min_neighbor_coords(matrix, x, y);
-//        size_t new_x = min_coords.first;
-//        size_t new_y = min_coords.second;
-//
-//        if (new_x == x && new_y == y) {
-//            return matrix[x][y];
-//        }
-//
-//        x = new_x;
-//        y = new_y;
-//    }
-//}
+template <class T>
+T find_local_minimum(const Matrix<T>& matrix) {
+    size_t x = getRandomIndex(matrix.getM());
+    size_t y = getRandomIndex(matrix.getN());
+
+    while (true) {
+        std::pair<size_t, size_t> min_coords = find_min_neighbor_coords(matrix, x, y);
+        size_t new_x = min_coords.first;
+        size_t new_y = min_coords.second;
+
+        if (new_x == x && new_y == y) {
+            return matrix[x][y];
+        }
+
+        x = new_x;
+        y = new_y;
+    }
+}
 bool check_brackets(std::string str) {
     Stack<char> stack(str.length());
     stack.clear();
@@ -227,62 +227,126 @@ Node<T>* find_loop_start(List<T>& list) {
     }
     return it2_slow;
 }
-//size_t get_count_of_islands(Matrix<int>& matrix) {
-//    if (matrix.is_empty()) {
-//        return 0;
-//    }
-//    size_t N = matrix.getN();
-//    size_t M = matrix.getM();
-//    DSU islands(M * N);
-//
-//    // ¬се 8 направлений
-//    int directions[8][2] = {
-//        {-1, -1}, {-1, 0}, {-1, 1},  // верхние
-//        {0, -1},           {0, 1},   // левый, правый  
-//        {1, -1},  {1, 0},  {1, 1}    // нижние
-//    };
-//
-//    for (size_t i = 0; i < M; i++) {
-//        for (size_t j = 0; j < N; j++) {
-//            if (matrix[i][j] == 1) {
-//                // ѕровер€ем всех 8 соседей
-//                for (auto& dir : directions) {
-//                    int ni = i + dir[0];
-//                    int nj = j + dir[1];
-//
-//                    if (ni >= 0 && ni < M && nj >= 0 && nj < N) {
-//                        if (matrix[ni][nj] == 1) {
-//                            islands.dsu_union(i * N + j, ni * N + nj);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    std::unordered_set<int> unique_roots;
-//    for (size_t i = 0; i < M; i++) {
-//        for (size_t j = 0; j < N; j++) {
-//            if (matrix[i][j] == 1) {
-//                unique_roots.insert(islands.dsu_find_recursive(i * N + j));
-//            }
-//        }
-//    }
-//    return unique_roots.size();
-//}
-DSU generate(int x, int y, int n, int m) {
+size_t get_count_of_islands(Matrix<int>& matrix) {
+    if (matrix.is_empty()) {
+        return 0;
+    }
+    size_t N = matrix.getN();
+    size_t M = matrix.getM();
+    DSU islands(M * N);
+
+    // ¬се 8 направлений
+    int directions[8][2] = {
+        {-1, -1}, {-1, 0}, {-1, 1},  // верхние
+        {0, -1},           {0, 1},   // левый, правый  
+        {1, -1},  {1, 0},  {1, 1}    // нижние
+    };
+
+    for (size_t i = 0; i < M; i++) {
+        for (size_t j = 0; j < N; j++) {
+            if (matrix[i][j] == 1) {
+                // ѕровер€ем всех 8 соседей
+                for (auto& dir : directions) {
+                    int ni = i + dir[0];
+                    int nj = j + dir[1];
+
+                    if (ni >= 0 && ni < M && nj >= 0 && nj < N) {
+                        if (matrix[ni][nj] == 1) {
+                            islands.dsu_union(i * N + j, ni * N + nj);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    std::unordered_set<int> unique_roots;
+    for (size_t i = 0; i < M; i++) {
+        for (size_t j = 0; j < N; j++) {
+            if (matrix[i][j] == 1) {
+                unique_roots.insert(islands.dsu_find_recursive(i * N + j));
+            }
+        }
+    }
+    return unique_roots.size();
+}
+
+Matrix<bool> generate1(int x, int y, size_t n, size_t m) {
+    Matrix<bool> matrix(n + 1, m + 1);
+    for (size_t i = 0; i < n + 1; i++) {
+        for (size_t j = 0; j < m + 1; j++) {
+            matrix[i][j] = true;
+        }
+    }
+    DSU dsu(n * m);
+    dsu.dsu_union(x, y); 
+    for (size_t i = 0; i < n; i++) {
+        for (size_t j = 0; j < m; j++) {
+            size_t current = i * m + j;
+            if (j < m - 1 && getRandomIndex(9) >= 3) {
+                size_t right = i * m + (j + 1);
+                dsu.dsu_union(current, right);
+      
+                matrix[i + 1][j + 1] = false; 
+                if (j + 2 <= m) matrix[i + 1][j + 2] = false; 
+            }
+            if (i < n - 1 && getRandomIndex(9) >= 3) {
+                int bottom = (i + 1) * m + j;
+                dsu.dsu_union(current, bottom);
+              
+                matrix[i + 1][j + 1] = false; 
+                if (i + 2 <= n) matrix[i + 2][j + 1] = false; 
+            }
+        }
+    }
+    return matrix;
+}
+void print_labirint1(Matrix<bool> matrix, size_t n, size_t m) {
+    for (size_t j = 0; j < m; j++) {
+        std::cout << "+---";
+    }
+    std::cout << "+" << std::endl;
+
+    for (size_t i = 0; i < n; i++) {
+        std::cout << "|";
+        for (size_t j = 0; j < m; j++) {
+            int cell_num = i * m + j;
+            if (cell_num < 10) std::cout << " " << cell_num << " ";
+            else std::cout << cell_num << " ";
+
+            bool has_right_wall = matrix[i][j + 1] && matrix[i + 1][j + 1];
+            std::cout << (has_right_wall ? "|" : " ");
+        }
+        std::cout << std::endl;
+
+        if (i < n - 1) {
+            for (size_t j = 0; j < m; j++) {
+                std::cout << "+";
+                bool has_bottom_wall = matrix[i + 1][j] && matrix[i + 1][j + 1];
+                std::cout << (has_bottom_wall ? "---" : "   ");
+            }
+            std::cout << "+" << std::endl;
+        }
+    }
+
+    for (size_t j = 0; j < m; j++) {
+        std::cout << "+---";
+    }
+    std::cout << "+" << std::endl;
+}
+
+DSU generate2(int x, int y, int n, int m) {
     DSU dsu(n * m);
     dsu.dsu_union(x, y);
-    // соедин€ем соседние с веро€тностью 70
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             int current = i * m + j;
 
-            if (j < m - 1 && getRandomIndex(9) >= 3) { 
+            if (j < m - 1 && getRandomIndex(9) >= 3) {
                 int right = i * m + (j + 1);
                 dsu.dsu_union(current, right);
             }
-            if (i < n - 1 && getRandomIndex(9) >= 3) { 
+            if (i < n - 1 && getRandomIndex(9) >= 3) {
                 int bottom = (i + 1) * m + j;
                 dsu.dsu_union(current, bottom);
             }
@@ -290,31 +354,27 @@ DSU generate(int x, int y, int n, int m) {
     }
     return dsu;
 }
-void print_labirint(DSU labirint, int n, int m) {
-    int entry = 0;
-    int exit = n * m - 1;
+void print_labirint2(DSU labirint, int n, int m) {
     std::cout << "+";
     for (int j = 0; j < m; j++) {
         std::cout << "---+";
     }
     std::cout << std::endl;
+
     for (int i = 0; i < n; i++) {
         std::cout << "|";
+
         for (int j = 0; j < m; j++) {
             int cell = i * m + j;
-            if (cell < 10) {
-                std::cout << " " << cell << " ";
-            }
-            else {
-                std::cout << cell << " ";
-            }
+            if (cell < 10) std::cout << " " << cell << " ";
+            else std::cout << cell << " ";
             if (j < m - 1) {
                 int right_cell = i * m + (j + 1);
                 if (labirint.dsu_find_recursive(cell) == labirint.dsu_find_recursive(right_cell)) {
                     std::cout << " "; 
                 }
                 else {
-                    std::cout << "|";
+                    std::cout << "|"; 
                 }
             }
             else {
@@ -327,17 +387,18 @@ void print_labirint(DSU labirint, int n, int m) {
             for (int j = 0; j < m; j++) {
                 int cell = i * m + j;
                 int bottom_cell = (i + 1) * m + j;
-
                 if (labirint.dsu_find_recursive(cell) == labirint.dsu_find_recursive(bottom_cell)) {
                     std::cout << "   +"; 
                 }
                 else {
-                    std::cout << "---+";
+                    std::cout << "---+"; 
                 }
             }
             std::cout << std::endl;
         }
     }
+
+    // Ќижн€€ граница - всегда стена
     std::cout << "+";
     for (int j = 0; j < m; j++) {
         std::cout << "---+";
