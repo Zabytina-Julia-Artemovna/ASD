@@ -2,7 +2,9 @@
 //#define EASY_EXAMPLE
 //#define CIRCLES_AND_SPHERES
 
-#define CALCULATOR
+//#define CALCULATOR
+#define DSU_LABIRINT
+
 #ifdef EASY_EXAMPLE
 #include <iostream>
 #include <iomanip>
@@ -622,5 +624,20 @@ int main() {
         }
     }
     return 0;
+}
+#endif
+#ifdef DSU_LABIRINT 
+#include "../lib_dsu/dsu.h"
+#include "../lib_algoritm/algoritm.h"
+int main() {
+    int n = 5, m = 10;
+    int x = 1;         
+    int y = n * m - 1;   
+
+    DSU dsu = generate(x, y, n, m);
+    print_labirint(dsu, n, m);
+
+    return 0;
+
 }
 #endif
