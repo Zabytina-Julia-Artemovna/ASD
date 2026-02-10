@@ -45,13 +45,11 @@ Monom Monom::operator /(const Monom& other_monom) const {
     if (std::abs(other_monom.get_coefficient()) < EPSILON) {
         throw std::logic_error("Division by zero");
     }
-
     if (other_monom.powerX() > this->powerX() ||
         other_monom.powerY() > this->powerY() ||
         other_monom.powerZ() > this->powerZ()) {
         throw std::logic_error("Negative power in division");
     }
-
     double new_coefficient = this->get_coefficient() / other_monom.get_coefficient();
     int new_x = this->powerX() - other_monom.powerX();
     int new_y = this->powerY() - other_monom.powerY();
@@ -64,6 +62,48 @@ Monom Monom::operator /(double value) const {
     }
     double new_coefficient = this->get_coefficient() / value;
     return Monom(new_coefficient, this->powerX(), this->powerY(), this->powerZ());
+}
+Monom& Monom::operator +=(const Monom& other_monom) {
+    if (*this != other_monom) {
+        throw std::logic_error("Monoms must be similar");
+    }
+    double new_coefficient = this->get_coefficient() + other_monom.get_coefficient();
+    this->set_coefficient(new_coefficient);
+    return *this;
+}
+Monom& Monom::operator -=(const Monom& other_monom) {
+    if (*this != other_monom) {
+        throw std::logic_error("Monoms must be similar");
+    }
+    double new_coefficient = this->get_coefficient() - other_monom.get_coefficient();
+    this->set_coefficient(new_coefficient);
+    return *this;
+}
+Monom& Monom::operator *=(const Monom& other_monom) {
+    double new_coefficient = this->get_coefficient() * other_monom.get_coefficient();
+    int new_x = this->powerX() + other_monom.powerX();
+    int new_y = this->powerY() + other_monom.powerY();
+    int new_z = this->powerZ() + other_monom.powerZ();
+    this->set_coefficient(new_coefficient);
+    this->set_powers(new_x, new_y, new_z);
+    return *this;
+}
+Monom& Monom::operator /=(const Monom& other_monom) {
+    if (std::abs(other_monom.get_coefficient()) < EPSILON) {
+        throw std::logic_error("Division by zero");
+    }
+    if (other_monom.powerX() > this->powerX() ||
+        other_monom.powerY() > this->powerY() ||
+        other_monom.powerZ() > this->powerZ()) {
+        throw std::logic_error("Negative power in division");
+    }
+    double new_coefficient = this->get_coefficient() / other_monom.get_coefficient();
+    int new_x = this->powerX() - other_monom.powerX();
+    int new_y = this->powerY() - other_monom.powerY();
+    int new_z = this->powerZ() - other_monom.powerZ();
+    this->set_coefficient(new_coefficient);
+    this->set_powers(new_x, new_y, new_z);
+    return *this;
 }
 double Monom::calculate(double x, double y, double z) const {
     return _coefficient *
