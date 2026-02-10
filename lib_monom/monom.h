@@ -37,7 +37,6 @@ public:
         , _powers{ x_power, y_power, z_power } {  
     }
     Monom(const Monom& other) = default; 
-    bool is_similar(const Monom& other) const noexcept;
     bool operator ==(const Monom& other_monom) const; //проверку подобия двух мономов(мономы подобны, если у них одинаковые степени);
     bool operator !=(const Monom& other_monom) const; 
     bool operator >(const Monom& other_monom) const;
@@ -56,8 +55,9 @@ public:
     Monom& operator *=(const Monom& other_monom);
     Monom& operator /=(const Monom& other_monom);
 
-    Monom operator -() const; //должен возвращать новый моном с противоположным коэффициентом
-
+    Monom operator -() const {
+        return Monom(_coefficient * (-1), _powers[0], _powers[1], _powers[2]);
+    }
     double calculate(double x, double y, double z);
 
     friend std::ostream& operator<<(std::ostream& out, const Monom& monom);
