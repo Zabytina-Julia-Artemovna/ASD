@@ -34,7 +34,10 @@ public:
     }
     Monom(double coefficient, int x_power, int y_power, int z_power)
         : _coefficient(coefficient)
-        , _powers{ x_power, y_power, z_power } {  
+        , _powers{ x_power, y_power, z_power } {
+        if (x_power < 0 || y_power < 0 || z_power < 0) {
+            throw std::invalid_argument("Powers cannot be negative");
+        }
     }
     Monom(const Monom& other) = default; 
     bool operator ==(const Monom& other_monom) const;
@@ -61,5 +64,5 @@ public:
     double calculate(double x, double y, double z) const;
 
     friend std::ostream& operator<<(std::ostream& out, const Monom& monom);
-    friend std::istream& operator>>(std::istream& in, const Monom& monom);
+    friend std::istream& operator>>(std::istream& input, Monom& monom);
 };
