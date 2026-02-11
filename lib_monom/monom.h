@@ -23,6 +23,9 @@ public:
         _coefficient = value;
     }
     void set_powers(int value1, int value2, int value3) {
+        if (value1 < 0 || value2 < 0 || value3 < 0) {
+            throw std::invalid_argument("Powers cannot be negative");
+        }
         _powers[0] = value1;
         _powers[1] = value2;
         _powers[2] = value3;
