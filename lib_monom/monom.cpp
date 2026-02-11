@@ -8,18 +8,36 @@ bool Monom::operator ==(const Monom& other_monom) const {
 bool Monom::operator !=(const Monom& other_monom) const {
     return !(*this == other_monom);
 }
-//bool Monom::operator >(const Monom& other_monom) const {//?
-//    if (this->powerX() <= other_monom.powerX()) { 
-//        return false;
-//    }
-//    return true;
-//}
-//bool Monom::operator <(const Monom& other_monom) const {//?
-//    if (this->powerX() >= other_monom.powerX()) {
-//        return false;
-//    }
-//    return true;
-//}
+bool Monom::operator >(const Monom& other_monom) const {
+    int total_degree_this = this->powerX() + this->powerY() + this->powerZ();
+    int total_degree_other = other_monom.powerX() + other_monom.powerY() + other_monom.powerZ();
+
+    if (total_degree_this == total_degree_other) {
+
+        int pow_x_this = this->powerX();
+        int pow_y_this = this->powerY();
+        int pow_z_this = this->powerZ();
+
+        int pow_x_other = other_monom.powerX();
+        int pow_y_other = other_monom.powerY();
+        int pow_z_other = other_monom.powerZ();
+
+        if (pow_x_this != pow_x_other) {
+            return (pow_x_this > pow_x_other);
+        }
+        if (pow_y_this != pow_y_other) {
+            return (pow_y_this > pow_y_other);
+        }
+        if (pow_z_this != pow_z_other) {
+            return (pow_z_this > pow_z_other);
+        }
+        return false;
+    }
+    return total_degree_this > total_degree_other;
+}
+bool Monom::operator<(const Monom& other_monom) const {
+    return other_monom > *this; 
+}
 Monom Monom::operator +(const Monom& other_monom) const {
     if (*this != other_monom) {
         throw std::logic_error("Monoms must be similar");
@@ -111,3 +129,20 @@ double Monom::calculate(double x, double y, double z) const {
         std::pow(y, _powers[1]) *
         std::pow(z, _powers[2]);
 }
+//std::ostream& operator<<(std::ostream& out, const Monom& monom) {
+//    double coefficient = monom.get_coefficient();
+//    int power_x = monom.powerX();
+//    int power_y = monom.powerY();
+//    int power_z = monom.powerZ();
+//    if (std::abs(coefficient) < EPSILON) {
+//        out << "0";
+//        return out;
+//    }
+//    return out;
+//}
+//std::istream& operator>>(std::istream& input, Monom& monom) {
+//    double coefficient;
+//    int power_x, power_y, power_z;
+//    input >> coefficient >> power_x >> power_y >> power_z;
+//    return input;
+//}
