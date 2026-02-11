@@ -175,3 +175,134 @@ TEST(TestMonomLib, monom_div_value_with_exception) {
     // Assert
     ASSERT_THROW(monom / value, std::invalid_argument);
 }
+TEST(TestMonomLib, plus_equals_operator) {
+    // Arrange & Act
+    Monom monom1(23, 1, 5, 2);
+    Monom monom2(44, 1, 5, 2);
+    monom1 += monom2;
+    // Assert
+    EXPECT_EQ(monom1.get_coefficient(), 67);
+    EXPECT_EQ(monom1.powerX(), 1);
+    EXPECT_EQ(monom1.powerY(), 5);
+    EXPECT_EQ(monom1.powerZ(), 2);
+}
+TEST(TestMonomLib, plus_equals_operator_with_exception) {
+    // Arrange & Act
+    Monom monom1(23, 1, 5, 2);
+    Monom monom2(44, 1, 55, 2);
+    // Assert
+    ASSERT_THROW(monom1 += monom2, std::invalid_argument);
+}
+TEST(TestMonomLib, minus_equals_operator) {
+    // Arrange & Act
+    Monom monom1(50, 3, 2, 1);
+    Monom monom2(30, 3, 2, 1);
+    monom1 -= monom2;
+    // Assert
+    EXPECT_EQ(monom1.get_coefficient(), 20);
+    EXPECT_EQ(monom1.powerX(), 3);
+    EXPECT_EQ(monom1.powerY(), 2);
+    EXPECT_EQ(monom1.powerZ(), 1);
+}
+TEST(TestMonomLib, minus_equals_operator_with_exception) {
+    // Arrange & Act
+    Monom monom1(50, 3, 2, 1);
+    Monom monom2(30, 3, 2, 11);
+    // Assert
+    ASSERT_THROW(monom1 -= monom2, std::invalid_argument);
+}
+TEST(TestMonomLib, multiply_equals_monom_operator) {
+    // Arrange & Act
+    Monom monom1(2, 3, 2, 1);
+    Monom monom2(3, 1, 2, 3);
+    monom1 *= monom2;
+    // Assert
+    EXPECT_EQ(monom1.get_coefficient(), 6);
+    EXPECT_EQ(monom1.powerX(), 4);  
+    EXPECT_EQ(monom1.powerY(), 4); 
+    EXPECT_EQ(monom1.powerZ(), 4); 
+}
+TEST(TestMonomLib, multiply_equals_scalar_operator) {
+    // Arrange & Act
+    Monom monom(5, 2, 3, 1);
+    double value = 3.5;
+    monom *= value;
+    // Assert
+    EXPECT_EQ(monom.get_coefficient(), 17.5);
+    EXPECT_EQ(monom.powerX(), 2);
+    EXPECT_EQ(monom.powerY(), 3);
+    EXPECT_EQ(monom.powerZ(), 1);
+}
+TEST(TestMonomLib, divide_equals_monom_operator) {
+    // Arrange & Act
+    Monom monom1(12, 4, 3, 2);
+    Monom monom2(3, 1, 1, 1);
+    monom1 /= monom2;
+    // Assert
+    EXPECT_EQ(monom1.get_coefficient(), 4);
+    EXPECT_EQ(monom1.powerX(), 3);  
+    EXPECT_EQ(monom1.powerY(), 2);
+    EXPECT_EQ(monom1.powerZ(), 1); 
+}
+TEST(TestMonomLib, divide_equals_monom_operator_with_exception_division_by_zero) {
+    // Arrange & Act
+    Monom monom1(12, 4, 3, 2);
+    Monom monom2(0, 1, 1, 1);
+    // Assert
+    ASSERT_THROW(monom1 /= monom2, std::invalid_argument);
+}
+TEST(TestMonomLib, divide_equals_monom_operator_with_exception_negative_power) {
+    // Arrange & Act
+    Monom monom1(12, 1, 2, 3);
+    Monom monom2(3, 2, 1, 1);
+    // Assert
+    ASSERT_THROW(monom1 /= monom2, std::invalid_argument);
+}
+TEST(TestMonomLib, divide_equals_scalar_operator) {
+    // Arrange & Act
+    Monom monom(15, 2, 3, 1);
+    double value = 3.0;
+    monom /= value;
+    // Assert
+    EXPECT_EQ(monom.get_coefficient(), 5);
+    EXPECT_EQ(monom.powerX(), 2);
+    EXPECT_EQ(monom.powerY(), 3);
+    EXPECT_EQ(monom.powerZ(), 1);
+}
+TEST(TestMonomLib, divide_equals_scalar_operator_with_exception) {
+    // Arrange & Act
+    Monom monom(15, 2, 3, 1);
+    double value = 0.0;
+    // Assert
+    ASSERT_THROW(monom /= value, std::invalid_argument);
+}
+TEST(TestMonomLib, calculate_method) {
+    // Arrange & Act
+    Monom monom(2, 2, 1, 3); 
+    double x = 3.0;
+    double y = 2.0;
+    double z = 1.0;
+    double result = monom.calculate(x, y, z);
+    // Assert
+    EXPECT_EQ(result, 36);
+}
+TEST(TestMonomLib, calculate_method_with_zero_powers) {
+    // Arrange & Act
+    Monom monom(5, 0, 0, 0);
+    double x = 10.0;
+    double y = 20.0;
+    double z = 30.0;
+    double result = monom.calculate(x, y, z); 
+    // Assert
+    EXPECT_EQ(result, 5);
+}
+TEST(TestMonomLib, calculate_method_with_negative_coefficient) {
+    // Arrange & Act
+    Monom monom(-3, 1, 2, 0);
+    double x = 2.0;
+    double y = 3.0;
+    double z = 1.0;
+    double result = monom.calculate(x, y, z); 
+    // Assert
+    EXPECT_EQ(result, -54);
+}
