@@ -88,8 +88,90 @@ TEST(TestMonomLib, monom1_greater_monom2_false) {
 }
 TEST(TestMonomLib, monom1_less_monom2_false) {
     // Arrange & Act
-    Monom monom1(10, 1, 39, 2);
+    Monom monom1(10.1, 1, 39, 2);
     Monom monom2(34, 2, 3, 4);
     // Assert
     EXPECT_FALSE(monom1 < monom2);
+}
+TEST(TestMonomLib, add_monoms) {
+    // Arrange & Act
+    Monom monom1(23, 1, 5, 2);
+    Monom monom2(44, 1, 5, 2);
+    Monom result = monom1 + monom2;
+    // Assert
+    EXPECT_EQ(result.get_coefficient(), monom1.get_coefficient() + monom2.get_coefficient());
+}
+TEST(TestMonomLib, add_monoms_with_exception) {
+    // Arrange & Act
+    Monom monom1(23, 1, 5, 2);
+    Monom monom2(44, 1, 55, 2);
+    // Assert
+    ASSERT_THROW(monom1 + monom2, std::invalid_argument);
+}
+TEST(TestMonomLib, sub_monoms) {
+    // Arrange & Act
+    Monom monom1(33.9, 1, 5, 2);
+    Monom monom2(44, 1, 5, 2);
+    Monom result = monom1 - monom2;
+    // Assert
+    EXPECT_EQ(result.get_coefficient(), monom1.get_coefficient() - monom2.get_coefficient());
+}
+TEST(TestMonomLib, sub_monoms_with_exception) {
+    // Arrange & Act
+    Monom monom1(23, 1, 5, 2);
+    Monom monom2(4.4, 1, 5, 772);
+    // Assert
+    ASSERT_THROW(monom1 - monom2, std::invalid_argument);
+}
+TEST(TestMonomLib,mult_monoms) {
+    // Arrange & Act
+    Monom monom1(23.8, 33, 5, 2);
+    Monom monom2(44, 2, 4555, 7);
+    Monom result = monom1 * monom2;
+    // Assert
+    EXPECT_EQ(result.get_coefficient(), monom1.get_coefficient() * monom2.get_coefficient());
+    EXPECT_EQ(result.powerX(), monom1.powerX() + monom2.powerX());
+    EXPECT_EQ(result.powerY(), monom1.powerY() + monom2.powerY());
+    EXPECT_EQ(result.powerZ(), monom1.powerZ() + monom2.powerZ());
+}
+TEST(TestMonomLib, div_monoms) {
+    // Arrange & Act
+    Monom monom1(23.9, 33, 4555, 22);
+    Monom monom2(33.3, 2, 5, 7);
+    Monom result = monom1 / monom2;
+    // Assert
+    EXPECT_EQ(result.get_coefficient(), monom1.get_coefficient() / monom2.get_coefficient());
+    EXPECT_EQ(result.powerX(), monom1.powerX() - monom2.powerX());
+    EXPECT_EQ(result.powerY(), monom1.powerY() - monom2.powerY());
+    EXPECT_EQ(result.powerZ(), monom1.powerZ() - monom2.powerZ());
+}
+TEST(TestMonomLib, div_monoms_with_exception) {
+    // Arrange & Act
+    Monom monom1(25.9, 2, 3, 1);
+    Monom monom2(3.3, 3, 2, 1);
+    // Assert
+    ASSERT_THROW(monom1 / monom2, std::invalid_argument);
+}
+TEST(TestMonomLib, monom_mult_value) {
+    // Arrange & Act
+    Monom monom(223.39, 33, 4555, 22);
+    double value = 22.5;
+    Monom result = monom * value;
+    // Assert
+    EXPECT_EQ(result.get_coefficient(), monom.get_coefficient() * value);
+}
+TEST(TestMonomLib, monom_div_value) {
+    // Arrange & Act
+    Monom monom(223.39, 33, 4555, 22);
+    double value = 223.5;
+    Monom result = monom / value;
+    // Assert
+    EXPECT_EQ(result.get_coefficient(), monom.get_coefficient() / value);
+}
+TEST(TestMonomLib, monom_div_value_with_exception) {
+    // Arrange & Act
+    Monom monom(223.39, 333, 4, 2);
+    double value = 0.0;
+    // Assert
+    ASSERT_THROW(monom / value, std::invalid_argument);
 }
