@@ -59,6 +59,10 @@ Monom Monom::operator *(const Monom& other_monom) const {
     int new_z = this->powerZ() + other_monom.powerZ();
     return Monom(new_coefficient, new_x, new_y, new_z);
 }
+Monom Monom::operator *(double value) const {
+    double new_coefficient = value * this->get_coefficient();
+    return Monom(new_coefficient, this->powerX(), this->powerY(), this->powerZ());
+}
 Monom Monom::operator /(const Monom& other_monom) const {
     if (std::abs(other_monom.get_coefficient()) < EPSILON) {
         throw std::logic_error("Division by zero");
@@ -106,6 +110,10 @@ Monom& Monom::operator *=(const Monom& other_monom) {
     this->set_powers(new_x, new_y, new_z);
     return *this;
 }
+Monom& Monom::operator *=(double value) {
+    this->set_coefficient(this->get_coefficient() * value);
+    return *this;
+}
 Monom& Monom::operator /=(const Monom& other_monom) {
     if (std::abs(other_monom.get_coefficient()) < EPSILON) {
         throw std::logic_error("Division by zero");
@@ -121,6 +129,13 @@ Monom& Monom::operator /=(const Monom& other_monom) {
     int new_z = this->powerZ() - other_monom.powerZ();
     this->set_coefficient(new_coefficient);
     this->set_powers(new_x, new_y, new_z);
+    return *this;
+}
+Monom& Monom::operator /=(double value) {
+    if (std::abs(value < EPSILON)) {
+        throw std::invalid_argument("Division by zero");
+    }
+    this->set_coefficient(this->get_coefficient() / value);
     return *this;
 }
 double Monom::calculate(double x, double y, double z) const {
