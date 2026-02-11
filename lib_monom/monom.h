@@ -50,19 +50,21 @@ public:
     Monom operator +(const Monom& other_monom) const;
     Monom operator -(const Monom& other_monom) const;
     Monom operator *(const Monom& other_monom) const;
+    Monom operator *(double value) const;
     Monom operator /(const Monom& other_monom) const;
     Monom operator /(double value) const;
 
     Monom& operator +=(const Monom& other_monom);
     Monom& operator -=(const Monom& other_monom);
     Monom& operator *=(const Monom& other_monom);
+    Monom& operator *=(double value);
     Monom& operator /=(const Monom& other_monom);
+    Monom& operator /=(double value);
 
     Monom operator -() const {
         return Monom(_coefficient * (-1), _powers[0], _powers[1], _powers[2]);
     }
     double calculate(double x, double y, double z) const;
-
     friend std::ostream& operator<<(std::ostream& out, const Monom& monom);
     friend std::istream& operator>>(std::istream& input, Monom& monom);
 };
