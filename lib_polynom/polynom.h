@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
-
 class Polynom {
 private:
     List<Monom> _polynom;
@@ -17,35 +16,32 @@ public:
     }
     Polynom(const std::string& string);
     Polynom(const char* str);
-
+    Polynom::Polynom(const Polynom& other) {
+        _polynom = other._polynom;  
+    }
     Polynom& operator=(const Polynom& other);
 
     Polynom operator +(const Polynom& other_polynom) const;
     Polynom operator -(const Polynom& other_polynom) const;
     Polynom operator *(const Polynom& other_polynom) const;
-    /*Polynom operator /(const Polynom& other_polynom) const;*/
+    //Polynom operator /(const Polynom& other_polynom) const;
 
     Polynom& operator +=(const Polynom& other_polynom);
     Polynom& operator -=(const Polynom& other_polynom);
     Polynom& operator *=(const Polynom& other_polynom);
-   /* Polynom& operator /=(const Polynom& other_polynom);*/
+   //Polynom& operator /=(const Polynom& other_polynom);
 
     Polynom operator +(const Monom& other_monom) const;
     Polynom operator -(const Monom& other_monom) const;
-    Polynom operator *(const Monom& other_monom) const;
-    Polynom operator /(const Monom& other_monom) const;
+    //Polynom operator /(const Monom& other_monom) const;
 
     Polynom& operator +=(const Monom& other_monom);
     Polynom& operator -=(const Monom& other_monom);
-    Polynom& operator *=(const Monom& other_monom);
-    Polynom& operator /=(const Monom& other_monom);
-    // Унарные операторы
+    //Polynom& operator /=(const Monom& other_monom);
+
     Polynom operator-() const;
 
-    // Вычисление значения
     double calculate(double x, double y, double z) const;
-
-    // Методы для работы с полиномом
     bool is_zero() const noexcept { 
         return _polynom.is_empty(); 
     }
