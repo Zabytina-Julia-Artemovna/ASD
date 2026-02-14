@@ -73,6 +73,28 @@ Polynom Polynom::operator-() const {
     return result;
 }
 double Polynom::calculate(double x, double y, double z) const {
-    double result;
+    double result = 0.0;
+    for (auto it = _polynom.begin(); it != _polynom.end(); it++) {
+        result += (*it).calculate(x, y, z);
+    }
+    return result;
+}
+std::ostream& operator<<(std::ostream& out, const Polynom& polynom) {
+    if (polynom.is_zero()) {
+        out << "0";
+        return out;
+    }
+    auto it = polynom._polynom.begin();
+    out << *it;
+    for (++it; it != polynom._polynom.end(); it++) {
+        double coef = (*it).get_coefficient();
 
+        if (coef > 0) {
+            out << " + " << *it;
+        }
+        else {
+            out << " - " << -(*it);
+        }
+    }
+    return out;
 }
