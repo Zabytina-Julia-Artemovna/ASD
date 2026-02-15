@@ -2,13 +2,14 @@
 #include "../lib_list/List.h"
 #include <iostream>
 #include <string>
+#include <sstream>  
 #include <stdexcept>
 class Polynom {
 private:
     List<Monom> _polynom;
 
-    void simplify();  // удалить нулевые, объединить подобные
-    void sort();  // упорядочить
+    void simplify();
+    void sort();
 public:
     Polynom() : _polynom() {}
     Polynom(const Monom& monom) {
@@ -24,20 +25,18 @@ public:
     Polynom operator +(const Polynom& other_polynom) const;
     Polynom operator -(const Polynom& other_polynom) const;
     Polynom operator *(const Polynom& other_polynom) const;
-    //Polynom operator /(const Polynom& other_polynom) const;
 
     Polynom& operator +=(const Polynom& other_polynom);
     Polynom& operator -=(const Polynom& other_polynom);
     Polynom& operator *=(const Polynom& other_polynom);
-   //Polynom& operator /=(const Polynom& other_polynom);
 
     Polynom operator +(const Monom& other_monom) const;
     Polynom operator -(const Monom& other_monom) const;
-    //Polynom operator /(const Monom& other_monom) const;
+    Polynom operator /(const Monom& other_monom) const;
 
     Polynom& operator +=(const Monom& other_monom);
     Polynom& operator -=(const Monom& other_monom);
-    //Polynom& operator /=(const Monom& other_monom);
+    Polynom& operator /=(const Monom& other_monom);
 
     Polynom operator-() const;
 
