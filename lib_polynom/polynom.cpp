@@ -98,3 +98,98 @@ std::ostream& operator<<(std::ostream& out, const Polynom& polynom) {
     }
     return out;
 }
+std::istream& operator>>(std::istream& input, Polynom& polynom) {
+    polynom = Polynom();
+    char c;
+    bool positive = true;
+    std::string monom_str;
+    while (input.get(c)) {
+        if (c == '+' || c == '-') {
+            if (!monom_str.empty()) {
+                try {
+                    Monom m;
+                    std::istringstream iss(monom_str);
+                    iss >> m;
+                    if (!positive) {
+                        m = -m;
+                    }
+                    polynom._polynom.push_back(m);
+                }
+                catch (std::exception ex) {
+                    input.setstate(std::ios::failbit);
+                    return input;
+                }
+                monom_str.clear();
+            }
+            positive = (c == '+');
+        }
+        else if (!isspace(c)) {
+            monom_str += c;
+        }
+    }
+    if (!monom_str.empty()) {
+        try {
+            Monom m;
+            std::istringstream iss(monom_str);
+            iss >> m;
+            if (!positive) {
+                m = -m;
+            }
+            polynom._polynom.push_back(m);
+        }
+        catch (std::exception ex) {
+            input.setstate(std::ios::failbit);
+            return input;
+        }
+    }
+    polynom.sort();
+    polynom.simplify();
+
+    return input;
+}
+void Polynom::sort() {
+    size_t n = _polynom.get_size();
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = i + 1; j < n; ++j) {
+            auto it_i = _polynom.begin();
+            for (size_t k = 0; k < i; ++k) ++it_i;
+
+            auto it_j = _polynom.begin();
+            for (size_t k = 0; k < j; ++k) ++it_j;
+            if (!(*it_i > *it_j)) {
+                Monom temp = *it_i;
+                *it_i = *it_j;
+                *it_j = temp;
+            }
+        }
+    }
+}
+void Polynom::simplify() {
+    sort();
+    size_t i = 0;
+    while (i + 1 < _polynom.get_size()) {
+        auto it1 = _polynom.begin();
+        for (size_t k = 0; k < i; ++k) ++it1;
+        auto it2 = it1;
+        ++it2;
+        if ((*it1) == (*it2)) {
+            double new_coef = (*it1).get_coefficient() + (*it2).get_coefficient();
+            (*it1).set_coefficient(new_coef);
+            _polynom.erase(i + 1);
+        }
+        else {
+            ++i;
+        }
+    }
+    i = 0;
+    while (i < _polynom.get_size()) {
+        auto it = _polynom.begin();
+        for (size_t k = 0; k < i; ++k) ++it;
+        if (std::abs((*it).get_coefficient()) < EPSILON) {
+            _polynom.erase(i);
+        }
+        else {
+            ++i;
+        }
+    }
+}
