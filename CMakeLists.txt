@@ -21,6 +21,8 @@ add_subdirectory(lib_queue)
 add_subdirectory(lib_queue_on_list)
 add_subdirectory(lib_stack_on_list)
 
+add_subdirectory(lib_monom)
+add_subdirectory(lib_polynom)
 add_subdirectory(lib_dsu)
 
 add_subdirectory(lib_doubly_linked_list)
