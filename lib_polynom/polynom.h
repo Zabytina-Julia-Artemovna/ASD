@@ -32,11 +32,9 @@ public:
 
     Polynom operator +(const Monom& other_monom) const;
     Polynom operator -(const Monom& other_monom) const;
-    Polynom operator /(const Monom& other_monom) const;
 
     Polynom& operator +=(const Monom& other_monom);
     Polynom& operator -=(const Monom& other_monom);
-    Polynom& operator /=(const Monom& other_monom);
 
     Polynom operator-() const;
 
