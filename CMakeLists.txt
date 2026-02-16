@@ -21,6 +21,10 @@ add_subdirectory(lib_queue)
 add_subdirectory(lib_queue_on_list)
 add_subdirectory(lib_stack_on_list)
 
+add_subdirectory(lib_itable)
+add_subdirectory(lib_table)
+add_subdirectory(lib_unsorted_table_m)
+
 add_subdirectory(lib_dsu)
 
 add_subdirectory(lib_doubly_linked_list)
