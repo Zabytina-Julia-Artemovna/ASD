@@ -16,10 +16,6 @@ include(cmake/function.cmake)         # подхватываем функции,
 add_subdirectory(lib_easy_example)    # подключаем дополнительный CMakeLists.txt из подкаталога с именем lib_easy_example
 
 add_subdirectory(lib_list)
-add_subdirectory(lib_stack)
-add_subdirectory(lib_queue)
-add_subdirectory(lib_queue_on_list)
-add_subdirectory(lib_stack_on_list)
 
 add_subdirectory(lib_itable)
 add_subdirectory(lib_table)
@@ -27,7 +23,8 @@ add_subdirectory(lib_unsorted_table_m)
 
 add_subdirectory(lib_dsu)
 
-add_subdirectory(lib_doubly_linked_list)
+add_subdirectory(lib_monom)
+add_subdirectory(lib_polynom)
 add_subdirectory(lib_calculator_app)
 add_subdirectory(lib_algoritm)
 
