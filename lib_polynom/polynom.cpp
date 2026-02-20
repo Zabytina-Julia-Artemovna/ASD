@@ -1,6 +1,26 @@
 #include "polynom.h"
-const double EPSILON = 1e-10;
+Polynom::Polynom(const std::string& str) {
+    if (str.empty()) {
+        return;  
+    }
+    std::stringstream ss(str);
+    std::string token;
+    char sign = '+'; 
+    while (ss >> token) {
+        if (token == "+" || token == "-") {
+            sign = token[0];
+            continue;
+        }
+        Monom monom = parseMonom(token);
+        if (sign == '-') {
+            monom.set_coefficient(-monom.get_coefficient());
+        }
+        *this += monom;
 
+        sign = '+'; 
+    }
+    simplify();  
+}
 Polynom Polynom::operator +(const Polynom& other_polynom) const {
     Polynom result = *this;
     for (auto it = other_polynom._polynom.begin(); it != other_polynom._polynom.end(); it++) {
@@ -36,27 +56,25 @@ Polynom& Polynom::operator *=(const Polynom& other_polynom) {
     *this = *this * other_polynom;
     return *this;
 }
-Polynom Polynom::operator +(const Monom& other_monom) const {
+
+Polynom Polynom::operator+(const Monom& other_monom) const {
     Polynom result = *this;
     result += other_monom;
-    result.simplify();
-    result.sort();
     return result;
 }
 Polynom Polynom::operator -(const Monom& other_monom) const {
     Polynom result = *this;
     result -= other_monom;
-    result.simplify();
-    result.sort();
     return result;
 }
-
-Polynom& Polynom::operator +=(const Monom& other_monom) {
-    *this = *this + other_monom;
+Polynom& Polynom::operator+=(const Monom& other_monom) {
+    _polynom.push_back(other_monom); 
+    simplify();
     return *this;
 }
-Polynom& Polynom::operator -=(const Monom& other_monom) {
-    *this = *this - other_monom;
+Polynom& Polynom::operator-=(const Monom& other_monom) {
+    _polynom.push_back(-other_monom);
+    simplify();
     return *this;
 }
 Polynom& Polynom::operator=(const Polynom& other) {
@@ -115,7 +133,7 @@ std::istream& operator>>(std::istream& input, Polynom& polynom) {
                     }
                     polynom._polynom.push_back(m);
                 }
-                catch (std::exception ex) {
+                catch (std::exception& ex) {
                     input.setstate(std::ios::failbit);
                     return input;
                 }
@@ -137,7 +155,7 @@ std::istream& operator>>(std::istream& input, Polynom& polynom) {
             }
             polynom._polynom.push_back(m);
         }
-        catch (std::exception ex) {
+        catch (std::exception& ex) {
             input.setstate(std::ios::failbit);
             return input;
         }
@@ -148,20 +166,18 @@ std::istream& operator>>(std::istream& input, Polynom& polynom) {
     return input;
 }
 void Polynom::sort() {
-    size_t n = _polynom.get_size();
-    for (size_t i = 0; i < n; ++i) {
-        for (size_t j = i + 1; j < n; ++j) {
-            auto it_i = _polynom.begin();
-            for (size_t k = 0; k < i; ++k) ++it_i;
-
-            auto it_j = _polynom.begin();
-            for (size_t k = 0; k < j; ++k) ++it_j;
-            if (!(*it_i > *it_j)) {
-                Monom temp = *it_i;
-                *it_i = *it_j;
-                *it_j = temp;
-            }
-        }
+    if (_polynom.get_size() <= 1) return;
+    std::vector<Monom> temp;
+    for (auto it = _polynom.begin(); it != _polynom.end(); ++it) {
+        temp.push_back(*it);
+    }
+    std::sort(temp.begin(), temp.end(),
+        [](const Monom& a, const Monom& b) { return a > b; });
+    while (!_polynom.is_empty()) {
+        _polynom.pop_back();
+    }
+    for (const auto& m : temp) {
+        _polynom.push_back(m);
     }
 }
 void Polynom::simplify() {
@@ -192,4 +208,37 @@ void Polynom::simplify() {
             ++i;
         }
     }
+}
+Monom Polynom::parseMonom(const std::string& token) const {
+    if (token.empty()) {
+        throw std::invalid_argument("Empty monom token");
+    }
+    double coefficient = 1.0;
+    int powers[3] = { 0, 0, 0 };  // [x, y, z]
+    size_t pos = 0;
+    if (isdigit(token[pos]) || token[pos] == '.') {
+        size_t end;
+        coefficient = std::stod(token.substr(pos), &end);
+        pos = end;
+    }
+    while (pos < token.length()) {
+        char var = token[pos];
+        pos++;
+
+        int var_index = -1;
+        if (var == 'x') var_index = 0;
+        else if (var == 'y') var_index = 1;
+        else if (var == 'z') var_index = 2;
+        else throw std::invalid_argument("Invalid variable: " + std::string(1, var));
+
+        int power = 1;
+        if (pos < token.length() && token[pos] == '^') {
+            pos++;
+            size_t end;
+            power = std::stoi(token.substr(pos), &end);
+            pos += end;
+        }
+        powers[var_index] = power;
+    }
+    return Monom(coefficient, powers[0], powers[1], powers[2]);
 }
