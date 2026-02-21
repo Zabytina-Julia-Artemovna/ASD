@@ -56,7 +56,6 @@ Polynom& Polynom::operator *=(const Polynom& other_polynom) {
     *this = *this * other_polynom;
     return *this;
 }
-
 Polynom Polynom::operator+(const Monom& other_monom) const {
     Polynom result = *this;
     result += other_monom;
@@ -67,6 +66,12 @@ Polynom Polynom::operator -(const Monom& other_monom) const {
     result -= other_monom;
     return result;
 }
+Polynom Polynom::operator *(const Monom& other_monom) const {
+    Polynom result = *this;
+    result *= other_monom;
+    return result;
+}
+
 Polynom& Polynom::operator+=(const Monom& other_monom) {
     _polynom.push_back(other_monom); 
     simplify();
@@ -75,6 +80,12 @@ Polynom& Polynom::operator+=(const Monom& other_monom) {
 Polynom& Polynom::operator-=(const Monom& other_monom) {
     _polynom.push_back(-other_monom);
     simplify();
+    return *this;
+}
+Polynom& Polynom::operator *=(const Monom& other_monom) {
+    for (auto it = _polynom.begin(); it != _polynom.end(); it++) {
+        *it = *it * other_monom;
+    }
     return *this;
 }
 Polynom& Polynom::operator=(const Polynom& other) {
