@@ -188,6 +188,42 @@ TEST(TestPolynomLib, polynom_sub_monom) {
     oss << result;
     EXPECT_EQ(oss.str(), "2233.4xy^2z^8 - 99.9x^2y^2z^2");
 }
+TEST(TestPolynomLib, polynom_mult_monom) {
+    // Arrange
+    Polynom polynom("2x^2 + 3y");
+    Monom monom(4, 1, 0, 0);
+    // Act
+    Polynom result = polynom * monom;
+    // Assert
+    std::ostringstream oss;
+    oss << result;
+    EXPECT_EQ(oss.str(), "8x^3 + 12xy");
+    EXPECT_EQ(result.size(), 2);
+}
+TEST(TestPolynomLib, polynom_mult_monom_with_zero_power) {
+    // Arrange
+    Polynom polynom("5x^2 + 2y^3 + 7");
+    Monom monom(3, 0, 0, 0); 
+    // Act
+    Polynom result = polynom * monom;
+    // Assert
+    std::ostringstream oss;
+    oss << result;
+    EXPECT_EQ(oss.str(), "15x^2 + 6y^3 + 21");
+    EXPECT_EQ(result.size(), 3);
+}
+TEST(TestPolynomLib, polynom_mult_monom_negative_coefficient) {
+    // Arrange
+    Polynom polynom("4x^2 - 2y");
+    Monom monom(-3, 1, 0, 0);
+    // Act
+    Polynom result = polynom * monom;
+    // Assert
+    std::ostringstream oss;
+    oss << result;
+    EXPECT_EQ(oss.str(), "-12x^3 + 6xy");
+    EXPECT_EQ(result.size(), 2);
+}
 TEST(TestPolynomLib, polynom_add_assign_monom) {
     // Arrange
     Monom monom1(1.2, 4, 4, 8);
@@ -213,6 +249,17 @@ TEST(TestPolynomLib, polynom_sub_assign_monom) {
     std::ostringstream oss;
     oss << polynom;
     EXPECT_EQ(oss.str(), "2233.4xy^2z^8 - 99.9x^2y^2z^2");
+}
+TEST(TestPolynomLib, polynom_mult_assign_monom) {
+    // Arrange
+    Polynom polynom("2x^2 + 3y");
+    Monom monom(4, 1, 0, 0);
+    // Act
+    polynom *= monom;
+    // Assert
+    std::ostringstream oss;
+    oss << polynom;
+    EXPECT_EQ(oss.str(), "8x^3 + 12xy");
 }
 TEST(TestPolynomLib, polynom_unary_minus) {
     // Arrange
