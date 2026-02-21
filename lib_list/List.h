@@ -227,6 +227,8 @@ List<T>& List<T>::operator=(const List<T>& other) {
             _head = _head->next;
             delete temporary;
         }
+        _head = nullptr;
+        _tail = nullptr;
         _count_elements = 0;
         for (auto it = other.begin(); it != other.end(); ++it) {
             this->push_back(*it);
