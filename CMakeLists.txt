@@ -20,6 +20,8 @@ add_subdirectory(lib_list)
 add_subdirectory(lib_itable)
 add_subdirectory(lib_table)
 add_subdirectory(lib_unsorted_table_m)
+add_subdirectory(lib_unsorted_table_l)
+add_subdirectory(lib_sorted_table_m)
 
 add_subdirectory(lib_dsu)
 
