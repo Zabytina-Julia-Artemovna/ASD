@@ -66,11 +66,8 @@ const TValue& UnsortedTableM<TKey, TValue>::find(const TKey& key) const {
 }
 template <class TKey, class TValue>
 TValue& UnsortedTableM<TKey, TValue>::find(const TKey& key) {
-    // ШАГ 1: Представляем, что *this - константный
     const UnsortedTableM& const_this = static_cast<const UnsortedTableM&>(*this);
-    // ШАГ 2: Вызываем const-версию find у константного объекта
     const TValue& result = const_this.find(key);
-    // ШАГ 3: "Снимаем" константность с результата
     return const_cast<TValue&>(result);
 }
 template <class TKey, class TValue>
