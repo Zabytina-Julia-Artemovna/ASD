@@ -1,5 +1,4 @@
-#include <iostream>
-#include <stdexcept>
+#pragma once
 template <class Tkey, class Tvalue>
 class ITable {
 public:
