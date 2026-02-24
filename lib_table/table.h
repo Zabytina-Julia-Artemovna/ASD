@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "..\lib_itable\itable.h"
+#include "../lib_itable/itable.h"
 template <class TKey, class TValue>
 class Table: public ITable<TKey, TValue> {
 public:
