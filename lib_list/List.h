@@ -24,6 +24,18 @@ public:
             _current = other._current;
             return *this;
         }
+        T* operator->() {
+            if (_current == nullptr) {
+                throw std::runtime_error("Dereferencing end iterator");
+            }
+            return &(_current->value);
+        }
+        const T* operator->() const {
+            if (_current == nullptr) {
+                throw std::runtime_error("Dereferencing end iterator");
+            }
+            return &(_current->value);
+        }
         Iterator& operator+=(size_t n) {
             for (size_t i = 0; i < n && _current != nullptr; ++i) {
                 _current = _current->next;
