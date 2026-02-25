@@ -22,14 +22,14 @@ public:
     void print(std::ostream& out) const override;
 };
 template <class TKey, class TValue>
-UnsortedTableL<TKey, TValue>& UnsortedTableL<TKey, TValue>::operator=(const UnsortedTableL<TKey, TValue>& other) {
+UnsortedTableL<TKey, TValue>& UnsortedTableL<TKey, TValue>::operator=(const UnsortedTableL<TKey, TValue>& other) { // O(n)
     if (this != &other) {
         _items = other._items;
     }
     return *this;
 }
 template <class TKey, class TValue>
-void UnsortedTableL<TKey, TValue>::insert(const TKey& key, const TValue& value) {
+void UnsortedTableL<TKey, TValue>::insert(const TKey& key, const TValue& value) { // O(n)
     for (auto it = _items.begin(); it != _items.end(); it++) {
         if (it->first == key) {
             throw std::invalid_argument("Key already exists");
@@ -38,15 +38,15 @@ void UnsortedTableL<TKey, TValue>::insert(const TKey& key, const TValue& value) 
     _items.push_back(std::make_pair(key, value));
 }
 template <class TKey, class TValue>
-size_t UnsortedTableL<TKey, TValue>::size() const noexcept {
+size_t UnsortedTableL<TKey, TValue>::size() const noexcept { // O(1)
     return _items.get_size();
 }
 template <class TKey, class TValue>
-bool UnsortedTableL<TKey, TValue>::is_empty() const noexcept {
+bool UnsortedTableL<TKey, TValue>::is_empty() const noexcept { // O(1)
     return _items.is_empty();
 }
 template <class TKey, class TValue>
-void UnsortedTableL<TKey, TValue>::erase(const TKey& key) {
+void UnsortedTableL<TKey, TValue>::erase(const TKey& key) { // O(n)
     size_t current_position = 0;
     for (auto it = _items.begin(); it != _items.end(); it++) {
         if (it->first == key) {
@@ -58,7 +58,7 @@ void UnsortedTableL<TKey, TValue>::erase(const TKey& key) {
     throw std::out_of_range("Key not found");
 }
 template <class TKey, class TValue>
-const TValue& UnsortedTableL<TKey, TValue>::find(const TKey& key) const {
+const TValue& UnsortedTableL<TKey, TValue>::find(const TKey& key) const { // O(n)
     for (auto it = _items.begin(); it != _items.end(); it++) {
         if (it->first == key) {
             return it->second;
@@ -67,13 +67,13 @@ const TValue& UnsortedTableL<TKey, TValue>::find(const TKey& key) const {
     throw std::out_of_range("Key not found");
 }
 template <class TKey, class TValue>
-TValue& UnsortedTableL<TKey, TValue>::find(const TKey& key) {
+TValue& UnsortedTableL<TKey, TValue>::find(const TKey& key) { // O(n)
     const UnsortedTableL& const_this = static_cast<const UnsortedTableL&>(*this);
     const TValue& result = const_this.find(key);
     return const_cast<TValue&>(result);
 }
 template <class TKey, class TValue>
-void UnsortedTableL<TKey, TValue>::print(std::ostream& out) const {
+void UnsortedTableL<TKey, TValue>::print(std::ostream& out) const { // O(n)
     out << "Unsorted table on list: \n";
     for (auto it = _items.begin(); it != _items.end(); it++) {
         out << "| " << it->first << " | " << it->second << " |\n";
