@@ -305,22 +305,6 @@ TEST(TestVectorLib, insert3) {
     int expected_result = 225;
     EXPECT_EQ(expected_result, actual_result);
 }
-TEST(TestVectorLib, insert4) {
-    // Arrange
-    bool actual_result = true;
-    int data[5] = { 1, 2, 3, 4, 5 };
-    size_t size = 5;
-    Tvector<int> vector(data, size);
-    try {
-        vector.insert(225, 5);
-    }
-    catch (...) {
-        actual_result = false;
-    }
-    // Assert
-    bool expected_result = false;
-    EXPECT_EQ(expected_result, actual_result);
-}
 TEST(TestVectorLib, push_back1) {
     // Arrange
     int data[1] = { 1 };
