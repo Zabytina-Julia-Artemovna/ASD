@@ -13,9 +13,11 @@ private:
             size_t middle = (left + right) / 2;
             if (_rows[middle].first > key) {
                 right = middle;
-            } else if (_rows[middle].first == key) {
+            }
+            else if (_rows[middle].first == key) {
                 return { middle, true };
-            } else {
+            }
+            else {
                 left = middle + 1;
             }
         }
