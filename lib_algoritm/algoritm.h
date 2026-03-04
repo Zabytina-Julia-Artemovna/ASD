@@ -5,10 +5,14 @@
 #include "../lib_dsu/dsu.h"
 #include <random>
 #include <utility> 
-#include <stdexcept>
 #include <string>
 #include <cctype>
 #include <unordered_set>
+#include <iostream>
+#include <stdexcept>
+#include <stdlib.h>     // srand
+#include <time.h>       // time
+#include <Windows.h>
 template <class T>
 std::pair<size_t, size_t> find_min_neighbor_coords(const Matrix<T>& matrix, size_t x, size_t y) {
     T min_val = matrix[x][y];
@@ -271,137 +275,76 @@ size_t get_count_of_islands(Matrix<int>& matrix) {
     return unique_roots.size();
 }
 
-Matrix<bool> generate1(int x, int y, size_t n, size_t m) {
-    Matrix<bool> matrix(n + 1, m + 1);
-    for (size_t i = 0; i < n + 1; i++) {
-        for (size_t j = 0; j < m + 1; j++) {
-            matrix[i][j] = true;
+bool** generate(int X, int Y, int N, int M) {
+    if ((N < 2) || (M < 2)) { throw std::invalid_argument("Wrong size"); }
+
+    int size_maze = N * M;
+    DSU maze(size_maze);
+
+    int new_N = N * 2 + 1, new_M = M + 1, size_walls = new_N * new_M;
+    bool** walls = new bool* [new_N];
+    for (int i = 0; i < new_N; i++) {
+        walls[i] = new bool[new_M];
+    }
+
+    for (int i = 0; i < new_N; i++) {
+        for (int j = 0; j < new_M; j++) {
+            if ((i % 2 == 0) && (j == M)) walls[i][j] = false;
+            else walls[i][j] = true;
         }
     }
-    DSU dsu(n * m);
-    dsu.dsu_union(x, y); 
-    for (size_t i = 0; i < n; i++) {
-        for (size_t j = 0; j < m; j++) {
-            size_t current = i * m + j;
-            if (j < m - 1 && getRandomIndex(9) >= 3) {
-                size_t right = i * m + (j + 1);
-                dsu.dsu_union(current, right);
-      
-                matrix[i + 1][j + 1] = false; 
-                if (j + 2 <= m) matrix[i + 1][j + 2] = false; 
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            int random_on_the_right = rand() % 2;
+            int random_on_the_bottom = rand() % 2;
+            if ((random_on_the_right == 0) && (j != (M - 1)) && (maze.dsu_find_recursive(i * M + j) != maze.dsu_find_recursive(i * M + j + 1))) {   // + проверка на 
+                //состояние в dsu, тогда не нужно убирать стену
+                maze.dsu_union(i * M + j, i * M + j + 1);
+                walls[i * 2 + 1][j + 1] = false;
             }
-            if (i < n - 1 && getRandomIndex(9) >= 3) {
-                int bottom = (i + 1) * m + j;
-                dsu.dsu_union(current, bottom);
-              
-                matrix[i + 1][j + 1] = false; 
-                if (i + 2 <= n) matrix[i + 2][j + 1] = false; 
+            if ((random_on_the_bottom == 0) && (i != (N - 1)) && (maze.dsu_find_recursive(i * M + j) != maze.dsu_find_recursive(i * M + j + M))) {   // + проверка на 
+                //состояние в dsu, тогда не нужно убирать стену
+                maze.dsu_union(i * M + j, i * M + j + M);
+                walls[i * 2 + 2][j] = false;
             }
         }
     }
-    return matrix;
-}
-void print_labirint1(Matrix<bool> matrix, size_t n, size_t m) {
-    for (size_t j = 0; j < m; j++) {
-        std::cout << "+---";
-    }
-    std::cout << "+" << std::endl;
 
-    for (size_t i = 0; i < n; i++) {
-        std::cout << "|";
-        for (size_t j = 0; j < m; j++) {
-            int cell_num = i * m + j;
-            if (cell_num < 10) std::cout << " " << cell_num << " ";
-            else std::cout << cell_num << " ";
+    int i_x = X / M, j_x = X % M, i_y = Y / M, j_y = Y % M;
+    if (i_x == 0) walls[0][j_x] = false;
+    else if (i_x == N - 1) walls[new_N - 1][j_x] = false;
+    else if (j_x == 0) walls[i_x * 2 + 1][0] = false;
+    else if (j_x == M - 1) walls[i_x * 2 + 1][new_M - 1] = false;
 
-            bool has_right_wall = matrix[i][j + 1] && matrix[i + 1][j + 1];
-            std::cout << (has_right_wall ? "|" : " ");
+    if (i_y == 0) walls[0][j_y] = false;
+    else if (i_y == N - 1) walls[new_N - 1][j_y] = false;
+    else if (j_y == 0) walls[i_y * 2 + 1][0] = false;
+    else if (j_y == M - 1) walls[i_y * 2 + 1][new_M - 1] = false;
+
+    if (maze.dsu_find_recursive(X) == maze.dsu_find_recursive(Y)) return walls;
+    else {
+        for (int i = 0; i < new_N; i++) {
+            delete[] walls[i];
         }
-        std::cout << std::endl;
+        delete[] walls;
 
-        if (i < n - 1) {
-            for (size_t j = 0; j < m; j++) {
-                std::cout << "+";
-                bool has_bottom_wall = matrix[i + 1][j] && matrix[i + 1][j + 1];
-                std::cout << (has_bottom_wall ? "---" : "   ");
-            }
-            std::cout << "+" << std::endl;
-        }
+        return generate(X, Y, N, M);
     }
-
-    for (size_t j = 0; j < m; j++) {
-        std::cout << "+---";
-    }
-    std::cout << "+" << std::endl;
 }
 
-DSU generate2(int x, int y, int n, int m) {
-    DSU dsu(n * m);
-    dsu.dsu_union(x, y);
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            int current = i * m + j;
-
-            if (j < m - 1 && getRandomIndex(9) >= 3) {
-                int right = i * m + (j + 1);
-                dsu.dsu_union(current, right);
-            }
-            if (i < n - 1 && getRandomIndex(9) >= 3) {
-                int bottom = (i + 1) * m + j;
-                dsu.dsu_union(current, bottom);
-            }
-        }
-    }
-    return dsu;
-}
-void print_labirint2(DSU labirint, int n, int m) {
-    std::cout << "+";
-    for (int j = 0; j < m; j++) {
-        std::cout << "---+";
-    }
-    std::cout << std::endl;
-
-    for (int i = 0; i < n; i++) {
-        std::cout << "|";
-
-        for (int j = 0; j < m; j++) {
-            int cell = i * m + j;
-            if (cell < 10) std::cout << " " << cell << " ";
-            else std::cout << cell << " ";
-            if (j < m - 1) {
-                int right_cell = i * m + (j + 1);
-                if (labirint.dsu_find_recursive(cell) == labirint.dsu_find_recursive(right_cell)) {
-                    std::cout << " "; 
-                }
-                else {
-                    std::cout << "|"; 
-                }
+void print(bool** labirint, int N, int M) {
+    int new_N = N * 2 + 1, new_M = M + 1;
+    for (int i = 0; i < new_N; i++) {
+        for (int j = 0; j < new_M; j++) {
+            if (i % 2 == 0) {
+                if (labirint[i][j] == true) std::cout << " --";
+                else std::cout << "   ";
             }
             else {
-                std::cout << "|";
+                if (labirint[i][j] == true) std::cout << "|  ";
+                else std::cout << "   ";
             }
         }
-        std::cout << std::endl;
-        if (i < n - 1) {
-            std::cout << "+";
-            for (int j = 0; j < m; j++) {
-                int cell = i * m + j;
-                int bottom_cell = (i + 1) * m + j;
-                if (labirint.dsu_find_recursive(cell) == labirint.dsu_find_recursive(bottom_cell)) {
-                    std::cout << "   +"; 
-                }
-                else {
-                    std::cout << "---+"; 
-                }
-            }
-            std::cout << std::endl;
-        }
+        std::cout << "\n";
     }
-
-    // Нижняя граница - всегда стена
-    std::cout << "+";
-    for (int j = 0; j < m; j++) {
-        std::cout << "---+";
-    }
-    std::cout << std::endl;
-}
