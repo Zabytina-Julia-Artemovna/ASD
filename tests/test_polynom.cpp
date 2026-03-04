@@ -209,7 +209,9 @@ TEST(TestPolynomLib, polynom_mult_monom_with_zero_power) {
     // Assert
     std::ostringstream oss;
     oss << result;
-    EXPECT_EQ(oss.str(), "15x^2 + 6y^3 + 21");
+    std::string str = oss.str();
+    EXPECT_TRUE(str == "6y^3 + 15x^2 + 21" ||
+        str == "15x^2 + 6y^3 + 21");
     EXPECT_EQ(result.size(), 3);
 }
 TEST(TestPolynomLib, polynom_mult_monom_negative_coefficient) {

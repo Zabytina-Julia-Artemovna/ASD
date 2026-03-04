@@ -33,7 +33,6 @@ TEST(TestBinaryTreeLib, binary_tree_insert) {
     ASSERT_NE(result, nullptr);
     expect_polynom_equal(value, *result);
 }
-
 TEST(TestBinaryTreeLib, binary_tree_insert_and_erase) {
     // Arrange
     BinaryTree<std::string, Polynom> tree;
@@ -44,7 +43,7 @@ TEST(TestBinaryTreeLib, binary_tree_insert_and_erase) {
     std::string key3 = "polynom3";
     Polynom value3("10.8x^3 + z^2");
 
-    // Act & Assert 
+    // Act & Assert - вставка
     tree.insert(key1, value1);
     tree.insert(key2, value2);
     tree.insert(key3, value3);
@@ -66,16 +65,17 @@ TEST(TestBinaryTreeLib, binary_tree_insert_and_erase) {
     tree.erase(key1);
 
     // Assert 
-    EXPECT_THROW(tree.erase(key1), std::logic_error);
-    EXPECT_THROW(tree.erase(key2), std::logic_error);
     EXPECT_EQ(tree.find(key1), nullptr);
     EXPECT_EQ(tree.find(key2), nullptr);
+
+    ASSERT_THROW(tree.erase(key1), std::invalid_argument);
+    ASSERT_THROW(tree.erase(key2), std::invalid_argument);
 
     Polynom* result3_after = tree.find(key3);
     ASSERT_NE(result3_after, nullptr);
     expect_polynom_equal(value3, *result3_after);
 
-    // Act
+    // Act 
     tree.insert(key1, value1);
 
     // Assert 
@@ -83,7 +83,6 @@ TEST(TestBinaryTreeLib, binary_tree_insert_and_erase) {
     ASSERT_NE(result1_again, nullptr);
     expect_polynom_equal(value1, *result1_again);
 }
-
 TEST(TestBinaryTreeLib, binary_tree_find_nonexistent) {
     // Arrange
     BinaryTree<std::string, Polynom> tree;
