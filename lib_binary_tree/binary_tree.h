@@ -1,6 +1,7 @@
 #pragma once
 #include <utility>
 #include <iostream>
+#include <stdexcept>
 #include "../lib_queue_on_list/queue_on_list.h"
 template <class TKey, class TValue>
 struct TNode {
@@ -20,7 +21,7 @@ private:
     void clear_recursive(TNode<TKey, TValue>* node) noexcept;
 
     TNode<TKey, TValue>* find_node(const TKey& key) const noexcept;
-    std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> find_last_with_parent();
+    std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> find_last_with_parent() const noexcept;
 public:
     BinaryTree();
     ~BinaryTree();
@@ -74,7 +75,7 @@ void BinaryTree<TKey, TValue>::insert(const TKey& key, const TValue& value) {
     }
 }
 template <class TKey, class TValue>
-std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> BinaryTree<TKey, TValue>::find_last_with_parent() {
+std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> BinaryTree<TKey, TValue>::find_last_with_parent() const noexcept {
     if (is_empty()) {
         return { nullptr, nullptr };
     }
@@ -93,12 +94,15 @@ std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> BinaryTree<TKey, TValue>::
             queue.push(last_node->right_);
             parent = last_node; 
         }
+        if (queue.is_empty()) {
+            return { last_node, parent };
+        }
     }
     return { last_node, parent };
 }
 template <class TKey, class TValue>
 TNode<TKey, TValue>* BinaryTree<TKey, TValue>::find_node(const TKey& key) const noexcept {
-    if (is_emplty()) {
+    if (is_empty()) {
         return nullptr;
     }
     QueueOnList<TNode<TKey, TValue>*> queue;
@@ -126,25 +130,11 @@ TValue* BinaryTree<TKey, TValue>::find(const TKey& key) const noexcept {
     if (is_empty()) {
         return nullptr;
     }
-    TNode<TKey, TValue>* current = nullptr;
-    QueueOnList<TNode<TKey, TValue>*> queue;
-    queue.push(_root);
-    while (1) {
-        current = queue.head();
-        queue.pop();
-        if (current->data_.first == key) {
-            return &(current->data_.second);
-        }
-        if (current->left_) {
-            queue.push(current->left_);
-        }
-        if (current->right_) {
-            queue.push(current->right_);
-        }
-        if (queue.is_empty()) {
-            return nullptr;
-        }
+    TNode<TKey, TValue>* result = find_node(key);
+    if (!result) {
+        return nullptr;
     }
+    return &(result->data_.second);
 }
 template <class TKey, class TValue>
 void BinaryTree<TKey, TValue>::erase(const TKey& key) {
@@ -244,6 +234,7 @@ void BinaryTree<TKey, TValue>::print_DCLR() const {
 template <class TKey, class TValue>
 void BinaryTree<TKey, TValue>::clear() noexcept {
     clear_recursive(_root);
+    _root = nullptr;
 }
 template <class TKey, class TValue>
 void BinaryTree<TKey, TValue>::clear_recursive(TNode<TKey, TValue>* node) noexcept {
