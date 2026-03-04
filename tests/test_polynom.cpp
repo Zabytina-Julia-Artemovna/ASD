@@ -45,6 +45,31 @@ TEST(TestPolynomLib, polynom_copy_constructor) {
     oss_copy << copy;
     EXPECT_EQ(oss_original.str(), oss_copy.str());
 }
+TEST(TestPolynomLib, polynom_constructor_from_string_simple) {
+    // Arrange & Act
+    Polynom polynom("2x^2 + 3y - 5z");
+
+    // Assert
+    EXPECT_EQ(polynom.size(), 3);
+    std::ostringstream oss;
+    oss << polynom;
+    EXPECT_EQ(oss.str(), "2x^2 + 3y - 5z");
+}
+
+TEST(TestPolynomLib, polynom_constructor_from_string_with_spaces) {
+    // Arrange & Act
+    Polynom polynom("  2x^2   +   3y   -   5z  ");
+
+    // Assert
+    EXPECT_EQ(polynom.size(), 3);
+    std::ostringstream oss;
+    oss << polynom;
+    EXPECT_EQ(oss.str(), "2x^2 + 3y - 5z");
+}
+TEST(TestPolynomLib, polynom_constructor_from_char_exception) {
+    // Arrange & Act & Assert
+    EXPECT_THROW(Polynom(nullptr), std::invalid_argument);
+}
 TEST(TestPolynomLib, polynom_assignment_operator) {
     // Arrange
     Monom monom1(10.2, 1, 3, 8);
