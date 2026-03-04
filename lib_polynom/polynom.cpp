@@ -215,7 +215,7 @@ void Polynom::simplify() {
     size_t i = 0;
     while (i + 1 < monoms.size()) {
         if (monoms[i] == monoms[i + 1]) {
-            double new_coef = monoms[i].get_coefficient() + monoms[i + 1].get_coefficient();
+            double new_coef = monoms[i].get_coefficient() + monoms[i + 1].get_coefficient(); //складываем подобные
             monoms[i].set_coefficient(new_coef);
             monoms.erase(monoms.begin() + i + 1);
         }
@@ -226,7 +226,7 @@ void Polynom::simplify() {
     i = 0;
     while (i < monoms.size()) {
         if (std::abs(monoms[i].get_coefficient()) < EPSILON) {
-            monoms.erase(monoms.begin() + i);
+            monoms.erase(monoms.begin() + i); //удаляем нулевые
         }
         else {
             ++i;
@@ -236,7 +236,7 @@ void Polynom::simplify() {
         _polynom.push_back(m);
     }
 }
-Monom Polynom::parseMonom(const std::string& token) const {
+Monom Polynom::parseMonom(const std::string& token) const { //считываем число - коэфф., перем., затем степень
    if (token.empty()) {
         throw std::invalid_argument("Empty monom token");
     }
@@ -256,11 +256,18 @@ Monom Polynom::parseMonom(const std::string& token) const {
         pos++;
 
         int var_index = -1;
-        if (var == 'x') var_index = 0;
-        else if (var == 'y') var_index = 1;
-        else if (var == 'z') var_index = 2;
-        else throw std::invalid_argument("Invalid variable: " + std::string(1, var));
-
+        if (var == 'x') {
+            var_index = 0;
+        }
+        else if (var == 'y') {
+            var_index = 1;
+        }
+        else if (var == 'z') {
+            var_index = 2;
+        }
+        else {
+            throw std::invalid_argument("Invalid variable: " + std::string(1, var));
+        }
         int power = 1;
         if (pos < token.length() && token[pos] == '^') {
             pos++;
