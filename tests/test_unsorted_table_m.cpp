@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 #include "../lib_unsorted_table_m/unsorted_table_m.h"
 #include "../lib_polynom/polynom.h"
-void expect_polynom_equal(const Polynom& expected, const Polynom& actual) {
+static void expect_polynom_equal(const Polynom& expected, const Polynom& actual) { // static видима только в текущем файле
     std::stringstream ss_expected, ss_actual;
     ss_expected << expected;
     ss_actual << actual;

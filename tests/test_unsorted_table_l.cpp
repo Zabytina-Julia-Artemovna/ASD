@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 #include "../lib_unsorted_table_l/unsorted_table_l.h"
 #include "../lib_polynom/polynom.h"
-void expect_polynom_equal(const Polynom& expected, const Polynom& actual) {
+static void expect_polynom_equal(const Polynom& expected, const Polynom& actual) {
     std::stringstream ss_expected, ss_actual;
     ss_expected << expected;
     ss_actual << actual;
@@ -25,16 +25,14 @@ TEST(TestUnsortedTableLLib, unsorted_table_l_copy_constructor) {
     table1.insert(name1, data1);
     table1.insert(name2, data2);
 
-    // Act 
     UnsortedTableL<std::string, Polynom> table2(table1);
 
-    // Assert
+    
     EXPECT_EQ(table1.size(), table2.size());
     expect_polynom_equal(table1.find(name1), table2.find(name1));
     expect_polynom_equal(table1.find(name2), table2.find(name2));
 }
 TEST(TestUnsortedTableLLib, unsorted_table_l_operator_assign) {
-    // Arrange
     std::string name1 = "p1";
     Polynom data1("x^2 + 2yz^7");
     std::string name2 = "p2";
@@ -44,17 +42,15 @@ TEST(TestUnsortedTableLLib, unsorted_table_l_operator_assign) {
     table1.insert(name1, data1);
     table1.insert(name2, data2);
 
-    // Act 
+     
     UnsortedTableL<std::string, Polynom> table2;
     table2 = table1;
 
-    // Assert
     EXPECT_EQ(table1.size(), table2.size());
     expect_polynom_equal(table1.find(name1), table2.find(name1));
     expect_polynom_equal(table1.find(name2), table2.find(name2));
 }
 TEST(TestUnsortedTableLLib, unsorted_table_l_operator_assign_self_copy) {
-    // Arrange
     std::string name1 = "p1";
     Polynom data1("2.9yz^7 + x^8");
     std::string name2 = "p2";
