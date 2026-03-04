@@ -169,7 +169,7 @@ void BinaryTree<TKey, TValue>::erase(const TKey& key) {
         delete last;
         return;
     }
-    target->data_ = last->data_;
+    target->data_ = last->data_; // удаляем не последний
     if (parent_of_last->left_ == last) {
         parent_of_last->left_ = nullptr;
     }
@@ -240,4 +240,17 @@ template <class TKey, class TValue>
 void BinaryTree<TKey, TValue>::print_DCLR() const {
     print_DCLR_recursive(_root);
 
+}
+template <class TKey, class TValue>
+void BinaryTree<TKey, TValue>::clear() noexcept {
+    clear_recursive(_root);
+}
+template <class TKey, class TValue>
+void BinaryTree<TKey, TValue>::clear_recursive(TNode<TKey, TValue>* node) noexcept {
+    if (node == nullptr) {
+        return;
+    }
+    clear_recursive(node->left_);
+    clear_recursive(node->right_);
+    delete node;
 }
