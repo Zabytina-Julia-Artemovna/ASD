@@ -18,6 +18,9 @@ private:
     void print_DLRC_recursive(TNode<TKey, TValue>* node) const;
     void print_DCLR_recursive(TNode<TKey, TValue>* node) const;
     void clear_recursive(TNode<TKey, TValue>* node) noexcept;
+
+    TNode<TKey, TValue>* find_node(const TKey& key) const noexcept;
+    std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> find_last_with_parent();
 public:
     BinaryTree();
     ~BinaryTree();
@@ -70,20 +73,111 @@ void BinaryTree<TKey, TValue>::insert(const TKey& key, const TValue& value) {
         queue.push(current->right_);
     }
 }
-
-//template <class TKey, class TValue>
-//TValue* BinaryTree<TKey, TValue>::find(const TKey& key) const noexcept {
-//
-//}
-//
-//template <class TKey, class TValue>
-//void BinaryTree<TKey, TValue>::erase(const TKey& key) {
-//
-//}
-
-
-
-
+template <class TKey, class TValue>
+std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> BinaryTree<TKey, TValue>::find_last_with_parent() {
+    if (is_empty()) {
+        return { nullptr, nullptr };
+    }
+    QueueOnList<TNode<TKey, TValue>*> queue;
+    queue.push(_root);
+    TNode<TKey, TValue>* last_node = nullptr;
+    TNode<TKey, TValue>* parent = nullptr;
+    while (1) {
+        last_node = queue.head();
+        queue.pop();
+        if (last_node->left_) {
+            queue.push(last_node->left_);
+            parent = last_node;  
+        }
+        if (last_node->right_) {
+            queue.push(last_node->right_);
+            parent = last_node; 
+        }
+    }
+    return { last_node, parent };
+}
+template <class TKey, class TValue>
+TNode<TKey, TValue>* BinaryTree<TKey, TValue>::find_node(const TKey& key) const noexcept {
+    if (is_emplty()) {
+        return nullptr;
+    }
+    QueueOnList<TNode<TKey, TValue>*> queue;
+    queue.push(_root);
+    TNode<TKey, TValue>* node = nullptr;
+    while (1) {
+        node = queue.head();
+        queue.pop();
+        if (node->data_.first == key) {
+            return node;
+        }
+        if (node->left_) {
+            queue.push(node->left_);
+        }
+        if (node->right_) {
+            queue.push(node->right_);
+        }
+        if (queue.is_empty()) {
+            return nullptr;
+        }
+    }
+}
+template <class TKey, class TValue>
+TValue* BinaryTree<TKey, TValue>::find(const TKey& key) const noexcept {
+    if (is_empty()) {
+        return nullptr;
+    }
+    TNode<TKey, TValue>* current = nullptr;
+    QueueOnList<TNode<TKey, TValue>*> queue;
+    queue.push(_root);
+    while (1) {
+        current = queue.head();
+        queue.pop();
+        if (current->data_.first == key) {
+            return &(current->data_.second);
+        }
+        if (current->left_) {
+            queue.push(current->left_);
+        }
+        if (current->right_) {
+            queue.push(current->right_);
+        }
+        if (queue.is_empty()) {
+            return nullptr;
+        }
+    }
+}
+template <class TKey, class TValue>
+void BinaryTree<TKey, TValue>::erase(const TKey& key) {
+    if (is_empty()) {
+        throw std::logic_error("Cannot erase: tree is empty");
+    }
+    auto [last, parent_of_last] = find_last_with_parent();
+    TNode<TKey, TValue>* target = find_node(key);
+    if (!target) {
+        throw std::invalid_argument("Cannot erase: key not found");
+    }
+    if (target == last) { // узел последний/последний и единственный
+        if (parent_of_last) {
+            if (parent_of_last->left_ == last) {
+                parent_of_last->left_ = nullptr;
+            } else {
+                parent_of_last->right_ = nullptr;
+            }
+        } else {
+            _root = nullptr;
+        }
+        delete last;
+        return;
+    }
+    target->data_ = last->data_;
+    if (parent_of_last->left_ == last) {
+        parent_of_last->left_ = nullptr;
+    }
+    else {
+        parent_of_last->right_ = nullptr;
+    }
+    delete last;
+}
 template <class TKey, class TValue>
 void BinaryTree<TKey, TValue>::print_width() const {
     if (is_empty()) {
