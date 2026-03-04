@@ -3,10 +3,10 @@ Polynom::Polynom(const std::string& str) {
     if (str.empty()) {
         return;
     }
-    std::stringstream ss(str);
+    std::stringstream ss(str);// превращаем строку в поток
     std::string token;
     char sign = '+';
-    while (ss >> token) {
+    while (ss >> token) { //ss >> token будет читать слова, разделенные пробелами
         if (token == "+" || token == "-") {
             sign = token[0];
             continue;
@@ -15,11 +15,10 @@ Polynom::Polynom(const std::string& str) {
         if (sign == '-') {
             monom.set_coefficient(-monom.get_coefficient());
         }
-        *this += monom;
-
+        _polynom.push_back(monom);
         sign = '+';
     }
-    simplify();
+    simplify();  
 }
 Polynom Polynom::operator +(const Polynom& other_polynom) const {
     Polynom result = *this;
@@ -44,19 +43,30 @@ Polynom Polynom::operator *(const Polynom& other_polynom) const {
     }
     return result;
 }
-Polynom& Polynom::operator +=(const Polynom& other_polynom) {
-    *this = *this + other_polynom;
+Polynom& Polynom::operator+=(const Polynom& other_polynom) {
+    for (auto it = other_polynom._polynom.begin(); it != other_polynom._polynom.end(); ++it) {
+        *this += *it;  
+    }
     return *this;
 }
 Polynom& Polynom::operator -=(const Polynom& other_polynom) {
-    *this = *this - other_polynom;
+    for (auto it = other_polynom._polynom.begin(); it != other_polynom._polynom.end(); ++it) {
+        *this -= *it;
+    }
     return *this;
 }
-Polynom& Polynom::operator *=(const Polynom& other_polynom) {
-    *this = *this * other_polynom;
+Polynom& Polynom::operator*=(const Polynom& other_polynom) {
+    Polynom result;
+    for (auto it1 = _polynom.begin(); it1 != _polynom.end(); ++it1) { // через result: нельзя изменять коллекцию, по которой итерируешься!!!
+        // напр, если simplify() удалил элемент, на который указывал it1 - он уничтожен
+        for (auto it2 = other_polynom._polynom.begin(); it2 != other_polynom._polynom.end(); ++it2) {
+            result += (*it1) * (*it2);
+        }
+    }
+    _polynom.clear();  
+    _polynom = result._polynom;
     return *this;
 }
-
 Polynom Polynom::operator+(const Monom& other_monom) const {
     Polynom result = *this;
     result += other_monom;
@@ -79,15 +89,23 @@ Polynom& Polynom::operator-=(const Monom& other_monom) {
 }
 Polynom& Polynom::operator=(const Polynom& other) {
     if (this != &other) {
-        _polynom = other._polynom;
+        while (!_polynom.is_empty()) {
+            _polynom.pop_back();
+        }
+        for (auto it = other._polynom.begin(); it != other._polynom.end(); ++it) {
+            _polynom.push_back(*it);
+        }
+        
+        simplify();
     }
     return *this;
 }
 Polynom Polynom::operator-() const {
     Polynom result;
-    for (auto it = _polynom.begin(); it != _polynom.end(); it++) {
-        result += -(*it);
+    for (auto it = _polynom.begin(); it != _polynom.end(); ++it) {
+        result._polynom.push_back(-(*it));
     }
+    result.simplify();
     return result;
 }
 double Polynom::calculate(double x, double y, double z) const {
@@ -166,13 +184,15 @@ std::istream& operator>>(std::istream& input, Polynom& polynom) {
     return input;
 }
 void Polynom::sort() {
-    if (_polynom.get_size() <= 1) return;
+    if (_polynom.get_size() <= 1) {
+        return;
+    }
     std::vector<Monom> temp;
     for (auto it = _polynom.begin(); it != _polynom.end(); ++it) {
         temp.push_back(*it);
     }
     std::sort(temp.begin(), temp.end(),
-        [](const Monom& a, const Monom& b) { return a > b; });
+        [](const Monom& a, const Monom& b) { return a > b; }); //лямбда-функция (анонимная функция), которая сравнивает два монома a и b (сортировка по убыв. степ.)
     while (!_polynom.is_empty()) {
         _polynom.pop_back();
     }
@@ -181,40 +201,50 @@ void Polynom::sort() {
     }
 }
 void Polynom::simplify() {
+    if (_polynom.get_size() <= 1) {
+        return;
+    }
     sort();
+    std::vector<Monom> monoms;
+    for (auto it = _polynom.begin(); it != _polynom.end(); ++it) {
+        monoms.push_back(*it);
+    }
+    while (!_polynom.is_empty()) {
+        _polynom.pop_back();
+    }
     size_t i = 0;
-    while (i + 1 < _polynom.get_size()) {
-        auto it1 = _polynom.begin();
-        for (size_t k = 0; k < i; ++k) ++it1;
-        auto it2 = it1;
-        ++it2;
-        if ((*it1) == (*it2)) {
-            double new_coef = (*it1).get_coefficient() + (*it2).get_coefficient();
-            (*it1).set_coefficient(new_coef);
-            _polynom.erase(i + 1);
+    while (i + 1 < monoms.size()) {
+        if (monoms[i] == monoms[i + 1]) {
+            double new_coef = monoms[i].get_coefficient() + monoms[i + 1].get_coefficient();
+            monoms[i].set_coefficient(new_coef);
+            monoms.erase(monoms.begin() + i + 1);
         }
         else {
             ++i;
         }
     }
     i = 0;
-    while (i < _polynom.get_size()) {
-        auto it = _polynom.begin();
-        for (size_t k = 0; k < i; ++k) ++it;
-        if (std::abs((*it).get_coefficient()) < EPSILON) {
-            _polynom.erase(i);
+    while (i < monoms.size()) {
+        if (std::abs(monoms[i].get_coefficient()) < EPSILON) {
+            monoms.erase(monoms.begin() + i);
         }
         else {
             ++i;
         }
     }
+    for (const auto& m : monoms) {
+        _polynom.push_back(m);
+    }
 }
 Monom Polynom::parseMonom(const std::string& token) const {
-    if (token.empty()) {
+   if (token.empty()) {
         throw std::invalid_argument("Empty monom token");
     }
+        if (token == "0") {
+        return Monom(0.0, 0, 0, 0);
+    }
     double coefficient = 1.0;
-    int powers[3] = { 0, 0, 0 };  // [x, y, z]
+    int powers[3] = { 0, 0, 0 };
     size_t pos = 0;
     if (isdigit(token[pos]) || token[pos] == '.') {
         size_t end;

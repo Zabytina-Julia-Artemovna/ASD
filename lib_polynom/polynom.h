@@ -14,10 +14,10 @@ private:
     void sort();
     Monom parseMonom(const std::string& token) const;
 public:
-    Polynom() : _polynom() {} //
+    Polynom() : _polynom() {} 
     Polynom(const Monom& monom) {
         _polynom.push_back(monom);
-    } //
+    } 
     Polynom(const std::string& string);
     Polynom(const char* str) {
         if (!str) {
@@ -27,8 +27,8 @@ public:
     }
     Polynom(const Polynom& other) {
         _polynom = other._polynom;
-    } //
-    Polynom& operator=(const Polynom& other); //
+    }
+    Polynom& operator=(const Polynom& other);
 
     Polynom operator +(const Polynom& other_polynom) const;
     Polynom operator -(const Polynom& other_polynom) const;

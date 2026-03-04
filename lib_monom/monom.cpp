@@ -8,7 +8,7 @@ bool Monom::operator ==(const Monom& other_monom) const {
 bool Monom::operator !=(const Monom& other_monom) const {
     return !(*this == other_monom);
 }
-bool Monom::operator >(const Monom& other_monom) const {
+bool Monom::operator >(const Monom& other_monom) const { 
     int total_degree_this = this->powerX() + this->powerY() + this->powerZ();
     int total_degree_other = other_monom.powerX() + other_monom.powerY() + other_monom.powerZ();
 
