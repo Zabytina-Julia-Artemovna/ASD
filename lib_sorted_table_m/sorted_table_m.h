@@ -28,6 +28,7 @@ public:
     SortedTableM(const SortedTableM& other) = default;
     ~SortedTableM() override = default;
 
+    std::vector<TKey> get_keys() const;
     SortedTableM<TKey, TValue>& operator=(const SortedTableM<TKey, TValue>& other);
     void insert(const TKey& key, const TValue& value) override;
     void erase(const TKey& key) override;
@@ -38,6 +39,14 @@ public:
     size_t size() const noexcept override;
     void print(std::ostream& out) const override;
 };
+template <class TKey, class TValue>
+std::vector<TKey> SortedTableM<TKey, TValue>::get_keys() const {
+    std::vector<TKey> keys;
+    for (size_t i = 0; i < _rows.get_size(); ++i) {
+        keys.push_back(_rows[i].first);
+    }
+    return keys;
+}
 template <class TKey, class TValue>
 SortedTableM<TKey, TValue>& SortedTableM<TKey, TValue>::operator=(const SortedTableM<TKey, TValue>& other) { // O(n)
     if (this != &other) {
@@ -68,11 +77,15 @@ TValue& SortedTableM<TKey, TValue>::find(const TKey& key) { // O(logn)
     return const_cast<TValue&>(result);
 }
 template <class TKey, class TValue>
-const TValue& SortedTableM<TKey, TValue>::find(const TKey& key) const { // O(logn)
+const TValue& SortedTableM<TKey, TValue>::find(const TKey& key) const {
     std::pair<size_t, bool> result = find_position(key);
     if (result.second == false) {
         throw std::out_of_range("Key not found");
     }
+
+    std::cout << "find: key=" << key << ", index=" << result.first << std::endl;
+    std::cout << "value size=" << _rows[result.first].second.size() << std::endl;
+
     return _rows[result.first].second;
 }
 template <class TKey, class TValue>
