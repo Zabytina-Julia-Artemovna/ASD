@@ -86,6 +86,7 @@ public:
     Iterator end() const {
         return Iterator(nullptr);
     }
+
     List();
     ~List();
     List(const List<T>& other_list);
@@ -124,6 +125,7 @@ public:
     void pop_back();
     void erase(size_t position);
     void erase(Node<T>* node);
+    void clear() noexcept;
 };
 template <class T>
 List<T>::List() : _head(nullptr), _tail(nullptr), _count_elements(0) {}
@@ -330,4 +332,14 @@ void List<T>::erase(Node<T>* node) {
     current->next = node->next;
     delete node;
     _count_elements--;
+}
+template <class T>
+void List<T>::clear() noexcept {
+    while (_head != nullptr) {
+        Node<T>* temporary = _head;
+        _head = _head->next;
+        delete temporary;
+    }
+    _tail = nullptr;
+    _count_elements = 0;
 }
