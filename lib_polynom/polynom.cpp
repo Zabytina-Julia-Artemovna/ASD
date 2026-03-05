@@ -15,10 +15,9 @@ Polynom::Polynom(const std::string& str) {
         if (sign == '-') {
             monom.set_coefficient(-monom.get_coefficient());
         }
-        _polynom.push_back(monom);
+        *this += monom;
         sign = '+';
     }
-    simplify();  
 }
 Polynom Polynom::operator +(const Polynom& other_polynom) const {
     Polynom result = *this;
@@ -70,13 +69,33 @@ Polynom Polynom::operator -(const Monom& other_monom) const {
     return result;
 }
 Polynom& Polynom::operator+=(const Monom& other_monom) {
-    _polynom.push_back(other_monom);
-    simplify();
+    if (std::abs(other_monom.get_coefficient()) < EPSILON) {
+        return *this;
+    }
+    if (_polynom.is_empty()) {
+        _polynom.push_back(other_monom);
+        return *this;
+    }
+    for (auto it = _polynom.begin(); it != _polynom.end(); it++) {
+        if (other_monom == *it) {
+            *it += other_monom;
+            if (std::abs(it->get_coefficient()) < EPSILON) {
+                _polynom.erase(it);
+            }
+            return *this;
+        }
+    }
+    size_t pos = 0;
+    auto it = _polynom.begin();
+    while (it != _polynom.end() && *it > other_monom) {
+        it++;
+        pos++;
+    }
+    _polynom.insert(pos, other_monom);
     return *this;
 }
 Polynom& Polynom::operator-=(const Monom& other_monom) {
-    _polynom.push_back(-other_monom);
-    simplify();
+    (*this) += (-other_monom);
     return *this;
 }
 Polynom& Polynom::operator=(const Polynom& other) {
@@ -85,17 +104,14 @@ Polynom& Polynom::operator=(const Polynom& other) {
         for (auto it = other._polynom.begin(); it != other._polynom.end(); ++it) {
             _polynom.push_back(*it);
         }
-        
-        simplify();
     }
     return *this;
 }
 Polynom Polynom::operator-() const {
     Polynom result;
     for (auto it = _polynom.begin(); it != _polynom.end(); ++it) {
-        result._polynom.push_back(-(*it));
+        result += -(*it);
     }
-    result.simplify();
     return result;
 }
 double Polynom::calculate(double x, double y, double z) const {
@@ -139,7 +155,7 @@ std::istream& operator>>(std::istream& input, Polynom& polynom) {
                     if (!positive) {
                         m = -m;
                     }
-                    polynom._polynom.push_back(m);
+                    polynom += m;
                 }
                 catch (std::exception& ex) {
                     input.setstate(std::ios::failbit);
@@ -161,70 +177,15 @@ std::istream& operator>>(std::istream& input, Polynom& polynom) {
             if (!positive) {
                 m = -m;
             }
-            polynom._polynom.push_back(m);
+            polynom += m;
         }
         catch (std::exception& ex) {
             input.setstate(std::ios::failbit);
             return input;
         }
     }
-    polynom.sort();
-    polynom.simplify();
 
     return input;
-}
-void Polynom::sort() {
-    if (_polynom.get_size() <= 1) {
-        return;
-    }
-    std::vector<Monom> temp;
-    for (auto it = _polynom.begin(); it != _polynom.end(); ++it) {
-        temp.push_back(*it);
-    }
-    std::sort(temp.begin(), temp.end(),
-        [](const Monom& a, const Monom& b) { return a > b; }); //лямбда-функция (анонимная функция), которая сравнивает два монома a и b (сортировка по убыв. степ.)
-    while (!_polynom.is_empty()) {
-        _polynom.pop_back();
-    }
-    for (const auto& m : temp) {
-        _polynom.push_back(m);
-    }
-}
-void Polynom::simplify() {
-    if (_polynom.get_size() <= 1) {
-        return;
-    }
-    sort();
-    std::vector<Monom> monoms;
-    for (auto it = _polynom.begin(); it != _polynom.end(); ++it) {
-        monoms.push_back(*it);
-    }
-    while (!_polynom.is_empty()) {
-        _polynom.pop_back();
-    }
-    size_t i = 0;
-    while (i + 1 < monoms.size()) {
-        if (monoms[i] == monoms[i + 1]) {
-            double new_coef = monoms[i].get_coefficient() + monoms[i + 1].get_coefficient(); //складываем подобные
-            monoms[i].set_coefficient(new_coef);
-            monoms.erase(monoms.begin() + i + 1);
-        }
-        else {
-            ++i;
-        }
-    }
-    i = 0;
-    while (i < monoms.size()) {
-        if (std::abs(monoms[i].get_coefficient()) < EPSILON) {
-            monoms.erase(monoms.begin() + i); //удаляем нулевые
-        }
-        else {
-            ++i;
-        }
-    }
-    for (const auto& m : monoms) {
-        _polynom.push_back(m);
-    }
 }
 Monom Polynom::parseMonom(const std::string& token) const { //считываем число - коэфф., перем., затем степень
    if (token.empty()) {

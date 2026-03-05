@@ -10,8 +10,6 @@ class Polynom {
 private:
     List<Monom> _polynom;
     static constexpr double EPSILON = 1e-10;
-    void simplify();
-    void sort();
     Monom parseMonom(const std::string& token) const;
 public:
     Polynom() : _polynom() {} 
