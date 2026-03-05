@@ -8,32 +8,14 @@ bool Monom::operator ==(const Monom& other_monom) const {
 bool Monom::operator !=(const Monom& other_monom) const {
     return !(*this == other_monom);
 }
-bool Monom::operator >(const Monom& other_monom) const { 
-    int total_degree_this = this->powerX() + this->powerY() + this->powerZ();
-    int total_degree_other = other_monom.powerX() + other_monom.powerY() + other_monom.powerZ();
-
-    if (total_degree_this == total_degree_other) {
-
-        int pow_x_this = this->powerX();
-        int pow_y_this = this->powerY();
-        int pow_z_this = this->powerZ();
-
-        int pow_x_other = other_monom.powerX();
-        int pow_y_other = other_monom.powerY();
-        int pow_z_other = other_monom.powerZ();
-
-        if (pow_x_this != pow_x_other) {
-            return (pow_x_this > pow_x_other);
-        }
-        if (pow_y_this != pow_y_other) {
-            return (pow_y_this > pow_y_other);
-        }
-        if (pow_z_this != pow_z_other) {
-            return (pow_z_this > pow_z_other);
-        }
-        return false;
+bool Monom::operator>(const Monom& other_monom) const {
+    if (this->powerX() != other_monom.powerX()) {
+        return this->powerX() > other_monom.powerX();
     }
-    return total_degree_this > total_degree_other;
+    if (this->powerY() != other_monom.powerY()) {
+        return this->powerY() > other_monom.powerY();
+    }
+    return this->powerZ() > other_monom.powerZ();
 }
 bool Monom::operator<(const Monom& other_monom) const {
     return other_monom > *this;
