@@ -81,9 +81,7 @@ Polynom& Polynom::operator-=(const Monom& other_monom) {
 }
 Polynom& Polynom::operator=(const Polynom& other) {
     if (this != &other) {
-        while (!_polynom.is_empty()) {
-            _polynom.pop_back();
-        }
+        _polynom.clear();
         for (auto it = other._polynom.begin(); it != other._polynom.end(); ++it) {
             _polynom.push_back(*it);
         }
