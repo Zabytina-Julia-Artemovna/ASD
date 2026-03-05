@@ -74,35 +74,67 @@ TEST(TestMonomLib, is_monoms_not_similar_false) {
 }
 
 TEST(TestMonomLib, monom1_greater_monom2_true) {
-    // Arrange & Act
     Monom monom1(130.0, 10, 3, 4);
     Monom monom2(35.0, 2, 3, 4);
-    // Assert
     EXPECT_TRUE(monom1 > monom2);
+
+    Monom monom3(1.0, 2, 5, 1);
+    Monom monom4(1.0, 2, 3, 1);
+    EXPECT_TRUE(monom3 > monom4);
+
+    Monom monom5(1.0, 2, 3, 4);
+    Monom monom6(1.0, 2, 3, 2);
+    EXPECT_TRUE(monom5 > monom6);
 }
 
 TEST(TestMonomLib, monom1_less_monom2_true) {
-    // Arrange & Act
     Monom monom1(10.0, 1, 1, 2);
     Monom monom2(34.0, 2, 3, 4);
-    // Assert
     EXPECT_TRUE(monom1 < monom2);
+
+    Monom monom3(1.0, 2, 1, 4);
+    Monom monom4(1.0, 2, 3, 4);
+    EXPECT_TRUE(monom3 < monom4);
+
+   
+    Monom monom5(1.0, 2, 3, 1);
+    Monom monom6(1.0, 2, 3, 4);
+    EXPECT_TRUE(monom5 < monom6);
 }
 
 TEST(TestMonomLib, monom1_greater_monom2_false) {
-    // Arrange & Act
-    Monom monom1(130.0, 10, 3, 4);
-    Monom monom2(35.0, 2, 3, 389);
-    // Assert
+    Monom monom1(130.0, 2, 3, 4);
+    Monom monom2(35.0, 10, 3, 4);
     EXPECT_FALSE(monom1 > monom2);
+
+    Monom monom3(1.0, 2, 3, 4);
+    Monom monom4(1.0, 2, 5, 4);
+    EXPECT_FALSE(monom3 > monom4);
+
+    Monom monom5(1.0, 2, 3, 2);
+    Monom monom6(1.0, 2, 3, 4);
+    EXPECT_FALSE(monom5 > monom6);
+
+    Monom monom7(1.0, 2, 3, 4);
+    Monom monom8(1.0, 2, 3, 4);
+    EXPECT_FALSE(monom7 > monom8);
 }
 
 TEST(TestMonomLib, monom1_less_monom2_false) {
-    // Arrange & Act
-    Monom monom1(10.1, 1, 39, 2);
-    Monom monom2(34.0, 2, 3, 4);
-    // Assert
+    Monom monom1(130.0, 10, 3, 4);
+    Monom monom2(35.0, 2, 3, 4);
     EXPECT_FALSE(monom1 < monom2);
+
+    Monom monom3(1.0, 2, 5, 1);
+    Monom monom4(1.0, 2, 3, 1);
+    EXPECT_FALSE(monom3 < monom4);
+
+    Monom monom5(1.0, 2, 3, 4);
+    Monom monom6(1.0, 2, 3, 2);
+    EXPECT_FALSE(monom5 < monom6);
+    Monom monom7(1.0, 2, 3, 4);
+    Monom monom8(1.0, 2, 3, 4);
+    EXPECT_FALSE(monom7 < monom8);
 }
 
 TEST(TestMonomLib, add_monoms) {
