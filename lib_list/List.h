@@ -17,6 +17,7 @@ public:
     private:
         Node<T>* _current;
     public:
+        friend class List<T>;
         Iterator() : _current(nullptr) {}
         Iterator(Node<T>* node): _current(node) {}
         Iterator(const Iterator& other): _current(other._current) {}
@@ -111,7 +112,6 @@ public:
         }
         return _tail->value;
     }
-
     bool operator==(const List<T>& other) const;
     bool operator!=(const List<T>& other) const;
     List<T>& operator=(const List<T>& other);
@@ -125,6 +125,7 @@ public:
     void pop_back();
     void erase(size_t position);
     void erase(Node<T>* node);
+    Iterator erase(Iterator pos);
     void clear() noexcept;
 };
 template <class T>
@@ -308,6 +309,37 @@ void List<T>::erase(size_t position) {
     current->next = temporary->next;
     delete temporary;
     _count_elements--;
+}
+template <class T>
+typename List<T>::Iterator List<T>::erase(Iterator pos) {
+    if (pos == end()) {
+        return end();
+    }
+    if (pos == begin()) {
+        pop_front();
+        return begin();
+    }
+    Node<T>* prev = _head;
+    while (prev != nullptr && prev->next != pos._current) {
+        prev = prev->next;
+    }
+
+    if (prev == nullptr) {
+        throw std::invalid_argument("Invalid iterator");
+    }
+
+    Node<T>* to_delete = pos._current;
+    prev->next = to_delete->next;
+
+    if (to_delete == _tail) {
+        _tail = prev;
+    }
+
+    Iterator next(to_delete->next);
+    delete to_delete;
+    _count_elements--;
+
+    return next;
 }
 template <class T>
 void List<T>::erase(Node<T>* node) {
