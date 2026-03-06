@@ -170,8 +170,8 @@ public:
 template <class T>
 size_t Tvector<T>::get_real_position(size_t busy_index) const noexcept {
     size_t busy_count = 0;
-    for (size_t i = 0; i < _capacity; ++i) { 
-        if (_states[i] == busy) {
+    for (size_t i = 0; i < _capacity; ++i) {
+        if (_states[i] == State::busy) {
             if (busy_count == busy_index) {
                 return i;
             }
@@ -180,7 +180,6 @@ size_t Tvector<T>::get_real_position(size_t busy_index) const noexcept {
     }
     return _capacity;  
 }
-
 template <class T>
 void Tvector<T>::resize(size_t new_size) {
     if (new_size == _size) return;
@@ -609,12 +608,8 @@ void Tvector<T>::push_front(const T& value) {
 
 template <class T>
 void Tvector<T>::insert(const T& value, size_t position) {
-    if (_size == 0) {
-        resize(RESERVE_MEMORY);
-    }
-
     if (position > _size) {
-        throw std::out_of_range("Insert position out of range");
+        resize(position);  
     }
 
     if (_size >= _capacity) {
@@ -622,8 +617,9 @@ void Tvector<T>::insert(const T& value, size_t position) {
     }
 
     size_t real_pos = (position == _size) ? _size : get_real_position(position);
+
     for (size_t i = _size; i > real_pos; --i) {
-        _data[i] = _data[i - 1];  
+        _data[i] = _data[i - 1];
         _states[i] = _states[i - 1];
     }
 
@@ -631,7 +627,6 @@ void Tvector<T>::insert(const T& value, size_t position) {
     _states[real_pos] = State::busy;
     _size++;
 }
-
 template <class T>
 void Tvector<T>::push_back(const T& value) {
     if (_size >= _capacity) {
