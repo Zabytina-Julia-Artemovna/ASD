@@ -76,7 +76,8 @@ Polynom& Polynom::operator+=(const Monom& other_monom) {
         _polynom.push_back(other_monom);
         return *this;
     }
-    for (auto it = _polynom.begin(); it != _polynom.end(); it++) {
+    size_t pos = 0;
+    for (auto it = _polynom.begin(); it != _polynom.end(); ++it, ++pos) {
         if (other_monom == *it) {
             *it += other_monom;
             if (std::abs(it->get_coefficient()) < EPSILON) {
@@ -84,14 +85,12 @@ Polynom& Polynom::operator+=(const Monom& other_monom) {
             }
             return *this;
         }
+        if (*it < other_monom) { 
+            _polynom.insert(pos, other_monom);
+            return *this;
+        }
     }
-    size_t pos = 0;
-    auto it = _polynom.begin();
-    while (it != _polynom.end() && *it > other_monom) {
-        it++;
-        pos++;
-    }
-    _polynom.insert(pos, other_monom);
+    _polynom.push_back(other_monom);
     return *this;
 }
 Polynom& Polynom::operator-=(const Monom& other_monom) {
