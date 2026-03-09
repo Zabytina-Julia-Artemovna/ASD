@@ -20,8 +20,8 @@ private:
     void print_DCLR_recursive(TNode<TKey, TValue>* node) const;
     void clear_recursive(TNode<TKey, TValue>* node) noexcept;
 
-    TNode<TKey, TValue>* find_node(const TKey& key) const noexcept;
-    std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> find_last_with_parent() const noexcept;
+    TNode<TKey, TValue>* find_node(const TKey& key) const noexcept; // для erase
+    std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> find_last_with_parent() const noexcept; // для erase
 public:
     BinaryTree();
     ~BinaryTree();
@@ -50,7 +50,7 @@ bool BinaryTree<TKey, TValue>::is_empty() const noexcept {
     return _root == nullptr;
 }
 template <class TKey, class TValue>
-void BinaryTree<TKey, TValue>::insert(const TKey& key, const TValue& value) {
+void BinaryTree<TKey, TValue>::insert(const TKey& key, const TValue& value) { // O(n) в лучшем O(1)
     TNode<TKey, TValue>* node = new TNode<TKey, TValue>(key, value);
     if (is_empty()) {
         _root = node;
@@ -75,7 +75,7 @@ void BinaryTree<TKey, TValue>::insert(const TKey& key, const TValue& value) {
     }
 }
 template <class TKey, class TValue>
-std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> BinaryTree<TKey, TValue>::find_last_with_parent() const noexcept {
+std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> BinaryTree<TKey, TValue>::find_last_with_parent() const noexcept { // O(n) в любом случае
     if (is_empty()) {
         return { nullptr, nullptr };
     }
@@ -101,7 +101,7 @@ std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> BinaryTree<TKey, TValue>::
     return { last_node, parent };
 }
 template <class TKey, class TValue>
-TNode<TKey, TValue>* BinaryTree<TKey, TValue>::find_node(const TKey& key) const noexcept {
+TNode<TKey, TValue>* BinaryTree<TKey, TValue>::find_node(const TKey& key) const noexcept { // O(n) в лучшем O(1) если корень
     if (is_empty()) {
         return nullptr;
     }
@@ -126,7 +126,7 @@ TNode<TKey, TValue>* BinaryTree<TKey, TValue>::find_node(const TKey& key) const 
     }
 }
 template <class TKey, class TValue>
-TValue* BinaryTree<TKey, TValue>::find(const TKey& key) const noexcept {
+TValue* BinaryTree<TKey, TValue>::find(const TKey& key) const noexcept { // O(n) в лучшем случае O(1)
     if (is_empty()) {
         return nullptr;
     }
@@ -137,7 +137,7 @@ TValue* BinaryTree<TKey, TValue>::find(const TKey& key) const noexcept {
     return &(result->data_.second);
 }
 template <class TKey, class TValue>
-void BinaryTree<TKey, TValue>::erase(const TKey& key) {
+void BinaryTree<TKey, TValue>::erase(const TKey& key) { // O(n)
     if (is_empty()) {
         throw std::logic_error("Cannot erase: tree is empty");
     }
@@ -232,12 +232,12 @@ void BinaryTree<TKey, TValue>::print_DCLR() const {
 
 }
 template <class TKey, class TValue>
-void BinaryTree<TKey, TValue>::clear() noexcept {
+void BinaryTree<TKey, TValue>::clear() noexcept { // O(n)
     clear_recursive(_root);
     _root = nullptr;
 }
 template <class TKey, class TValue>
-void BinaryTree<TKey, TValue>::clear_recursive(TNode<TKey, TValue>* node) noexcept {
+void BinaryTree<TKey, TValue>::clear_recursive(TNode<TKey, TValue>* node) noexcept { // O(n)
     if (node == nullptr) {
         return;
     }
