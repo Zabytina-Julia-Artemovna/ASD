@@ -91,7 +91,25 @@ TEST(TestBinaryTreeLib, binary_tree_find_nonexistent) {
     // Act & Assert
     EXPECT_EQ(tree.find("nonexistent"), nullptr);
 }
+TEST(TestBinaryTreeLib, binary_tree_empty) {
+    // Arrange
+    BinaryTree<std::string, Polynom> tree;
 
+    // Assert 
+    EXPECT_TRUE(tree.is_empty());
+    EXPECT_EQ(tree.find("anything"), nullptr);
+    EXPECT_THROW(tree.erase("anything"), std::logic_error);
+
+    // Act 
+    tree.insert("only", Polynom("x"));
+    EXPECT_FALSE(tree.is_empty());
+
+    tree.erase("only");
+
+    // Assert 
+    EXPECT_TRUE(tree.is_empty());
+    EXPECT_EQ(tree.find("only"), nullptr);
+}
 TEST(TestBinaryTreeLib, binary_tree_clear) {
     // Arrange
     BinaryTree<std::string, Polynom> tree;
