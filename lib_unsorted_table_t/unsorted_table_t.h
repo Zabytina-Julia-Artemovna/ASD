@@ -64,8 +64,8 @@ size_t UnsortedTableT<TKey, TValue>::size() const noexcept {
 }
 template <class TKey, class TValue>
 void UnsortedTableT<TKey, TValue>::print(std::ostream& out) const {
-    out << "Unsorted table on binary tree: \n";
-    //for (auto it = _items.begin(); it != _items.end(); it++) {
-        //out << "| " << it->first << " | " << it->second << " |\n";
-    //}
+    out << "Unsorted table on binary tree" << "\n";
+    _items.traverse([&out](const std::pair<TKey, TValue>& item) {
+        out << "  " << item.first << " : " << item.second << "\n";
+        });
 }
