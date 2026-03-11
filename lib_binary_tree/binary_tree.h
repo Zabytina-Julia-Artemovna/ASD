@@ -24,11 +24,14 @@ private:
         bool is_left) const;
     void clear_recursive(TNode<TKey, TValue>* node) noexcept;
 
+    TNode<TKey, TValue>* copy_node(const TNode<TKey, TValue>* node) const; // для copy constructor
     TNode<TKey, TValue>* find_node(const TKey& key) const noexcept; // для erase
     std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> find_last_with_parent() const noexcept; // для erase
 public:
     BinaryTree();
+    BinaryTree(const BinaryTree<TKey, TValue>& other);
     ~BinaryTree();
+    BinaryTree<TKey, TValue>& operator=(const BinaryTree& other);
     void insert(const TKey& key, const TValue& value);
     TValue* find(const TKey& key) const noexcept;
     void erase(const TKey& key);
@@ -47,8 +50,20 @@ BinaryTree<TKey, TValue>::BinaryTree() {
     _root = nullptr;
 }
 template <class TKey, class TValue>
+BinaryTree<TKey, TValue>::BinaryTree(const BinaryTree<TKey, TValue>& other) {
+    _root = copy_node(other._root);
+}
+template <class TKey, class TValue>
 BinaryTree<TKey, TValue>::~BinaryTree() {
     clear();
+}
+template <class TKey, class TValue>
+BinaryTree<TKey, TValue>& BinaryTree<TKey, TValue>::operator=(const BinaryTree& other) {
+    if (this != &other) {
+        BinaryTree<TKey, TValue> temp(other);  
+        std::swap(_root, temp._root);
+    }
+    return *this;
 }
 template <class TKey, class TValue>
 bool BinaryTree<TKey, TValue>::is_empty() const noexcept {
@@ -105,6 +120,22 @@ std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> BinaryTree<TKey, TValue>::
         }
     }
     return { last_node, parent };
+}
+template <class TKey, class TValue>
+TNode<TKey, TValue>* BinaryTree<TKey, TValue>::copy_node(
+    const TNode<TKey, TValue>* node) const {
+
+    if (!node) return nullptr;
+
+    TNode<TKey, TValue>* new_node = new TNode<TKey, TValue>(
+        node->data_.first,
+        node->data_.second
+    );
+
+    new_node->left_ = copy_node(node->left_);
+    new_node->right_ = copy_node(node->right_);
+
+    return new_node;
 }
 template <class TKey, class TValue>
 TNode<TKey, TValue>* BinaryTree<TKey, TValue>::find_node(const TKey& key) const noexcept { // O(n) в лучшем O(1) если корень
