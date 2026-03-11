@@ -61,19 +61,17 @@ BinaryTree<TKey, TValue>::BinaryTree(const BinaryTree<TKey, TValue>& other) {
 template <class TKey, class TValue>
 template <class Func>
 void BinaryTree<TKey, TValue>::traverse(Func func) const {
-    traverse_recursive(_root, func);
+    traverse_recursive(_root, func); // рекурсивн. ф-ция обхода дерева (корень, ф-ция котор. примен. к кажд. узлу)
 }
-// для шаблонного метода шаблонного класса нужно ДВА template
 template <class TKey, class TValue>
 template <class Func>
-void BinaryTree<TKey, TValue>::traverse_recursive( // проход по дереву для вывода
+void BinaryTree<TKey, TValue>::traverse_recursive( 
     TNode<TKey, TValue>* node,
     Func& func) const {
-
-    if (!node) return;
-
-    func(node->data_);  // вызов ф-ции для текущего узла
-
+    if (!node) {
+        return;
+    }
+    func(node->data_);
     traverse_recursive(node->left_, func);
     traverse_recursive(node->right_, func);
 }
