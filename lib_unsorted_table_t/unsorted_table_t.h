@@ -66,6 +66,6 @@ template <class TKey, class TValue>
 void UnsortedTableT<TKey, TValue>::print(std::ostream& out) const {
     out << "Unsorted table on binary tree" << "\n";
     _items.traverse([&out](const std::pair<TKey, TValue>& item) {
-        out << "  " << item.first << " : " << item.second << "\n";
+        out << "  " << item.first << " : " << item.second << "\n"; //вывод применяется к каждому эл-ту дерева при обходе
         });
 }
