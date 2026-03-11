@@ -7,13 +7,12 @@ template <class TKey, class TValue>
 class UnsortedTableT : public Table<TKey, TValue> {
 private:
     BinaryTree<TKey, TValue> _items;
-    size_t _size;
+    size_t _size = 0;
 public:
     UnsortedTableT() = default;
     UnsortedTableT(const UnsortedTableT& other) = default;
     ~UnsortedTableT() override = default;
-
-    UnsortedTableT<TKey, TValue>& operator=(const UnsortedTableT<TKey, TValue>& other);
+    UnsortedTableT<TKey, TValue>& operator=(const UnsortedTableT<TKey, TValue>& other) = default;
     void insert(const TKey& key, const TValue& value) override;
     void erase(const TKey& key) override;
     TValue& find(const TKey& key) override;
@@ -23,10 +22,6 @@ public:
     size_t size() const noexcept override;
     void print(std::ostream& out) const override;
 };
-template <class TKey, class TValue>
-UnsortedTableT<TKey, TValue>& UnsortedTableT<TKey, TValue>::operator=(const UnsortedTableT<TKey, TValue>& other) {
-
-}
 template <class TKey, class TValue>
 void UnsortedTableT<TKey, TValue>::insert(const TKey& key, const TValue& value) {
     TValue* element = _items.find(key);
@@ -51,7 +46,6 @@ TValue& UnsortedTableT<TKey, TValue>::find(const TKey& key) {
     const TValue& result = const_this.find(key);
     return const_cast<TValue&>(result);
 }
-
 template <class TKey, class TValue>
 const TValue& UnsortedTableT<TKey, TValue>::find(const TKey& key) const {
     TValue* element = _items.find(key);
@@ -59,4 +53,19 @@ const TValue& UnsortedTableT<TKey, TValue>::find(const TKey& key) const {
         throw std::invalid_argument("Element not found");
     }
     return *element;
+}
+template <class TKey, class TValue>
+bool UnsortedTableT<TKey, TValue>::is_empty() const noexcept {
+    return _items.is_empty();
+}
+template <class TKey, class TValue>
+size_t UnsortedTableT<TKey, TValue>::size() const noexcept {
+    return _size;
+}
+template <class TKey, class TValue>
+void UnsortedTableT<TKey, TValue>::print(std::ostream& out) const {
+    out << "Unsorted table on binary tree: \n";
+    //for (auto it = _items.begin(); it != _items.end(); it++) {
+        //out << "| " << it->first << " | " << it->second << " |\n";
+    //}
 }
