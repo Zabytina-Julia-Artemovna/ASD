@@ -2,6 +2,7 @@
 #include <utility>
 #include <iostream>
 #include <stdexcept>
+#include <algorithm>
 #include "../lib_queue_on_list/queue_on_list.h"
 template <class TKey, class TValue>
 struct TNode {
