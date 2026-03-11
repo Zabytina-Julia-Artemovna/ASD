@@ -124,14 +124,13 @@ std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> BinaryTree<TKey, TValue>::
 template <class TKey, class TValue>
 TNode<TKey, TValue>* BinaryTree<TKey, TValue>::copy_node(
     const TNode<TKey, TValue>* node) const {
-
-    if (!node) return nullptr;
-
+    if (!node) {
+        return nullptr;
+    }
     TNode<TKey, TValue>* new_node = new TNode<TKey, TValue>(
         node->data_.first,
         node->data_.second
     );
-
     new_node->left_ = copy_node(node->left_);
     new_node->right_ = copy_node(node->right_);
 
