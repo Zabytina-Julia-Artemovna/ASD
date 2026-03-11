@@ -303,7 +303,7 @@ Matrix<bool> generate(int S, int F, int N, int M) {
 
     int connected = 1;
 
-    while (connected < N * M) {
+    while (connected < N * M) { // пока не соединили все клетки
 
         int cell = rand() % (N * M);
 
