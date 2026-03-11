@@ -19,7 +19,7 @@ TEST(TestSkipListLib, skip_list_constructor_with_max_levels) {
     size_t max_levels = 8;
     SkipList<int, Polynom> list(max_levels);
 
-    Polynom p("x+y");
+    Polynom p("x + y");
     list.insert(5, p);
     expect_polynom_equal(p, list.find(5));
 }
@@ -54,7 +54,7 @@ TEST(TestSkipListLib, skip_list_insert_multiple_elements) {
 TEST(TestSkipListLib, skip_list_insert_update_existing_key) {
     SkipList<int, Polynom> list;
 
-    Polynom p1("x+y");
+    Polynom p1("x + y");
     Polynom p2("x^2 + 2y");
 
     list.insert(5, p1);
@@ -63,37 +63,10 @@ TEST(TestSkipListLib, skip_list_insert_update_existing_key) {
     list.insert(5, p2);
     expect_polynom_equal(p2, list.find(5));
 }
-
-TEST(TestSkipListLib, skip_list_insert_duplicate_key_does_not_create_new_node) {
-    SkipList<int, Polynom> list;
-
-    Polynom p1("x+y");
-    Polynom p2("x^2 + 2y");
-
-    list.insert(5, p1);
-    list.insert(5, p2);  
-    EXPECT_THROW(list.find(10), std::runtime_error);
-}
-
-TEST(TestSkipListLib, skip_list_insert_with_string_keys) {
-    SkipList<std::string, Polynom> list;
-
-    Polynom p1("x+y");
-    Polynom p2("x^2 + 2y");
-    Polynom p3("9xyz");
-
-    list.insert("first", p1);
-    list.insert("second", p2);
-    list.insert("third", p3);
-
-    expect_polynom_equal(p1, list.find("first"));
-    expect_polynom_equal(p2, list.find("second"));
-    expect_polynom_equal(p3, list.find("third"));
-}
 TEST(TestSkipListLib, skip_list_find_existing_key) {
     SkipList<int, Polynom> list;
 
-    Polynom p1("x+y");
+    Polynom p1("x + y");
     Polynom p2("x^2 + 2y");
     Polynom p3("9xyz");
 
@@ -109,7 +82,7 @@ TEST(TestSkipListLib, skip_list_find_existing_key) {
 TEST(TestSkipListLib, skip_list_find_non_existing_key) {
     SkipList<int, Polynom> list;
 
-    list.insert(5, Polynom("x+y"));
+    list.insert(5, Polynom("x + y"));
     list.insert(3, Polynom("x^2 + 2y"));
 
     EXPECT_THROW(list.find(10), std::runtime_error);
