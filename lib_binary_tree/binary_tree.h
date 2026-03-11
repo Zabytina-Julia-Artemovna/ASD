@@ -28,10 +28,14 @@ private:
     TNode<TKey, TValue>* copy_node(const TNode<TKey, TValue>* node) const; // для copy constructor
     TNode<TKey, TValue>* find_node(const TKey& key) const noexcept; // для erase
     std::pair<TNode<TKey, TValue>*, TNode<TKey, TValue>*> find_last_with_parent() const noexcept; // для erase
+    template <class Func>
+    void traverse_recursive(TNode<TKey, TValue>* node, Func& func) const;
 public:
     BinaryTree();
     BinaryTree(const BinaryTree<TKey, TValue>& other);
     ~BinaryTree();
+    template <class Func>  
+    void traverse(Func func) const;
     BinaryTree<TKey, TValue>& operator=(const BinaryTree& other);
     void insert(const TKey& key, const TValue& value);
     TValue* find(const TKey& key) const noexcept;
@@ -53,6 +57,25 @@ BinaryTree<TKey, TValue>::BinaryTree() {
 template <class TKey, class TValue>
 BinaryTree<TKey, TValue>::BinaryTree(const BinaryTree<TKey, TValue>& other) {
     _root = copy_node(other._root);
+}
+template <class TKey, class TValue>
+template <class Func>
+void BinaryTree<TKey, TValue>::traverse(Func func) const {
+    traverse_recursive(_root, func);
+}
+// для шаблонного метода шаблонного класса нужно ДВА template
+template <class TKey, class TValue>
+template <class Func>
+void BinaryTree<TKey, TValue>::traverse_recursive( // проход по дереву для вывода
+    TNode<TKey, TValue>* node,
+    Func& func) const {
+
+    if (!node) return;
+
+    func(node->data_);  // вызов ф-ции для текущего узла
+
+    traverse_recursive(node->left_, func);
+    traverse_recursive(node->right_, func);
 }
 template <class TKey, class TValue>
 BinaryTree<TKey, TValue>::~BinaryTree() {
