@@ -3,7 +3,6 @@
 #include <utility>
 #include <random>
 #include <iostream>
-// insert и erase проще чем в сбалансир. деревьях
 template <class TKey, class TValue>
 struct TNode {
     TNode(int level, const TKey& key = TKey(), const TValue& value = TValue())
@@ -15,9 +14,8 @@ struct TNode {
     }
     size_t level_;
     std::pair<TKey, TValue> data_;
-    TNode** next_; //указатель на указатель (массив указателей)
+    TNode** next_; //указатель на указатель (массив указателей на след узлы для кажд уровня)
 };
-
 template <class TKey, class TValue>
 class SkipList {
 private:
@@ -39,7 +37,6 @@ private:
         }
         *it = node;
     }
-
 public:
     SkipList(size_t max_levels = 16);
     ~SkipList();
@@ -64,10 +61,10 @@ SkipList<TKey, TValue>::SkipList(size_t max_levels)
 }
 template <class TKey, class TValue>
 SkipList<TKey, TValue>::~SkipList() {
-    if (_heads.is_empty()) return;
-
+    if (_heads.is_empty()) {
+        return;
+    }
     TNode<TKey, TValue>* head = get_head(0);     
-
     TNode<TKey, TValue>* current = head->next_[0];
     while (current != nullptr) {
         TNode<TKey, TValue>* next = current->next_[0];
@@ -78,10 +75,9 @@ SkipList<TKey, TValue>::~SkipList() {
 }
 template <class TKey, class TValue>
 size_t SkipList<TKey, TValue>::flip_coin() const noexcept {
-    static thread_local std::random_device rd;
-    static thread_local std::mt19937 gen(rd());
-    static thread_local std::bernoulli_distribution dist(0.5);
-
+    static thread_local std::random_device rd; // аппаратный генератор случайных чисел
+    static thread_local std::mt19937 gen(rd()); //генератор, получив начальное число, может генерировать псевдослучайные числа
+    static thread_local std::bernoulli_distribution dist(0.5); //преобразует числа от mt19937 в значения true или false с вер-тью 50 проц
     size_t level = 1;
     while (dist(gen) && level < _max_levels) {
         ++level;
@@ -89,12 +85,14 @@ size_t SkipList<TKey, TValue>::flip_coin() const noexcept {
     return level;
 }
 template <class TKey, class TValue>
-TNode<TKey, TValue>* SkipList<TKey, TValue>::find_nearest(const TKey& key) const noexcept {
-    if (_heads.is_empty()) return nullptr;
+TNode<TKey, TValue>* SkipList<TKey, TValue>::find_nearest(const TKey& key) const noexcept { // поиск ближайший узел с ключом >= искомого
+    if (_heads.is_empty()) {
+        return nullptr;
+    }
     TNode<TKey, TValue>* current = get_head(_current_count_levels - 1);
 
     for (int i = _current_count_levels - 1; i >= 0; --i) {
-        while (current->next_[i] != nullptr &&
+        while (current->next_[i] != nullptr && //пока на текущем уровне есть следующий узел && его ключ меньше искомого
             current->next_[i]->data_.first < key) {
             current = current->next_[i];
         }
@@ -119,7 +117,8 @@ const TValue& SkipList<TKey, TValue>::find(const TKey& key) const {
 template <class TKey, class TValue>
 void SkipList<TKey, TValue>::insert(const TKey& key, const TValue& value) {
     size_t node_level = flip_coin();
-    TNode<TKey, TValue>** update = new TNode<TKey, TValue>* [_max_levels + 1];
+    TNode<TKey, TValue>** update = new TNode<TKey, TValue>* [_max_levels + 1]; //массив указателей на элементы, 
+                                                                               //которые будут перед новым узлом на каждом уровне
     TNode<TKey, TValue>* current = get_head(_current_count_levels - 1);
 
     for (int i = _current_count_levels - 1; i >= 0; --i) {
@@ -127,22 +126,22 @@ void SkipList<TKey, TValue>::insert(const TKey& key, const TValue& value) {
             current->next_[i]->data_.first < key) {
             current = current->next_[i];
         }
-        update[i] = current;
+        update[i] = current; //это последний узел перед местом вставки на уровне i
     }
     current = current->next_[0];
-    if (current != nullptr && current->data_.first == key) {
+    if (current != nullptr && current->data_.first == key) { // нашли узел с тем же ключом : просто обновл. значение
         current->data_.second = value;
         delete[] update; 
         return;
     }
-    if (node_level > _current_count_levels) {
+    if (node_level > _current_count_levels) { // новый уровень выше текущего максимума
         for (size_t i = _current_count_levels; i < node_level; ++i) {
             update[i] = get_head(i);
         }
         _current_count_levels = node_level;
     }
     TNode<TKey, TValue>* newNode = new TNode<TKey, TValue>(node_level, key, value);
-    for (int i = 0; i < node_level; ++i) {
+    for (int i = 0; i < node_level; ++i) { // вставляем узел на всех уровнях
         newNode->next_[i] = update[i]->next_[i];
         update[i]->next_[i] = newNode;
     }
@@ -154,10 +153,9 @@ void SkipList<TKey, TValue>::print() const noexcept {
         std::cout << "Empty list" << std::endl;
         return;
     }
-    // Печатаем сверху вниз
+    // печатаем сверху вниз
     for (int i = _current_count_levels - 1; i >= 0; --i) {
         std::cout << "Level " << i << ": H -> ";
-
         TNode<TKey, TValue>* current = get_head(i)->next_[i];
         while (current != nullptr) {
             std::cout << "[" << current->data_.first
