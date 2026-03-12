@@ -276,7 +276,9 @@
 //}
 //
 Matrix<bool> generate(int S, int F, int N, int M) {
-    if (S == F) throw std::out_of_range("Start and finish cannot be in the same place");
+    if (S == F) {
+        throw std::out_of_range("Start and finish cannot be in the same place");
+    }
     if (S < 1 || S > N * M ||
         (S > N && S <= N * (M - 1) && (S - 1) % N != 0 && S % N != 0)) {
         throw std::out_of_range("Start should be at the outer wall of the maze");
@@ -288,13 +290,13 @@ Matrix<bool> generate(int S, int F, int N, int M) {
     int rows = 2 * N + 1;
     int cols = 2 * M + 1;
 
-    Matrix<bool> maze(rows, cols);
+    Matrix<bool> maze(rows, cols); // матрица стен
 
     // заполнение
     for (int i = 0; i < rows; i++)
         for (int j = 0; j < cols; j++)
             maze[i][j] = true;
-    // открываем комнаты
+    // открываем внутри клеток
     for (int r = 0; r < N; r++)
         for (int c = 0; c < M; c++)
             maze[2 * r + 1][2 * c + 1] = false;
@@ -310,7 +312,7 @@ Matrix<bool> generate(int S, int F, int N, int M) {
         int r = cell / M;
         int c = cell % M;
 
-        int dir = rand() % 2;
+        int dir = rand() % 2; // случайная клетка и направление
 
         if (dir == 0 && c + 1 < M) {  // вправо
 
@@ -334,6 +336,7 @@ Matrix<bool> generate(int S, int F, int N, int M) {
             }
         }
     }
+    // открываем:
     // вход
     int sr = (S - 1) / M;
     int sc = (S - 1) % M;
