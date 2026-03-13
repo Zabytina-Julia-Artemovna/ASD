@@ -82,10 +82,6 @@ const TValue& SortedTableM<TKey, TValue>::find(const TKey& key) const {
     if (result.second == false) {
         throw std::out_of_range("Key not found");
     }
-
-    std::cout << "find: key=" << key << ", index=" << result.first << std::endl;
-    std::cout << "value size=" << _rows[result.first].second.size() << std::endl;
-
     return _rows[result.first].second;
 }
 template <class TKey, class TValue>
