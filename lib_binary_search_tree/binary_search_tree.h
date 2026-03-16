@@ -20,7 +20,7 @@ public:
     TValue* find(const TKey& key) const noexcept;
     void insert(const TKey& key, const TValue& value);
     void erase(const TKey & key);
-    bool is_empty() {
+    bool is_empty() const noexcept{
         return _root == nullptr;
     }
     void clear() noexcept;
@@ -52,23 +52,23 @@ template <class TKey, class TValue>
 void BinarySearchTree<TKey, TValue>::insert(const TKey& key, const TValue& value) {
     Node<TKey, TValue>* parent = find_parent(key);
     if (!parent) {
-        Node<TKey, TValue>* node = new Node(key, value);
-        _root = node;
+        _root = new Node<TKey, TValue>(key, value);
         return;
     }
-    if (parent->data_.first < key && !parent->right_) {
-        parent->right_ = new Node(key, value);
-        return;
+    if (parent == _root && _root->data_.first == key) {
+        throw std::invalid_argument("Key already exists");
     }
-    if (parent->data_.first < key && !parent->left_){
-        parent->left_ = new Node(key, value);
-        return;
+    if (parent->left_ && parent->left_->data_.first == key) {
+        throw std::invalid_argument("Key already exists");
     }
-    if (parent->right_->data_.first == key) {
-        throw std::invalid_argument("Key already exist");
+    if (parent->right_ && parent->right_->data_.first == key) {
+        throw std::invalid_argument("Key already exists");
     }
-    if (parent->left_->data_.first == key) {
-        throw std::invalid_argument("Key already exist");
+    if (parent->data_.first > key) {
+        parent->left_ = new Node<TKey, TValue>(key, value);
+    }
+    else { 
+        parent->right_ = new Node<TKey, TValue>(key, value);
     }
 }
 template <class TKey, class TValue>
