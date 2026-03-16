@@ -55,9 +55,6 @@ void BinarySearchTree<TKey, TValue>::insert(const TKey& key, const TValue& value
         _root = new Node<TKey, TValue>(key, value);
         return;
     }
-    if (parent == _root && _root->data_.first == key) {
-        throw std::invalid_argument("Key already exists");
-    }
     if (parent->left_ && parent->left_->data_.first == key) {
         throw std::invalid_argument("Key already exists");
     }
