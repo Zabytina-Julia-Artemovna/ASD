@@ -16,6 +16,7 @@ private:
     size_t getRightChildIndex(size_t index) const {
         return 2 * index + 2;
     }
+    void maxSiftDown(size_t index, size_t heapSize);
     void siftUp(size_t index) {
         while (index > 0 && _items[index].first < _items[getParentIndex(index)].first) { // key эл-та < key родителя - меняем их местами
             std::swap(_items[index], _items[getParentIndex(index)]);
@@ -66,16 +67,34 @@ void Heap<TKey, TValue>::insert(const TKey& key, const TValue& value) {
     siftUp(_items.size() - 1);
 }
 template <class TKey, class TValue>
+void Heap<TKey, TValue>::maxSiftDown(size_t index, size_t heapSize) {
+    while (true) {
+        size_t largest = index;
+        size_t left = getLeftChildIndex(index);
+        size_t right = getRightChildIndex(index);
+
+        if (left < heapSize && _items[left].first > _items[largest].first)
+            largest = left;
+        if (right < heapSize && _items[right].first > _items[largest].first)
+            largest = right;
+
+        if (largest == index) break;
+        std::swap(_items[index], _items[largest]);
+        index = largest;
+    }
+}
+template <class TKey, class TValue>
 void Heap<TKey, TValue>::heap_sort() {
-    // Вариант 1: просто строим кучу из текущих элементов
-    for (int i = _items.size() / 2 - 1; i >= 0; --i) {
-        siftDown(i, _items.size());
+    if (_items.empty()) return;
+    size_t n = _items.size();
+
+    for (int i = n / 2 - 1; i >= 0; --i) {
+        maxSiftDown(i, n);
     }
 
-    // Сортируем
-    for (size_t i = _items.size() - 1; i > 0; --i) {
-        std::swap(_items[0], _items[i]);
-        siftDown(0, i);
+    for (size_t i = n - 1; i > 0; --i) {
+        std::swap(_items[0], _items[i]); 
+        maxSiftDown(0, i);              
     }
 }
 template <class TKey, class TValue>
