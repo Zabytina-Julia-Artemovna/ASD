@@ -34,11 +34,13 @@ public:
     void heap_sort();
 
     const TKey& getMinKey() const;
-    const TValue& getMinValue() const;
+    TValue& getMinValue();              
+    const TValue& getMinValue() const;  
     bool empty() const;
     size_t size() const;
     void print() const;
 };
+
 template <class TKey, class TValue>
 Heap<TKey, TValue>::Heap() : _items() {}
 
@@ -89,11 +91,6 @@ void Heap<TKey, TValue>::maxSiftDown(size_t index, size_t heapSize) {
 
 template <class TKey, class TValue>
 void Heap<TKey, TValue>::insert(const TKey& key, const TValue& value) {
-    for (const auto& item : _items) {
-        if (item.first == key) {
-            throw std::runtime_error("Key already exists in heap");
-        }
-    }
     _items.push_back(std::make_pair(key, value));
     siftUp(_items.size() - 1);
 }
@@ -152,12 +149,21 @@ const TKey& Heap<TKey, TValue>::getMinKey() const {
 }
 
 template <class TKey, class TValue>
+TValue& Heap<TKey, TValue>::getMinValue() {
+    if (_items.empty()) {
+        throw std::runtime_error("Heap is empty");
+    }
+    return _items[0].second;
+}
+
+template <class TKey, class TValue>
 const TValue& Heap<TKey, TValue>::getMinValue() const {
     if (_items.empty()) {
         throw std::runtime_error("Heap is empty");
     }
     return _items[0].second;
 }
+
 template <class TKey, class TValue>
 bool Heap<TKey, TValue>::empty() const {
     return _items.empty();
