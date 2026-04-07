@@ -125,12 +125,28 @@ void HashTableOA<TValue>::erase(const std::string& key) {
 
 template <class TValue>
 TValue& HashTableOA<TValue>::find(const std::string& key) {
-    // TODO: реализация
-    throw std::logic_error("Not implemented");
+    const HashTableOA& const_this = static_cast<const HashTableOA&>(*this);
+    const TValue& result = const_this.find(key);
+    return const_cast<TValue&>(result);
 }
 
 template <class TValue>
 const TValue& HashTableOA<TValue>::find(const std::string& key) const {
-    // TODO: реализация
-    throw std::logic_error("Not implemented");
+    size_t hash = h(key);
+    size_t first_hash = hash;
+    while (1) {
+        if (_rows[hash].state_ == Status::empty) {
+            throw std::logic_error("Element not found");
+        }
+        if (_rows[hash].state_ == Status::busy && _rows[hash].key_ == key) {
+            return _rows[hash].value_;
+
+        }
+        hash = hh(hash);
+        if (first_hash == hash) {
+            break;
+        }
+    }
+    throw std::logic_error("Element not found");
 }
+
