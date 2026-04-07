@@ -19,6 +19,8 @@ add_subdirectory(lib_vector)
 add_subdirectory(lib_list)
 add_subdirectory(lib_skip_list)
 
+add_subdirectory(lib_hash_table_oa)
+add_subdirectory(lib_hash_table_chain)
 add_subdirectory(lib_binary_tree)
 add_subdirectory(lib_binary_search_tree)
 add_subdirectory(lib_itable)
