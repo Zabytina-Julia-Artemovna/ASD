@@ -35,6 +35,9 @@ add_subdirectory(lib_dsu)
 
 add_subdirectory(lib_heap)
 
+add_subdirectory(lib_graph_edge_list)
+add_subdirectory(lib_graph_adj_list)
+
 add_subdirectory(lib_avl_tree)
 add_subdirectory(lib_queue_with_priority)
 add_subdirectory(lib_monom)
