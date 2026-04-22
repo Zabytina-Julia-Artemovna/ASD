@@ -15,37 +15,50 @@ include(cmake/function.cmake)         # подхватываем функции,
 
 add_subdirectory(lib_easy_example)    # подключаем дополнительный CMakeLists.txt из подкаталога с именем lib_easy_example
 
+add_subdirectory(lib_monom)
+add_subdirectory(lib_polynom)
+
 add_subdirectory(lib_vector)
 add_subdirectory(lib_list)
 add_subdirectory(lib_skip_list)
 
-add_subdirectory(lib_hash_table_oa)
-add_subdirectory(lib_hash_table_chain)
 add_subdirectory(lib_binary_tree)
 add_subdirectory(lib_binary_search_tree)
+add_subdirectory(lib_avl_tree)
+add_subdirectory(lib_rbtree)
+
 add_subdirectory(lib_itable)
 add_subdirectory(lib_table)
+
 add_subdirectory(lib_unsorted_table_m)
-add_subdirectory(lib_unsorted_table_l)
 add_subdirectory(lib_sorted_table_m)
+
+add_subdirectory(lib_unsorted_table_l)
+
 add_subdirectory(lib_unsorted_table_t)
+
 add_subdirectory(lib_sorted_table_bst)
 
-add_subdirectory(lib_dsu)
+add_subdirectory(lib_hash_table_oa)
+add_subdirectory(lib_hash_table_chain)
 
+add_subdirectory(lib_table_rbtree)
+add_subdirectory(lib_table_avl_tree)
+
+
+
+
+
+add_subdirectory(lib_dsu)
 add_subdirectory(lib_heap)
 
 add_subdirectory(lib_graph_edge_list)
 add_subdirectory(lib_graph_adj_list)
 
-add_subdirectory(lib_avl_tree)
 add_subdirectory(lib_queue_with_priority)
-add_subdirectory(lib_monom)
-add_subdirectory(lib_polynom)
+
 add_subdirectory(lib_calculator_app)
 add_subdirectory(lib_algoritm)
-
-
 
 
 add_subdirectory(main)                # подключаем дополнительный CMakeLists.txt из подкаталога с именем main
