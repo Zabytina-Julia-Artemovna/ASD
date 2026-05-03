@@ -4,16 +4,13 @@
 #include <string>
 #include <vector>
 #include "../lib_itable/itable.h"
-
 #define SIZE 100
 #define SHIFT 7
-
 enum Status {
     busy,
     empty,
     deleted
 };
-
 template <class TValue>
 struct HashData {
     Status state_ = empty;
@@ -23,7 +20,6 @@ struct HashData {
     HashData(const std::string& key, const TValue& value, Status state)
         : state_(state), key_(key), value_(value) {}
 };
-
 template <class TValue>
 class HashTableOA : public ITable<std::string, TValue> {
 private:
@@ -31,13 +27,10 @@ private:
     size_t _size;
     size_t _count;
     size_t _shift;
-
 public:
-
     size_t size() const noexcept override { 
         return _count;
     }
-
     HashTableOA(size_t size) : _size(size), _count(0), _shift(SHIFT), _rows(size) {
         for (size_t i = std::max<size_t>(2, _size / 15); i < _size; i++) {
             if (is_simple(i, _size)) {
@@ -46,15 +39,12 @@ public:
             }
         }
     }
-
     bool is_empty() const noexcept {
         return _count == 0;
     }
-
     bool is_full() const noexcept {
         return _size == _count;
     }
-
     void insert(const std::string& key, const TValue& value) override;
     void erase(const std::string& key) override;
     TValue& find(const std::string& key) override;
@@ -68,11 +58,9 @@ private:
         hash %= _size;
         return hash;
     }
-
     size_t hh(size_t hash) const noexcept {
         return (hash + _shift) % _size;
     }
-
     bool is_simple(size_t a, size_t b) const noexcept {
         while (b != 0) {
             size_t temp = b;
@@ -82,7 +70,6 @@ private:
         return a == 1;
     }
 };
-
 template <class TValue>
 void HashTableOA<TValue>::insert(const std::string& key, const TValue& value) {
     if (is_full()) {
@@ -101,7 +88,6 @@ void HashTableOA<TValue>::insert(const std::string& key, const TValue& value) {
         hash = hh(hash);
     }
 }
-
 template <class TValue>
 void HashTableOA<TValue>::erase(const std::string& key) {
     size_t hash = h(key);
@@ -122,14 +108,12 @@ void HashTableOA<TValue>::erase(const std::string& key) {
     }
     throw std::logic_error("Key not found");
 }
-
 template <class TValue>
 TValue& HashTableOA<TValue>::find(const std::string& key) {
     const HashTableOA& const_this = static_cast<const HashTableOA&>(*this);
     const TValue& result = const_this.find(key);
     return const_cast<TValue&>(result);
 }
-
 template <class TValue>
 const TValue& HashTableOA<TValue>::find(const std::string& key) const {
     size_t hash = h(key);
@@ -149,4 +133,3 @@ const TValue& HashTableOA<TValue>::find(const std::string& key) const {
     }
     throw std::logic_error("Element not found");
 }
-
