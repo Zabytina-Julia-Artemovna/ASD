@@ -14,10 +14,10 @@ public:
     size_t size() const noexcept override {
         return _count;
     }
-    HashTableChain(size_t size = 1): _rows(size), _count(0) {}
     bool is_empty() const noexcept {
         return _count == 0;
     }
+    HashTableChain(size_t size = 100): _rows(size), _count(0) {}
     void insert(const std::string& key, const TValue& value) override;
     void erase(const std::string& key) override;
     TValue& find(const std::string& key) override;
