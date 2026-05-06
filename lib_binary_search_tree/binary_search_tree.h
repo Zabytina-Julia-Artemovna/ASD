@@ -94,16 +94,22 @@ void BinarySearchTree<TKey, TValue>::insert(const TKey& key, const TValue& value
         _root = new NodeBST<TKey, TValue>(key, value);
         return;
     }
+
+    // Проверка на дубликаты перед вставкой
+    if (parent == _root && _root->data_.first == key) {
+        throw std::invalid_argument("Key already exists");
+    }
     if (parent->left_ && parent->left_->data_.first == key) {
         throw std::invalid_argument("Key already exists");
     }
     if (parent->right_ && parent->right_->data_.first == key) {
         throw std::invalid_argument("Key already exists");
     }
-    if (!parent->right_ && parent->data_.first < key) {
+
+    if (key > parent->data_.first) {
         parent->right_ = new NodeBST<TKey, TValue>(key, value);
     }
-    else { 
+    else {
         parent->left_ = new NodeBST<TKey, TValue>(key, value);
     }
 }
@@ -113,7 +119,6 @@ NodeBST<TKey, TValue>* BinarySearchTree<TKey, TValue>::find_parent(const TKey& k
         return nullptr;
     }
 
-    // Если ключ в корне
     if (_root->data_.first == key) {
         return _root;
     }
@@ -122,16 +127,16 @@ NodeBST<TKey, TValue>* BinarySearchTree<TKey, TValue>::find_parent(const TKey& k
     while (current) {
         if (key < current->data_.first) {
             if (!current->left_) {
-                return nullptr;
+                return current; 
             }
             if (current->left_->data_.first == key) {
                 return current;
             }
             current = current->left_;
         }
-        else if (key > current->data_.first) { 
+        else if (key > current->data_.first) {
             if (!current->right_) {
-                return nullptr;
+                return current;  
             }
             if (current->right_->data_.first == key) {
                 return current;
@@ -143,8 +148,7 @@ NodeBST<TKey, TValue>* BinarySearchTree<TKey, TValue>::find_parent(const TKey& k
         }
     }
     return nullptr;
-}
-template <class TKey, class TValue>
+}template <class TKey, class TValue>
 NodeBST<TKey, TValue>* BinarySearchTree<TKey, TValue>::copy_node(
     const NodeBST<TKey, TValue>* node) const {
     if (!node) {
