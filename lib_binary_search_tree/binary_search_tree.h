@@ -75,15 +75,16 @@ TValue* BinarySearchTree<TKey, TValue>::find(const TKey& key) const noexcept {
     if (!parent) {
         return nullptr; // дерево пустое - элемент НЕ найден
     }
+    if (parent == _root && _root->data_.first == key) {
+        return &_root->data_.second; // Ключ в корне
+    }
     if (parent->left_ && parent->left_->data_.first == key) {
         return &parent->left_->data_.second;
     }
-    else if (parent->right_ && parent->right_->data_.first == key) {
+    if (parent->right_ && parent->right_->data_.first == key) {
         return &parent->right_->data_.second;
     }
-    else if (parent == _root) {
-        return &_root->data_.second;
-    }
+
     return nullptr; // дерево не пустое, но такого ключа нет - элемент НЕ найден
 }
 template <class TKey, class TValue>
@@ -111,36 +112,38 @@ NodeBST<TKey, TValue>* BinarySearchTree<TKey, TValue>::find_parent(const TKey& k
     if (is_empty()) {
         return nullptr;
     }
+
+    // Если ключ в корне
     if (_root->data_.first == key) {
         return _root;
     }
+
     NodeBST<TKey, TValue>* current = _root;
-    while (1) {
-        if (current->data_.first > key) {
+    while (current) {
+        if (key < current->data_.first) {
             if (!current->left_) {
-                return current;
+                return nullptr;
             }
             if (current->left_->data_.first == key) {
                 return current;
             }
-            else {
-                current = current->left_;
-            }
+            current = current->left_;
         }
-        else {
+        else if (key > current->data_.first) { 
             if (!current->right_) {
-                return current;
+                return nullptr;
             }
             if (current->right_->data_.first == key) {
                 return current;
             }
-            else {
-                current = current->right_;
-            }
+            current = current->right_;
+        }
+        else {
+            return current;
         }
     }
+    return nullptr;
 }
-
 template <class TKey, class TValue>
 NodeBST<TKey, TValue>* BinarySearchTree<TKey, TValue>::copy_node(
     const NodeBST<TKey, TValue>* node) const {
@@ -186,13 +189,18 @@ template <class TKey, class TValue>
 void BinarySearchTree<TKey, TValue>::erase(const TKey& key) {
     NodeBST<TKey, TValue>* parent = find_parent(key);
     NodeBST<TKey, TValue>* node = nullptr;
-    bool is_left_child = false; //поиск
+    bool is_left_child = false;
+
+    if (!parent) {
+        throw std::invalid_argument("Key not found");
+    }
+
     // ключ в корне
     if (parent == _root && _root->data_.first == key) {
         node = _root;
-        parent = nullptr;  // у корня нет родителя
+        parent = nullptr;
     }
-    //ключ в левом ребёнке
+    // ключ в левом ребёнке
     else if (parent->left_ && parent->left_->data_.first == key) {
         node = parent->left_;
         is_left_child = true;
@@ -203,8 +211,9 @@ void BinarySearchTree<TKey, TValue>::erase(const TKey& key) {
         is_left_child = false;
     }
     else {
-        return;
+        throw std::invalid_argument("Key not found");
     }
+
     //удаление
     // узел - лист
     if (!node->left_ && !node->right_) {
