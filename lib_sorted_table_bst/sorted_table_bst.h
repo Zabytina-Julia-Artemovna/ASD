@@ -1,5 +1,6 @@
 #pragma once
 #include "../lib_binary_search_tree/binary_search_tree.h"
+#include "../lib_table/table.h"
 template <class TKey, class TValue>
 class SortedTableBST: public Table<TKey, TValue> {
 private:
@@ -27,6 +28,15 @@ bool SortedTableBST<TKey, TValue>::is_empty() const noexcept {
 template <class TKey, class TValue>
 size_t SortedTableBST<TKey, TValue>::size() const noexcept {
     return _size;
+}
+template <class TKey, class TValue>
+void SortedTableBST<TKey, TValue>::erase(const TKey& key) {
+    TValue* node = _items.find(key);
+    if (!node) {
+        throw std::invalid_argument("Key not found");
+    }
+    _items.erase(key);
+    _size--;
 }
 template <class TKey, class TValue>
 void SortedTableBST<TKey, TValue>::insert(const TKey& key, const TValue& value) {
