@@ -11,7 +11,6 @@ public:
     SortedTableBST() : _size(0) {}
     SortedTableBST(const SortedTableBST& other) = default;
     ~SortedTableBST() override = default;
-    SortedTableBST<TKey, TValue>& operator=(const SortedTableBST<TKey, TValue>& other) = default;
     void insert(const TKey& key, const TValue& value) override;
     void erase(const TKey& key) override;
     TValue& find(const TKey& key) override;
