@@ -54,8 +54,7 @@ void BinarySearchTree<TKey, TValue>::traverse(Func func) const {
 }
 template <class TKey, class TValue>
 NodeBST<TKey, TValue>* BinarySearchTree<TKey, TValue>::find_max_left(NodeBST<TKey, TValue>* node) const noexcept {
-    // Ищем САМЫЙ ПРАВЫЙ узел в ЛЕВОМ поддереве
-    // Это будет максимальный элемент среди всех МЕНЬШИХ, чем удаляемый узел
+    // макс элемент среди всех меньших, чем удаляемый узел
 
     if (!node || !node->left_) {
         return nullptr;  // нет левого поддерева нет замены
@@ -63,12 +62,12 @@ NodeBST<TKey, TValue>* BinarySearchTree<TKey, TValue>::find_max_left(NodeBST<TKe
 
     NodeBST<TKey, TValue>* current = node->left_;
 
-    // Идём ВПРАВО до упора (к самому большому)
+    // Идём ВПРАВО до конца - к самому большому
     while (current->right_) {
         current = current->right_;
     }
 
-    return current;  // возвращаем узел-замену
+    return current; 
 }
 template <class TKey, class TValue>
 TValue* BinarySearchTree<TKey, TValue>::find(const TKey& key) const noexcept {
