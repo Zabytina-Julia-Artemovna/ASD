@@ -23,7 +23,24 @@ void GraphAdjList::delete_edge(int from, int to) {
     }
 }
 void GraphAdjList::delete_vertex(int vertex) {
+    // вершина существует?
+    if (vertex >= static_cast<int>(_adj_list.size())) {
+        return;
+    }
+
+    // Удаляем все рёбра
+    for (size_t i = 0; i < _adj_list.size(); ++i) {
+        for (auto it = _adj_list[i].begin(); it != _adj_list[i].end(); ) {
+            if (it->vertex == vertex) {
+                it = _adj_list[i].erase(it);
+            }
+            else {
+                ++it;
+            }
+        }
+    }
     _adj_list[vertex].clear();
+
 
 }
 int GraphAdjList::get_weight(int from, int to) {
