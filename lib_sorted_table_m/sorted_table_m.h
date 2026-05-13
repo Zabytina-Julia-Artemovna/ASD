@@ -94,7 +94,7 @@ size_t SortedTableM<TKey, TValue>::size() const noexcept { // O(1)
 }
 template <class TKey, class TValue>
 void SortedTableM<TKey, TValue>::print(std::ostream& out) const { // O(n)
-    out << "Sorted table on vector: \n";
+    out << "Sorted table on vector:\n";
     for (size_t i = 0; i < _rows.get_size(); i++) {
         out << "| " << _rows[i].first << " | " << _rows[i].second << " |\n";
     }
