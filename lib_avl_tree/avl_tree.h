@@ -40,6 +40,7 @@ private:
         AVLNode<TKey, TValue>* node);
     template <class Func>
     void traverse_recursive(AVLNode<TKey, TValue>* node, Func& func) const;
+    AVLNode<TKey, TValue>* find_node(const TKey& key) const noexcept; //для insert(), т.к. проверка bst_insert() На дубликат ключа не полная
 public:
     AVLTree() : _root(nullptr) {}
     AVLTree(const AVLTree<TKey, TValue>& other);
@@ -54,6 +55,22 @@ public:
     template <class Func>
     void traverse(Func func) const;
 };
+template <class TKey, class TValue>
+AVLNode<TKey, TValue>* AVLTree<TKey, TValue>::find_node(const TKey& key) const noexcept {
+    AVLNode<TKey, TValue>* current = _root;
+    while (current) {
+        if (key < current->data_.first) {
+            current = current->left_;
+        }
+        else if (key > current->data_.first) {
+            current = current->right_;
+        }
+        else {
+            return current;
+        }
+    }
+    return nullptr;
+}
 template <class TKey, class TValue>
 template <class Func>
 void AVLTree<TKey, TValue>::traverse_recursive(
@@ -326,6 +343,9 @@ TValue* AVLTree<TKey, TValue>::find(const TKey& key) const noexcept {
 }
 template <class TKey, class TValue>
 void AVLTree<TKey, TValue>::insert(const TKey& key, const TValue& value) {
+    if (find_node(key)) {
+        throw std::invalid_argument("Key already exists");
+    }
     AVLNode<TKey, TValue>* new_node = bst_insert(key, value);
     AVLNode<TKey, TValue>* current = new_node;
     while (current) {
