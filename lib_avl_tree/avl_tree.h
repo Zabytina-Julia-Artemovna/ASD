@@ -38,6 +38,8 @@ private:
     AVLNode<TKey, TValue>* erase_recursive(AVLNode<TKey, TValue>* node, const TKey& key);
     AVLNode<TKey, TValue>* copy_node(
         AVLNode<TKey, TValue>* node);
+    template <class Func>
+    void traverse_recursive(AVLNode<TKey, TValue>* node, Func& func) const;
 public:
     AVLTree() : _root(nullptr) {}
     AVLTree(const AVLTree<TKey, TValue>& other);
@@ -49,7 +51,24 @@ public:
 
     bool is_empty() const noexcept;
     void clear() noexcept;
+    template <class Func>
+    void traverse(Func func) const;
 };
+template <class TKey, class TValue>
+template <class Func>
+void AVLTree<TKey, TValue>::traverse_recursive(
+    AVLNode<TKey, TValue>* node,
+    Func& func) const {
+    if (!node) return;
+    traverse_recursive(node->left_, func);
+    func(node->data_);
+    traverse_recursive(node->right_, func);
+}
+template <class TKey, class TValue>
+template <class Func>
+void AVLTree<TKey, TValue>::traverse(Func func) const {
+    traverse_recursive(_root, func); // рекурсивн. ф-ция обхода дерева (корень, ф-ция котор. примен. к кажд. узлу)
+}
 template <class TKey, class TValue>
 AVLNode<TKey, TValue>* AVLTree<TKey, TValue>::copy_node(
     AVLNode<TKey, TValue>* node) {
