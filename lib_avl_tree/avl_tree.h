@@ -115,20 +115,20 @@ void AVLTree<TKey, TValue>::left_rotate(AVLNode<TKey, TValue>* node) {
     if (!node || !node->right_) {
         return;
     }
-    // 1. «апоминаем правого ребенка (он станет новым корнем поддерева)
+    // запоминаем правого ребенка (он станет новым корнем поддерева)
     AVLNode<TKey, TValue>* child = node->right_;
     AVLNode<TKey, TValue>* parent = node->parent_;
-    // 2. ѕравый ребенок node становитс€ левым ребенком child
+    //правый ребенок node становитс€ левым ребенком child
     node->right_ = child->left_;
     if (child->left_) {
         child->left_->parent_ = node;
     }
-    // 3. child поднимаетс€ на место node
+    //child поднимаетс€ на место node
     child->left_ = node;
     node->parent_ = child;
-    // 4. ќбновл€ем parent у child
+    // ќбновл€ем parent у child
     child->parent_ = parent;
-    // 5. ≈сли был родитель, обновл€ем его указатель на child
+    // е был родитель, обновл€ем его указатель на child
     if (parent) {
         if (parent->left_ == node) {
             parent->left_ = child;
@@ -141,7 +141,6 @@ void AVLTree<TKey, TValue>::left_rotate(AVLNode<TKey, TValue>* node) {
         // node был корнем
         _root = child;
     }
-    // 6. ќбновл€ем высоты
     recalc_height(node);
     recalc_height(child);
 }
@@ -150,20 +149,20 @@ void AVLTree<TKey, TValue>::right_rotate(AVLNode<TKey, TValue>* node) {
     if (!node || !node->left_) {
         return;
     }
-    // 1. «апоминаем левого ребенка (он станет новым корнем поддерева)
+    //запоминаем левого ребенка (он - нов корнем поддерева)
     AVLNode<TKey, TValue>* child = node->left_;
     AVLNode<TKey, TValue>* parent = node->parent_;
-    // 2. Ћевый ребенок node становитс€ правым ребенком child
+    // лев ребенок node становитс€ правым ребенком child
     node->left_ = child->right_;
     if (child->right_) {
         child->right_->parent_ = node;
     }
-    // 3. child поднимаетс€ на место node
+    //child поднимаетс€ на место node
     child->right_ = node;
     node->parent_ = child;
-    // 4. ќбновл€ем parent у child
+    //обновл parent у child
     child->parent_ = parent;
-    // 5. ≈сли был родитель, обновл€ем его указатель на child
+    // е был родитель, обновл€ем его указатель на child
     if (parent) {
         if (parent->left_ == node) {
             parent->left_ = child;
@@ -176,7 +175,6 @@ void AVLTree<TKey, TValue>::right_rotate(AVLNode<TKey, TValue>* node) {
         // node был корнем
         _root = child;
     }
-    // 6. ќбновл€ем высоты
     recalc_height(node);
     recalc_height(child);
 }

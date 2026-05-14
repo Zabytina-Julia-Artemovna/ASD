@@ -27,9 +27,8 @@ template <class TKey, class TValue>
 size_t TableAVLTree<TKey, TValue>::size() const noexcept {
     return _size;
 }
-
 template <class TKey, class TValue>
-TValue& TableAVLTree<TKey, TValue>::find(const TKey& key) {
+TValue& TableAVLTree<TKey, TValue>::find(const TKey& key) { 
     TValue* value = _items.find(key);
     if (!value) {
         throw std::invalid_argument("Key not found");
