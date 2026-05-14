@@ -32,7 +32,7 @@ public:
         return _count;
     }
     HashTableOA(size_t size) : _size(size), _count(0), _shift(SHIFT), _rows(size) {
-        for (size_t i = std::max<size_t>(2, _size / 15); i < _size; i++) {
+        for (size_t i = std::max<size_t>(2, _size / 15); i < _size; i++) { //число i взаимно-простое с _size
             if (is_simple(i, _size)) {
                 _shift = i;
                 break;

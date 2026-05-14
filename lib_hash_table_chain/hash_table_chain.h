@@ -4,7 +4,7 @@
 #include <vector>
 #include <list>
 #include "../lib_itable/itable.h"
-//ћетод цепочек (Chaining) Ц каждый элемент массива хранит список (или другой контейнер) с элементами, имеющими одинаковый хеш.
+//каждый элемент массива хранит список с элементами, имеющими одинаковый хеш
 template <class TValue>
 class HashTableChain : public ITable<std::string, TValue> {
 private:
