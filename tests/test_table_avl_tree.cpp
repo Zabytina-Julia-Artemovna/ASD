@@ -164,3 +164,22 @@ TEST(TestTableAVLTree, print_format) {
     EXPECT_NO_THROW(table.print(ss));
     EXPECT_FALSE(ss.str().empty());
 }
+TEST(TestTableAVLTreeLib, table_avl_tree_print) {
+    TableAVLTree<std::string, Polynom> table;
+    Polynom p1("x^2");
+    Polynom p2("x^3");
+    Polynom p3("x^4");
+    table.insert("7", p1);
+    table.insert("1", p2);
+    table.insert("4", p3);
+    table.insert("9", p1);
+    table.insert("8", p2);
+    std::stringstream s;
+    table.print(s);
+    EXPECT_EQ(s.str(), "Sorted table on AVL tree\n\
+  1 : x^3\n\
+  4 : x^4\n\
+  7 : x^2\n\
+  8 : x^3\n\
+  9 : x^2\n");
+}
