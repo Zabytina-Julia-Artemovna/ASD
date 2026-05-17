@@ -152,3 +152,142 @@ TEST(TestAVLTree, with_polynoms) {
     ASSERT_NE(nullptr, found);
     expect_polynom_equal(p3, *found);
 }
+// Повороты
+
+TEST(TestAVLTree, ll_rotation) {
+    AVLTree<int, std::string> tree;
+
+    // Последовательность: 30, 20, 10
+    // Должен произойти правый поворот вокруг 30
+    tree.insert(30, "thirty");
+    tree.insert(20, "twenty");
+    tree.insert(10, "ten");
+
+    EXPECT_NE(nullptr, tree.find(20));
+    EXPECT_NE(nullptr, tree.find(10));
+    EXPECT_NE(nullptr, tree.find(30));
+
+    std::string* val = tree.find(20);
+    ASSERT_NE(nullptr, val);
+    EXPECT_EQ("twenty", *val);
+
+    val = tree.find(10);
+    ASSERT_NE(nullptr, val);
+    EXPECT_EQ("ten", *val);
+
+    val = tree.find(30);
+    ASSERT_NE(nullptr, val);
+    EXPECT_EQ("thirty", *val);
+}
+
+TEST(TestAVLTree, rr_rotation) {
+    AVLTree<int, std::string> tree;
+
+    // Последовательность: 10, 20, 30
+    // Должен произойти левый поворот вокруг 10
+    tree.insert(10, "ten");
+    tree.insert(20, "twenty");
+    tree.insert(30, "thirty");
+
+    // Проверяем, что дерево сбалансировано
+    EXPECT_NE(nullptr, tree.find(20));
+    EXPECT_NE(nullptr, tree.find(10));
+    EXPECT_NE(nullptr, tree.find(30));
+
+    std::string* val = tree.find(20);
+    ASSERT_NE(nullptr, val);
+    EXPECT_EQ("twenty", *val);
+}
+
+TEST(TestAVLTree, lr_rotation) {
+    AVLTree<int, std::string> tree;
+    // Последовательность: 30, 10, 20
+    // Должен произойти левый поворот вокруг 10, затем правый вокруг 30
+    tree.insert(30, "thirty");
+    tree.insert(10, "ten");
+    tree.insert(20, "twenty");
+
+    // Проверяем, что дерево сбалансировано
+    // Ожидаемая структура: корень 20, левый 10, правый 30
+    EXPECT_NE(nullptr, tree.find(20));
+    EXPECT_NE(nullptr, tree.find(10));
+    EXPECT_NE(nullptr, tree.find(30));
+
+    std::string* val = tree.find(20);
+    ASSERT_NE(nullptr, val);
+    EXPECT_EQ("twenty", *val);
+
+    val = tree.find(10);
+    ASSERT_NE(nullptr, val);
+    EXPECT_EQ("ten", *val);
+
+    val = tree.find(30);
+    ASSERT_NE(nullptr, val);
+    EXPECT_EQ("thirty", *val);
+}
+
+TEST(TestAVLTree, rl_rotation) {
+    AVLTree<int, std::string> tree;
+
+    // Последовательность: 10, 30, 20
+    // Должен произойти правый поворот вокруг 30, затем левый вокруг 10
+    tree.insert(10, "ten");
+    tree.insert(30, "thirty");
+    tree.insert(20, "twenty");
+
+    // Проверяем, что дерево сбалансировано
+    //  корень 20, левый 10, правый 30
+    EXPECT_NE(nullptr, tree.find(20));
+    EXPECT_NE(nullptr, tree.find(10));
+    EXPECT_NE(nullptr, tree.find(30));
+
+    std::string* val = tree.find(20);
+    ASSERT_NE(nullptr, val);
+    EXPECT_EQ("twenty", *val);
+}
+
+TEST(TestAVLTree, multiple_rotations) {
+    AVLTree<int, std::string> tree;
+
+    tree.insert(50, "fifty");
+    tree.insert(30, "thirty");
+    tree.insert(70, "seventy");
+    tree.insert(20, "twenty");
+    tree.insert(40, "forty");
+    tree.insert(60, "sixty");
+    tree.insert(80, "eighty");
+    tree.insert(10, "ten");
+    tree.insert(25, "twenty_five");
+    tree.insert(35, "thirty_five");
+    tree.insert(45, "forty_five");
+    tree.insert(55, "fifty_five");
+    tree.insert(65, "sixty_five");
+    tree.insert(75, "seventy_five");
+    tree.insert(85, "eighty_five");
+
+    //все элементы на месте
+    EXPECT_NE(nullptr, tree.find(50));
+    EXPECT_NE(nullptr, tree.find(30));
+    EXPECT_NE(nullptr, tree.find(70));
+    EXPECT_NE(nullptr, tree.find(20));
+    EXPECT_NE(nullptr, tree.find(40));
+    EXPECT_NE(nullptr, tree.find(60));
+    EXPECT_NE(nullptr, tree.find(80));
+    EXPECT_NE(nullptr, tree.find(10));
+    EXPECT_NE(nullptr, tree.find(25));
+    EXPECT_NE(nullptr, tree.find(35));
+    EXPECT_NE(nullptr, tree.find(45));
+    EXPECT_NE(nullptr, tree.find(55));
+    EXPECT_NE(nullptr, tree.find(65));
+    EXPECT_NE(nullptr, tree.find(75));
+    EXPECT_NE(nullptr, tree.find(85));
+
+    // Проверяем некоторые значения
+    std::string* val = tree.find(25);
+    ASSERT_NE(nullptr, val);
+    EXPECT_EQ("twenty_five", *val);
+
+    val = tree.find(55);
+    ASSERT_NE(nullptr, val);
+    EXPECT_EQ("fifty_five", *val);
+}
