@@ -2,10 +2,12 @@
 #include <iostream>
 #include <stdexcept>
 #include <utility> 
+
 enum Color {
     red,
     black
 };
+
 template <class T>
 struct RBNode {
     T data_;
@@ -15,6 +17,7 @@ struct RBNode {
     Color color_;
     int height_; //"черн." высота
 };
+
 template <class T>
 class RBTree {
 private:
@@ -23,7 +26,7 @@ private:
     //Для удаления
     Color get_color(RBNode<T>* node) const;
     void fix_erase(RBNode<T>* node);
-    RBNode<T>* find_node_by_key(const T& key) const noexcept;
+    RBNode<T>* find_node_by_key(const typename T::first_type& key) const noexcept; //first_type - чтобы в find передавать не всю пару а только ключ
     //
     void left_rotate(RBNode<T>* node);
     void right_rotate(RBNode<T>* node);
@@ -32,14 +35,14 @@ private:
     void recover_balance(RBNode<T>* node);
     void recolor(RBNode<T>* node);
 
-    RBNode<T>* find_parent(const T& key) const noexcept;
+    RBNode<T>* find_parent(const typename T::first_type& key) const noexcept;
     RBNode<T>* copy_node(RBNode<T>* node);
-    RBNode<T>* bst_insert(const T& key, const T& value);
+    RBNode<T>* bst_insert(const T& item);
 
     int get_height(RBNode<T>* node) const noexcept;
 
     void clear_recursive(RBNode<T>* node) noexcept;
-    RBNode<T>* erase_recursive(RBNode<T>* node, const T& key);
+    RBNode<T>* erase_recursive(RBNode<T>* node, const typename T::first_type& key);
     template <class Func>
     void traverse_recursive(RBNode<T>* node, Func& func) const;
 public:
@@ -47,50 +50,46 @@ public:
     RBTree(const RBTree<T>& other);
     ~RBTree();
 
-    void insert(const T& key, const T& value);
-    T* find(const T& key) const noexcept;
-    void erase(const T& key);
+    void insert(const T& item);  // item - это пара ключ-значение
+    typename T::second_type* find(const typename T::first_type& key) const noexcept;
+    void erase(const typename T::first_type& key);
 
     bool is_empty() const noexcept;
     void clear() noexcept;
     template <class Func>
     void traverse(Func func) const;
 };
+
 template <class T>
-void RBTree<T>::insert(const T& key, const T& value) {
-    RBNode<T>* node = bst_insert(key, value);
+void RBTree<T>::insert(const T& item) {
+    RBNode<T>* node = bst_insert(item);
     recover_balance(node);  //логика перекрашивания внутри
 }
+
 template <class T>
-T* RBTree<T>::find(const T& key) const noexcept {
-    RBNode<T>* parent = find_parent(key);
-    if (!parent) {
+typename T::second_type* RBTree<T>::find(const typename T::first_type& key) const noexcept {
+    RBNode<T>* node = find_node_by_key(key);
+    if (!node) {
         return nullptr;
     }
-    if (parent == _root && _root->data_.first == key) {
-        return &_root->data_.second;
-    }
-    if (parent->left_ && parent->left_->data_.first == key) {
-        return &parent->left_->data_.second;
-    }
-    if (parent->right_ && parent->right_->data_.first == key) {
-        return &parent->right_->data_.second;
-    }
-    return nullptr;
+    return &node->data_.second;
 }
 
-
-
 template <class T>
-void RBTree<T>::erase(const T& key) {
-    _root = erase_recursive(_root, key); //Проверка на сущ. проверяется в recursive
+void RBTree<T>::erase(const typename T::first_type& key) {
+    if (!find_node_by_key(key)) {
+        throw std::invalid_argument("Key not found");
+    }
+
+    _root = erase_recursive(_root, key);
 
     if (_root) {
         _root->color_ = Color::black;
     }
 }
+
 template <class T>
-RBNode<T>* RBTree<T>::erase_recursive(RBNode<T>* node, const T& key) {
+RBNode<T>* RBTree<T>::erase_recursive(RBNode<T>* node, const typename T::first_type& key) {
     if (!node) return nullptr;
 
     // Ищем узел
@@ -140,17 +139,18 @@ RBNode<T>* RBTree<T>::erase_recursive(RBNode<T>* node, const T& key) {
 
     return node;
 }
+
 template <class T>
 Color RBTree<T>::get_color(RBNode<T>* node) const {
-    return node ? node->color_ : Color::black;
+    return node ? node->color_ : Color::black;  
 }
-//Простое объяснение fix_erase :
-//Шаг	Что делаем
+
+// fix_erase :
 //1	Смотрим на брата удалённого узла
 //2	Если брат красный -> перекрашиваем и поворачиваем
 //3	Если брат чёрный и его дети чёрные -> перекрашиваем брата в красный
 //4	Если брат чёрный и один из его детей красный -> повороты и перекрашивание
-//Главное правило : восстанавливаем свойство "чёрная высота" после удаления чёрного узла.
+//Главное правило : восстанавливаем свойство "чёрная высота" после удаления чёрного узла
 template <class T>
 void RBTree<T>::fix_erase(RBNode<T>* node) {
     // Пока node не корень и он чёрный
@@ -225,8 +225,9 @@ void RBTree<T>::fix_erase(RBNode<T>* node) {
         node->color_ = Color::black;
     }
 }
+
 template <class T>
-RBNode<T>* RBTree<T>::find_node_by_key(const T& key) const noexcept {
+RBNode<T>* RBTree<T>::find_node_by_key(const typename T::first_type& key) const noexcept {
     RBNode<T>* current = _root;
     while (current) {
         if (key < current->data_.first) {
@@ -241,8 +242,6 @@ RBNode<T>* RBTree<T>::find_node_by_key(const T& key) const noexcept {
     }
     return nullptr;
 }
-
-
 
 template <class T>
 void RBTree<T>::recover_balance(RBNode<T>* node) {
@@ -295,6 +294,7 @@ void RBTree<T>::recover_balance(RBNode<T>* node) {
     }
     _root->color_ = Color::black;
 }
+
 template <class T>
 void RBTree<T>::recalc_height(RBNode<T>* node) {
     if (!node) return;
@@ -304,6 +304,7 @@ void RBTree<T>::recalc_height(RBNode<T>* node) {
 
     node->height_ = std::max(left_h, right_h) + (node->color_ == Color::black ? 1 : 0);
 }
+
 template <class T>
 void RBTree<T>::recolor(RBNode<T>* node) {
     if (!node) {
@@ -316,18 +317,18 @@ void RBTree<T>::recolor(RBNode<T>* node) {
         node->color_ = Color::black;
     }
 }
+
 template <class T>
-RBNode<T>* RBTree<T>::copy_node(
-    RBNode<T>* node) {
+RBNode<T>* RBTree<T>::copy_node(RBNode<T>* node) {
     if (!node) {
         return nullptr;
     }
     RBNode<T>* new_node = new RBNode<T>{
-        node->data_,    
-        nullptr, 
-        nullptr,      
-        nullptr,         
-        node->color_, 
+        node->data_,
+        nullptr,
+        nullptr,
+        nullptr,
+        node->color_,
         node->height_
     };
     new_node->left_ = copy_node(node->left_);
@@ -341,37 +342,37 @@ RBNode<T>* RBTree<T>::copy_node(
     }
     return new_node;
 }
+
 template <class T>
-RBNode<T>* RBTree<T>::bst_insert(const T& key, const T& value) {
-    RBNode<T>* parent = find_parent(key);
+RBNode<T>* RBTree<T>::bst_insert(const T& item) {
+    // Проверка на дубликаты ДО вставки
+    if (find_node_by_key(item.first)) {
+        throw std::invalid_argument("Key already exists");
+    }
+
+    RBNode<T>* parent = find_parent(item.first);
     if (!parent) {
-        //лист имеет высоту 0
         _root = new RBNode<T>{
-           {key, value},
-           nullptr,    
-           nullptr, 
-           nullptr,     
-           Color::black,  
-           0              
+            item,
+            nullptr,
+            nullptr,
+            nullptr,
+            Color::black,
+            0
         };
         return _root;
     }
-    // Проверка на дубликаты
-    if ((parent->left_ && parent->left_->data_.first == key) ||
-        (parent->right_ && parent->right_->data_.first == key)) {
-        throw std::invalid_argument("Key already exists");
-    }
-    //новый лист имеет высоту 0
+
     RBNode<T>* new_node = new RBNode<T>{
-    {key, value},  // 1. data_
-    nullptr,       // 2. left_
-    nullptr,       // 3. right_
-    parent,        // 4. parent_
-    Color::red,    // 5. color_ (новый узел красный)
-    0              // 6. height_
+        item,
+        nullptr,
+        nullptr,
+        parent,
+        Color::red,
+        0
     };
 
-    if (key > parent->data_.first) {
+    if (item.first > parent->data_.first) {
         parent->right_ = new_node;
     }
     else {
@@ -380,8 +381,9 @@ RBNode<T>* RBTree<T>::bst_insert(const T& key, const T& value) {
 
     return new_node;
 }
+
 template <class T>
-RBNode<T>* RBTree<T>::find_parent(const T& key) const noexcept {
+RBNode<T>* RBTree<T>::find_parent(const typename T::first_type& key) const noexcept {
     if (!_root) return nullptr;
 
     if (_root->data_.first == key) return _root;
@@ -404,10 +406,12 @@ RBNode<T>* RBTree<T>::find_parent(const T& key) const noexcept {
     }
     return nullptr;
 }
+
 template <class T>
 bool RBTree<T>::is_empty() const noexcept {
     return _root == nullptr;
 }
+
 template <class T>
 template <class Func>
 void RBTree<T>::traverse_recursive(
@@ -418,19 +422,23 @@ void RBTree<T>::traverse_recursive(
     func(node->data_);
     traverse_recursive(node->right_, func);
 }
+
 template <class T>
 template <class Func>
 void RBTree<T>::traverse(Func func) const {
     traverse_recursive(_root, func);
 }
+
 template<class T>
 RBTree<T>::RBTree(const RBTree<T>& other) {
     _root = copy_node(other._root);
 }
+
 template<class T>
 RBTree<T>::~RBTree() {
     clear();
 }
+
 template <class T>
 void RBTree<T>::clear_recursive(RBNode<T>* node) noexcept {
     if (node == nullptr) {
@@ -440,11 +448,13 @@ void RBTree<T>::clear_recursive(RBNode<T>* node) noexcept {
     clear_recursive(node->right_);
     delete node;
 }
+
 template <class T>
 void RBTree<T>::clear() noexcept {
     clear_recursive(_root);
     _root = nullptr;
 }
+
 template <class T>
 void RBTree<T>::left_rotate(RBNode<T>* node) {
     if (!node || !node->right_) {
@@ -479,6 +489,7 @@ void RBTree<T>::left_rotate(RBNode<T>* node) {
     recalc_height(node);
     recalc_height(child);
 }
+
 template <class T>
 void RBTree<T>::right_rotate(RBNode<T>* node) {
     if (!node || !node->left_) {
@@ -513,6 +524,7 @@ void RBTree<T>::right_rotate(RBNode<T>* node) {
     recalc_height(node);
     recalc_height(child);
 }
+
 template <class T>
 int RBTree<T>::get_height(RBNode<T>* node) const noexcept {
     return node ? node->height_ : 0;
