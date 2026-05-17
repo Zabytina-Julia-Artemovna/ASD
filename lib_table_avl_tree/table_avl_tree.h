@@ -45,7 +45,7 @@ const TValue& TableAVLTree<TKey, TValue>::find(const TKey& key) const {
 }
 template <class TKey, class TValue>
 void TableAVLTree<TKey, TValue>::print(std::ostream& out) const {
-    out << "Sorted table on binary search tree" << "\n";
+    out << "Sorted table on AVL tree" << "\n";
     _items.traverse([&out](const std::pair<TKey, TValue>& item) {
         out << "  " << item.first << " : " << item.second << "\n"; //вывод применяется к каждому эл-ту дерева при обходе
         });
