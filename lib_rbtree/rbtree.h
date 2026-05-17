@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <utility> 
-
+//Правила баланса: 1 корень черный 2 NULL эл черные 3 дети красного - черные  4 черный путь до листа одинак для всех
 enum Color {
     red,
     black
@@ -25,14 +25,14 @@ private:
 
     //Для удаления
     Color get_color(RBNode<T>* node) const;
-    void fix_erase(RBNode<T>* node);
+    void fix_erase(RBNode<T>* node); //для удаления
     RBNode<T>* find_node_by_key(const typename T::first_type& key) const noexcept; //first_type - чтобы в find передавать не всю пару а только ключ
     //
     void left_rotate(RBNode<T>* node);
     void right_rotate(RBNode<T>* node);
 
     void recalc_height(RBNode<T>* node);
-    void recover_balance(RBNode<T>* node);
+    void recover_balance(RBNode<T>* node); //Для вставки
     void recolor(RBNode<T>* node);
 
     RBNode<T>* find_parent(const typename T::first_type& key) const noexcept;
@@ -168,7 +168,8 @@ void RBTree<T>::fix_erase(RBNode<T>* node) {
             }
 
             // Случай 2: Брат чёрный и его дети чёрные
-            if (get_color(brother->left_) == Color::black &&
+            if (get_color(brother) == Color::black &&
+                get_color(brother->left_) == Color::black &&
                 get_color(brother->right_) == Color::black) {
                 brother->color_ = Color::red;
                 node = node->parent_;
@@ -176,7 +177,9 @@ void RBTree<T>::fix_erase(RBNode<T>* node) {
             else {
                 // Случай 3: Правый ребёнок брата чёрный
                 if (get_color(brother->right_) == Color::black) {
-                    brother->left_->color_ = Color::black;
+                    if (brother->left_) {
+                        brother->left_->color_ = Color::black;
+                    }
                     brother->color_ = Color::red;
                     right_rotate(brother);
                     brother = node->parent_->right_;
@@ -185,14 +188,17 @@ void RBTree<T>::fix_erase(RBNode<T>* node) {
                 // Случай 4: Правый ребёнок брата красный
                 brother->color_ = node->parent_->color_;
                 node->parent_->color_ = Color::black;
-                brother->right_->color_ = Color::black;
+                if (brother->right_) {
+                    brother->right_->color_ = Color::black;
+                }
                 left_rotate(node->parent_);
                 node = _root;
             }
         }
-        else { // Симметричный случай (node справа)
+        else { // Симметричный случай (node == node->parent_->right_)
             RBNode<T>* brother = node->parent_->left_;
 
+            // Случай 1: Брат красный
             if (get_color(brother) == Color::red) {
                 brother->color_ = Color::black;
                 node->parent_->color_ = Color::red;
@@ -200,22 +206,30 @@ void RBTree<T>::fix_erase(RBNode<T>* node) {
                 brother = node->parent_->left_;
             }
 
-            if (get_color(brother->left_) == Color::black &&
+            // Случай 2: Брат чёрный и его дети чёрные
+            if (get_color(brother) == Color::black &&
+                get_color(brother->left_) == Color::black &&
                 get_color(brother->right_) == Color::black) {
                 brother->color_ = Color::red;
                 node = node->parent_;
             }
             else {
+                // Случай 3: Левый ребёнок брата чёрный
                 if (get_color(brother->left_) == Color::black) {
-                    brother->right_->color_ = Color::black;
+                    if (brother->right_) {
+                        brother->right_->color_ = Color::black;
+                    }
                     brother->color_ = Color::red;
                     left_rotate(brother);
                     brother = node->parent_->left_;
                 }
 
+                // Случай 4: Левый ребёнок брата красный
                 brother->color_ = node->parent_->color_;
                 node->parent_->color_ = Color::black;
-                brother->left_->color_ = Color::black;
+                if (brother->left_) {
+                    brother->left_->color_ = Color::black;
+                }
                 right_rotate(node->parent_);
                 node = _root;
             }
@@ -225,7 +239,6 @@ void RBTree<T>::fix_erase(RBNode<T>* node) {
         node->color_ = Color::black;
     }
 }
-
 template <class T>
 RBNode<T>* RBTree<T>::find_node_by_key(const typename T::first_type& key) const noexcept {
     RBNode<T>* current = _root;
