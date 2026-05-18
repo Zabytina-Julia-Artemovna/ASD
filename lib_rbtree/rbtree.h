@@ -25,14 +25,15 @@ private:
 
     //Для удаления
     Color get_color(RBNode<T>* node) const;
-    void fix_erase(RBNode<T>* node); //для удаления
-    RBNode<T>* find_node_by_key(const typename T::first_type& key) const noexcept; //first_type - чтобы в find передавать не всю пару а только ключ
-    //
-    void left_rotate(RBNode<T>* node);
+    void fix_erase(RBNode<T>* node); //восстановление после удаления
+    RBNode<T>* find_node_by_key(const typename T::first_type& key) const noexcept; //first_type - 
+    //чтобы в find передавать не всю пару а только ключ
+
+    void left_rotate(RBNode<T>* node); // используются в recover_balance и fix_erase - восстан. баланса
     void right_rotate(RBNode<T>* node);
 
     void recalc_height(RBNode<T>* node);
-    void recover_balance(RBNode<T>* node); //Для вставки
+    void recover_balance(RBNode<T>* node); //восстановление после вставки
     void recolor(RBNode<T>* node);
 
     RBNode<T>* find_parent(const typename T::first_type& key) const noexcept;
@@ -62,8 +63,11 @@ public:
 
 template <class T>
 void RBTree<T>::insert(const T& item) {
-    RBNode<T>* node = bst_insert(item);
+    RBNode<T>* node = bst_insert(item); //возвращает родителя
     recover_balance(node);  //логика перекрашивания внутри
+    if (_root) {
+        _root->color_ = Color::black;
+    }
 }
 
 template <class T>
@@ -84,7 +88,8 @@ void RBTree<T>::erase(const typename T::first_type& key) {
     _root = erase_recursive(_root, key);
 
     if (_root) {
-        _root->color_ = Color::black;
+        _root->color_ = Color::black; //независимо 
+            // вызван был при вставке или удалении метод восстановления/нет, корень перекраш в черный 
     }
 }
 
@@ -102,9 +107,9 @@ RBNode<T>* RBTree<T>::erase_recursive(RBNode<T>* node, const typename T::first_t
         if (node->right_) node->right_->parent_ = node;
     }
     else {
-        // НАШЛИ! Удаляем
+        // если найден, Удаляем
 
-        // Случай 1: нет детей или 1 ребенок
+        // 1) нет детей или 1 ребенок
         if (!node->left_ || !node->right_) {
             RBNode<T>* child = node->left_ ? node->left_ : node->right_;
 
@@ -113,15 +118,15 @@ RBNode<T>* RBTree<T>::erase_recursive(RBNode<T>* node, const typename T::first_t
 
             delete node;
 
-            // Если удалили чёрный узел - нужна балансировка
+            // Если удалили чёрный узел
             if (deleted_color == Color::black && child) {
                 fix_erase(child);
             }
 
-            return child;  // ребенок встаёт на место
+            return child;  
         }
 
-        // Случай 2: два ребенка
+        // 2) два ребенка
         // Ищем замену (самый правый в левом поддереве)
         RBNode<T>* replacer = node->left_;
         while (replacer->right_) {
@@ -137,7 +142,7 @@ RBNode<T>* RBTree<T>::erase_recursive(RBNode<T>* node, const typename T::first_t
     }
     recalc_height(node);
 
-    return node;
+    return node; //возвращает указатель на узел, который должен стать новым ребёнком родителя удалённого узла
 }
 
 template <class T>
@@ -145,12 +150,11 @@ Color RBTree<T>::get_color(RBNode<T>* node) const {
     return node ? node->color_ : Color::black;  
 }
 
-// fix_erase :
 //1	Смотрим на брата удалённого узла
 //2	Если брат красный -> перекрашиваем и поворачиваем
 //3	Если брат чёрный и его дети чёрные -> перекрашиваем брата в красный
 //4	Если брат чёрный и один из его детей красный -> повороты и перекрашивание
-//Главное правило : восстанавливаем свойство "чёрная высота" после удаления чёрного узла
+//Главное : восстанавливаем свойство "чёрн высота" после удаления чёрного узла
 template <class T>
 void RBTree<T>::fix_erase(RBNode<T>* node) {
     // Пока node не корень и он чёрный
@@ -159,7 +163,7 @@ void RBTree<T>::fix_erase(RBNode<T>* node) {
         if (node == node->parent_->left_) {
             RBNode<T>* brother = node->parent_->right_;
 
-            // Случай 1: Брат красный
+            // 1) Брат красный
             if (get_color(brother) == Color::red) {
                 brother->color_ = Color::black;
                 node->parent_->color_ = Color::red;
@@ -167,7 +171,7 @@ void RBTree<T>::fix_erase(RBNode<T>* node) {
                 brother = node->parent_->right_;
             }
 
-            // Случай 2: Брат чёрный и его дети чёрные
+            // 2) Брат чёрный и его дети чёрные
             if (get_color(brother) == Color::black &&
                 get_color(brother->left_) == Color::black &&
                 get_color(brother->right_) == Color::black) {
@@ -175,7 +179,7 @@ void RBTree<T>::fix_erase(RBNode<T>* node) {
                 node = node->parent_;
             }
             else {
-                // Случай 3: Правый ребёнок брата чёрный
+                // 3) Правый ребёнок брата чёрный
                 if (get_color(brother->right_) == Color::black) {
                     if (brother->left_) {
                         brother->left_->color_ = Color::black;
@@ -185,7 +189,7 @@ void RBTree<T>::fix_erase(RBNode<T>* node) {
                     brother = node->parent_->right_;
                 }
 
-                // Случай 4: Правый ребёнок брата красный
+                // 4) Правый ребёнок брата красный
                 brother->color_ = node->parent_->color_;
                 node->parent_->color_ = Color::black;
                 if (brother->right_) {
@@ -198,7 +202,7 @@ void RBTree<T>::fix_erase(RBNode<T>* node) {
         else { // Симметричный случай (node == node->parent_->right_)
             RBNode<T>* brother = node->parent_->left_;
 
-            // Случай 1: Брат красный
+            // 1) Брат красный
             if (get_color(brother) == Color::red) {
                 brother->color_ = Color::black;
                 node->parent_->color_ = Color::red;
@@ -206,7 +210,7 @@ void RBTree<T>::fix_erase(RBNode<T>* node) {
                 brother = node->parent_->left_;
             }
 
-            // Случай 2: Брат чёрный и его дети чёрные
+            // 2) Брат чёрный и его дети чёрные
             if (get_color(brother) == Color::black &&
                 get_color(brother->left_) == Color::black &&
                 get_color(brother->right_) == Color::black) {
@@ -214,7 +218,7 @@ void RBTree<T>::fix_erase(RBNode<T>* node) {
                 node = node->parent_;
             }
             else {
-                // Случай 3: Левый ребёнок брата чёрный
+                // 3) Левый ребёнок брата чёрный
                 if (get_color(brother->left_) == Color::black) {
                     if (brother->right_) {
                         brother->right_->color_ = Color::black;
@@ -224,7 +228,7 @@ void RBTree<T>::fix_erase(RBNode<T>* node) {
                     brother = node->parent_->left_;
                 }
 
-                // Случай 4: Левый ребёнок брата красный
+                // 4) Левый ребёнок брата красный
                 brother->color_ = node->parent_->color_;
                 node->parent_->color_ = Color::black;
                 if (brother->left_) {
@@ -264,40 +268,39 @@ void RBTree<T>::recover_balance(RBNode<T>* node) {
         RBNode<T>* grandparent = parent->parent_;
 
         if (parent == grandparent->left_) {
-            RBNode<T>* uncle = grandparent->right_;
+            RBNode<T>* uncle = grandparent->right_; //родитель слева, дядя справа
 
-            // СЛУЧАЙ 1: Дядя красный - ПЕРЕКРАШИВАЕМ
             if (uncle && uncle->color_ == Color::red) {
-                recolor(parent);      //  используем recolor
-                recolor(uncle);       // используем recolor
-                recolor(grandparent); // используем recolor
-                node = grandparent;
+                recolor(parent);     
+                recolor(uncle);
+                recolor(grandparent);
+                node = grandparent; //подним на уров выше
             }
             else {
                 if (node == parent->right_) {
                     node = parent;
                     left_rotate(node);
-                    parent = node->parent_;
+                    parent = node->parent_; //подним на уров выше
                 }
-                recolor(parent);      // используем recolor
-                recolor(grandparent); //используем recolor
+                recolor(parent);
+                recolor(grandparent);
                 right_rotate(grandparent);
             }
         }
-        else {
+        else { // родитель справа, дядя слева
             RBNode<T>* uncle = grandparent->left_;
 
             if (uncle && uncle->color_ == Color::red) {
                 recolor(parent);
                 recolor(uncle);
                 recolor(grandparent);
-                node = grandparent;
+                node = grandparent; //подним на уров выше
             }
             else {
                 if (node == parent->left_) {
                     node = parent;
                     right_rotate(node);
-                    parent = node->parent_;
+                    parent = node->parent_; //подним на уров выше
                 }
                 recolor(parent);
                 recolor(grandparent);
@@ -305,7 +308,6 @@ void RBTree<T>::recover_balance(RBNode<T>* node) {
             }
         }
     }
-    _root->color_ = Color::black;
 }
 
 template <class T>
