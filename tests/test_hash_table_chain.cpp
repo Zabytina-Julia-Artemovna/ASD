@@ -198,3 +198,28 @@ TEST(TestHashTableChainLib, hash_table_chain__empty_table) {
     EXPECT_THROW(table.find("anything"), std::logic_error);
     EXPECT_THROW(table.erase("anything"), std::logic_error);
 }
+TEST(TestHashTableChainLib, hash_table_collision) {
+    HashTableChain<Polynom> table;
+    Polynom p1("x + y");
+    Polynom p2("x^2 + y"); 
+    Polynom p3("x^3 + y");
+    table.insert("abc",p1);
+    table.insert("acb", p2);
+    table.insert("cba", p3);
+
+    expect_polynom_equal(table.find("abc"), p1);
+    expect_polynom_equal(table.find("acb"), p2);
+
+    expect_polynom_equal(table.find("cba"), p3);
+    table.erase("acb");
+
+    expect_polynom_equal(table.find("abc"), p1);
+    EXPECT_THROW(table.find("acb"), std::logic_error);
+
+    expect_polynom_equal(table.find("cba"), p3);
+
+  /*  EXPECT_TRUE(table.is_empty());
+    EXPECT_EQ(0, table.size());
+    EXPECT_THROW(table.find("anything"), std::logic_error);
+    EXPECT_THROW(table.erase("anything"), std::logic_error);*/
+}

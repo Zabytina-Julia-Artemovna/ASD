@@ -14,18 +14,18 @@ static void expect_polynom_equal(const Polynom& expected, const Polynom& actual)
 
 TEST(TestBinarySearchTreeLib, binary_search_tree_default_constructor) {
     // Arrange & Act
-    BinarySearchTree<std::string, Polynom> tree;
+    BinarySearchTree<std::pair<std::string, Polynom>> tree;
     // Assert
     EXPECT_TRUE(tree.is_empty());
 }
 
 TEST(TestBinarySearchTreeLib, binary_search_tree_copy_constructor) {
     // Arrange & Act
-    BinarySearchTree<std::string, Polynom> tree1;
+    BinarySearchTree<std::pair<std::string, Polynom>> tree1;
     Polynom p("x^2");
     std::string key = "p";
-    tree1.insert("p", p);
-    BinarySearchTree<std::string, Polynom> tree2(tree1);
+    tree1.insert({ key, p });
+    BinarySearchTree<std::pair<std::string, Polynom>> tree2(tree1);
     // Assert
     EXPECT_FALSE(tree1.is_empty());
     EXPECT_FALSE(tree2.is_empty());
@@ -36,11 +36,11 @@ TEST(TestBinarySearchTreeLib, binary_search_tree_copy_constructor) {
 
 TEST(TestBinarySearchTreeLib, binary_search_tree_insert) {
     // Arrange
-    BinarySearchTree<std::string, Polynom> tree;
+    BinarySearchTree<std::pair<std::string, Polynom>> tree;
     std::string key = "polynom1";
     Polynom value("x^2 + y");
     // Act
-    tree.insert(key, value);
+    tree.insert({ key, value });
     // Assert
     Polynom* result = tree.find(key);
     ASSERT_NE(result, nullptr);
@@ -49,10 +49,10 @@ TEST(TestBinarySearchTreeLib, binary_search_tree_insert) {
 
 TEST(TestBinarySearchTreeLib, binary_search_tree_erase_root) {
     // Arrange
-    BinarySearchTree<std::string, Polynom> tree;
+    BinarySearchTree<std::pair<std::string, Polynom>> tree;
     std::string key = "root";
     Polynom value("x^2 + y");
-    tree.insert(key, value);
+    tree.insert({ key, value });
 
     // Act
     tree.erase(key);
@@ -64,8 +64,8 @@ TEST(TestBinarySearchTreeLib, binary_search_tree_erase_root) {
 
 TEST(TestBinarySearchTreeLib, binary_search_tree_erase_nonexistent) {
     // Arrange
-    BinarySearchTree<std::string, Polynom> tree;
-    tree.insert("key1", Polynom("x + y"));
+    BinarySearchTree<std::pair<std::string, Polynom>> tree;
+    tree.insert({ "key1", Polynom("x + y") });
 
     // Act & Assert
     ASSERT_THROW(tree.erase("nonexistent"), std::invalid_argument);
@@ -73,16 +73,16 @@ TEST(TestBinarySearchTreeLib, binary_search_tree_erase_nonexistent) {
 
 TEST(TestBinarySearchTreeLib, binary_search_tree_find) {
     // Arrange
-    BinarySearchTree<std::string, Polynom> tree;
+    BinarySearchTree<std::pair<std::string, Polynom>> tree;
     std::string key1 = "key1";
     Polynom p1 = "x + y";
     std::string key2 = "key2";
     Polynom p2 = "y";
     std::string key3 = "key3";
     Polynom p3 = "x^10 + z^2";
-    tree.insert(key1, p1);
-    tree.insert(key2, p2);
-    tree.insert(key3, p3);
+    tree.insert({ key1, p1 });
+    tree.insert({ key2, p2 });
+    tree.insert({ key3, p3 });
 
     // Act & Assert
     Polynom* found = tree.find(key3);
@@ -92,10 +92,10 @@ TEST(TestBinarySearchTreeLib, binary_search_tree_find) {
 
 TEST(TestBinarySearchTreeLib, binary_search_tree_find_nonexistent) {
     // Arrange
-    BinarySearchTree<std::string, Polynom> tree;
+    BinarySearchTree<std::pair<std::string, Polynom>> tree;
     std::string key = "key";
     Polynom p = "x + y + z";
-    tree.insert(key, p);
+    tree.insert({ key, p });
 
     // Act & Assert
     EXPECT_EQ(tree.find("nonexistent"), nullptr);
@@ -103,7 +103,7 @@ TEST(TestBinarySearchTreeLib, binary_search_tree_find_nonexistent) {
 
 TEST(TestBinarySearchTreeLib, binary_search_tree_empty) {
     // Arrange
-    BinarySearchTree<std::string, Polynom> tree;
+    BinarySearchTree<std::pair<std::string, Polynom>> tree;
 
     // Assert 
     EXPECT_TRUE(tree.is_empty());
@@ -111,7 +111,7 @@ TEST(TestBinarySearchTreeLib, binary_search_tree_empty) {
     ASSERT_THROW(tree.erase("anything"), std::invalid_argument);
 
     // Act 
-    tree.insert("only", Polynom("x"));
+    tree.insert({ "only", Polynom("x") });
     EXPECT_FALSE(tree.is_empty());
 
     tree.erase("only");
@@ -123,9 +123,9 @@ TEST(TestBinarySearchTreeLib, binary_search_tree_empty) {
 
 TEST(TestBinarySearchTreeLib, binary_search_tree_clear) {
     // Arrange
-    BinarySearchTree<std::string, Polynom> tree;
-    tree.insert("key1", Polynom("x + y"));
-    tree.insert("key2", Polynom("x^2"));
+    BinarySearchTree<std::pair<std::string, Polynom>> tree;
+    tree.insert({ "key1", Polynom("x + y") });
+    tree.insert({ "key2", Polynom("x^2") });
 
     // Act
     tree.clear();
@@ -135,9 +135,10 @@ TEST(TestBinarySearchTreeLib, binary_search_tree_clear) {
     EXPECT_EQ(tree.find("key1"), nullptr);
     EXPECT_EQ(tree.find("key2"), nullptr);
 }
+
 TEST(TestBinarySearchTreeLib, simple_test) {
-    BinarySearchTree<std::string, int> tree;
-    tree.insert("a", 1);
+    BinarySearchTree<std::pair<std::string, int>> tree;
+    tree.insert({ "a", 1 });
 
     int* found = tree.find("a");
     ASSERT_NE(found, nullptr);
@@ -145,24 +146,24 @@ TEST(TestBinarySearchTreeLib, simple_test) {
 }
 
 TEST(TestBinarySearchTreeLib, binary_search_tree_insert_duplicate) {
-    BinarySearchTree<std::string, Polynom> tree;
+    BinarySearchTree<std::pair<std::string, Polynom>> tree;
     std::string key = "polynom1";
     Polynom value1("x^2 + y");
     Polynom value2("x^3 + z");
 
-    tree.insert(key, value1);
-    ASSERT_THROW(tree.insert(key, value2), std::invalid_argument);
+    tree.insert({ key, value1 });
+    ASSERT_THROW(tree.insert({ key, value2 }), std::invalid_argument);
 }
 
 TEST(TestBinarySearchTreeLib, binary_search_tree_insert_and_erase) {
-    BinarySearchTree<std::string, Polynom> tree;
+    BinarySearchTree<std::pair<std::string, Polynom>> tree;
     std::string key1 = "polynom1";
     Polynom value1("x^2 + y");
     std::string key2 = "polynom2";
     Polynom value2("x + y");
 
-    tree.insert(key1, value1);
-    tree.insert(key2, value2);
+    tree.insert({ key1, value1 });
+    tree.insert({ key2, value2 });
 
     EXPECT_NE(tree.find(key1), nullptr);
     EXPECT_NE(tree.find(key2), nullptr);
@@ -173,20 +174,20 @@ TEST(TestBinarySearchTreeLib, binary_search_tree_insert_and_erase) {
     EXPECT_EQ(tree.find(key1), nullptr);
     EXPECT_EQ(tree.find(key2), nullptr);
 
-    tree.insert(key1, value1);
+    tree.insert({ key1, value1 });
     EXPECT_NE(tree.find(key1), nullptr);
 }
 
 TEST(TestBinarySearchTreeLib, binary_search_tree_complex_operations) {
-    BinarySearchTree<std::string, Polynom> tree;
+    BinarySearchTree<std::pair<std::string, Polynom>> tree;
 
-    tree.insert("50", Polynom("x^50"));
-    tree.insert("30", Polynom("x^30"));
-    tree.insert("70", Polynom("x^70"));
-    tree.insert("20", Polynom("x^20"));
-    tree.insert("40", Polynom("x^40"));
-    tree.insert("60", Polynom("x^60"));
-    tree.insert("80", Polynom("x^80"));
+    tree.insert({ "50", Polynom("x^50") });
+    tree.insert({ "30", Polynom("x^30") });
+    tree.insert({ "70", Polynom("x^70") });
+    tree.insert({ "20", Polynom("x^20") });
+    tree.insert({ "40", Polynom("x^40") });
+    tree.insert({ "60", Polynom("x^60") });
+    tree.insert({ "80", Polynom("x^80") });
 
     // Проверяем, что все элементы на месте
     EXPECT_NE(tree.find("20"), nullptr);
@@ -210,10 +211,10 @@ TEST(TestBinarySearchTreeLib, binary_search_tree_complex_operations) {
 }
 
 TEST(TestBinarySearchTreeLib, simple_test_int_multiple) {
-    BinarySearchTree<std::string, int> tree;
-    tree.insert("first", 100);
-    tree.insert("second", 200);
-    tree.insert("third", 300);
+    BinarySearchTree<std::pair<std::string, int>> tree;
+    tree.insert({ "first", 100 });
+    tree.insert({ "second", 200 });
+    tree.insert({ "third", 300 });
 
     int* found = tree.find("second");
     ASSERT_NE(found, nullptr);

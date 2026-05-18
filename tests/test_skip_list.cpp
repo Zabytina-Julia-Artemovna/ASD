@@ -77,6 +77,7 @@ TEST(TestSkipListLib, skip_list_find_existing_key) {
     expect_polynom_equal(p1, list.find(5));
     expect_polynom_equal(p2, list.find(3));
     expect_polynom_equal(p3, list.find(7));
+    list.print();
 }
 
 TEST(TestSkipListLib, skip_list_find_non_existing_key) {

@@ -88,6 +88,25 @@ TEST(TestAVLTree, erase_two_children) {
     EXPECT_NE(nullptr, tree.find(1));
     EXPECT_NE(nullptr, tree.find(4));
 }
+TEST(TestAVLTree, erase_with_double_rotation) {
+    AVLTree<int, std::string> tree;
+    tree.insert(40, "40");
+    tree.insert(20, "20");
+    tree.insert(60, "60");
+    tree.insert(15, "15");
+    tree.insert(25, "25");
+    tree.insert(50, "50");
+    tree.insert(70, "70");
+    tree.insert(5, "5");
+    tree.insert(45, "45");
+    tree.insert(55, "55");
+    tree.insert(65, "65");
+    tree.insert(80, "80");
+    tree.insert(75, "75");
+    tree.erase(25);
+    EXPECT_EQ(tree.get_root()->data_.first, 60);
+
+}
 
 TEST(TestAVLTree, erase_root) {
     AVLTree<int, std::string> tree;

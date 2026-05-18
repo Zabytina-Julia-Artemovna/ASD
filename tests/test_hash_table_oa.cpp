@@ -46,9 +46,9 @@ TEST(TestHashTableOALib, hash_table_oa_insert_with_exception) {
 TEST(TestHashTableOALib, hash_table_oa_insert_with_collision) {
     HashTableOA<Polynom> table(5);
 
-    Polynom p1("first");
-    Polynom p2("second");
-    Polynom p3("third");
+    Polynom p1("x + y");
+    Polynom p2("x + z");
+    Polynom p3("x^2");
 
     // Вставляем вызовут коллизии
     table.insert("abc", p1);
@@ -88,7 +88,7 @@ TEST(TestHashTableOALib, hash_table_oa_find_with_exception) {
 TEST(TestHashTableOALib, hash_table_oa_find_after_deleted) {
     HashTableOA<Polynom> table(10);
 
-    Polynom p("test value");
+    Polynom p("x + y + z");
     table.insert("key", p);
     table.erase("key");
 

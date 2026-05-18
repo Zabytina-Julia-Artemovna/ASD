@@ -193,3 +193,22 @@ TEST(TestSortedTableBSTLib, sorted_table_bst_various_polynoms) {
     expect_polynom_equal(p5, table.find("xyz"));
     expect_polynom_equal(p6, table.find("quadratic"));
 }
+TEST(TestSortedTableBSTLib, sorted_table_print) {
+    SortedTableBST<std::string, Polynom> table;
+    Polynom p1("x^2");
+    Polynom p2("x^3");
+    Polynom p3("x^4");
+    table.insert("7", p1);
+    table.insert("1", p2);
+    table.insert("4", p3);
+    table.insert("9", p1);
+    table.insert("8", p2);
+    std::stringstream s;
+    table.print(s);
+    EXPECT_EQ(s.str(), "Sorted table on binary search tree\n\
+  1 : x^3\n\
+  4 : x^4\n\
+  7 : x^2\n\
+  8 : x^3\n\
+  9 : x^2\n");
+}
