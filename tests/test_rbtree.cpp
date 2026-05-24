@@ -361,3 +361,44 @@ TEST(TestRBTree, recolor_color_check) {
     // Проверка новый элемент 25 - красный
     EXPECT_TRUE(tree.is_red(25));
 }
+TEST(TestRBTree, recolor_large_tree_check) {
+    RBTree<std::pair<int, std::string>> tree;
+
+    tree.insert({ 40, "40" });
+    tree.insert({ 20, "20" });
+    tree.insert({ 60, "60" });
+    tree.insert({ 15, "15" });
+    tree.insert({ 25, "25" });
+    tree.insert({ 50, "50" });
+    tree.insert({ 70, "70" });
+    tree.insert({ 5, "5" });
+    tree.insert({ 45, "45" });
+    tree.insert({ 55, "55" });
+    tree.insert({ 65, "65" });
+    tree.insert({ 80, "80" });
+    tree.insert({ 75, "75" });
+
+    // Добавляем элемент, который вызовет перекрашивание
+    // 77 - создаст ситуацию с красным дядей (75 будет красным)
+    tree.insert({ 77, "77" });
+
+    // Проверяем, что все элементы на месте
+    EXPECT_NE(nullptr, tree.find(40));
+    EXPECT_NE(nullptr, tree.find(20));
+    EXPECT_NE(nullptr, tree.find(60));
+    EXPECT_NE(nullptr, tree.find(15));
+    EXPECT_NE(nullptr, tree.find(25));
+    EXPECT_NE(nullptr, tree.find(50));
+    EXPECT_NE(nullptr, tree.find(70));
+    EXPECT_NE(nullptr, tree.find(5));
+    EXPECT_NE(nullptr, tree.find(45));
+    EXPECT_NE(nullptr, tree.find(55));
+    EXPECT_NE(nullptr, tree.find(65));
+    EXPECT_NE(nullptr, tree.find(80));
+    EXPECT_NE(nullptr, tree.find(75));
+    EXPECT_NE(nullptr, tree.find(77));
+
+    // Проверяем цвета (после перекрашивания)
+    // Корень должен быть чёрным
+    EXPECT_TRUE(tree.is_black(40));
+}
