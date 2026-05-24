@@ -87,27 +87,27 @@ TEST(TestRBTree, erase_one_child) {
     EXPECT_NE(nullptr, tree.find("two"));
 }
 
-//TEST(TestRBTree, erase_two_children) {
-//    RBTree<std::pair<std::string, Polynom>> tree;
-//    Polynom p1("x^2 + y");
-//    Polynom p2("2x + y^2");
-//    Polynom p3("xyz");
-//    Polynom p4("5x + 3y");
-//    Polynom p5("z^2");
-//
-//    tree.insert({ "five", p1 });
-//    tree.insert({ "three", p2 });
-//    tree.insert({ "seven", p3 });
-//    tree.insert({ "one", p4 });
-//    tree.insert({ "four", p5 });
-//
-//    tree.erase("three");
-//    EXPECT_EQ(nullptr, tree.find("three"));
-//    EXPECT_NE(nullptr, tree.find("five"));
-//    EXPECT_NE(nullptr, tree.find("seven"));
-//    EXPECT_NE(nullptr, tree.find("one"));
-//    EXPECT_NE(nullptr, tree.find("four"));
-//}
+TEST(TestRBTree, erase_two_children) {
+    RBTree<std::pair<std::string, Polynom>> tree;
+    Polynom p1("x^2 + y");
+    Polynom p2("2x + y^2");
+    Polynom p3("xyz");
+    Polynom p4("5x + 3y");
+    Polynom p5("z^2");
+
+    tree.insert({ "five", p1 });
+    tree.insert({ "three", p2 });
+    tree.insert({ "seven", p3 });
+    tree.insert({ "one", p4 });
+    tree.insert({ "four", p5 });
+
+    tree.erase("three");
+    EXPECT_EQ(nullptr, tree.find("three"));
+    EXPECT_NE(nullptr, tree.find("five"));
+    EXPECT_NE(nullptr, tree.find("seven"));
+    EXPECT_NE(nullptr, tree.find("one"));
+    EXPECT_NE(nullptr, tree.find("four"));
+}
 
 TEST(TestRBTree, erase_root) {
     RBTree<std::pair<std::string, Polynom>> tree;
@@ -170,41 +170,41 @@ TEST(TestRBTree, erase_after_clear) {
     EXPECT_NE(nullptr, tree.find("new_key"));
 }
 
-//TEST(TestRBTree, various_polynoms) {
-//    RBTree<std::pair<std::string, Polynom>> tree;
-//
-//    Polynom p1("1.0");
-//    Polynom p2("x");
-//    Polynom p3("y^2");
-//    Polynom p4("z^3");
-//    Polynom p5("xyz");
-//    Polynom p6("2x^2 + 3y^2 + 4z^2");
-//
-//    tree.insert({ "number", p1 });
-//    tree.insert({ "x", p2 });
-//    tree.insert({ "y2", p3 });
-//    tree.insert({ "z3", p4 });
-//    tree.insert({ "xyz", p5 });
-//    tree.insert({ "quadratic", p6 });
-//
-//    EXPECT_FALSE(tree.is_empty());
-//
-//    expect_polynom_equal(p1, *tree.find("number"));
-//    expect_polynom_equal(p2, *tree.find("x"));
-//    expect_polynom_equal(p3, *tree.find("y2"));
-//    expect_polynom_equal(p4, *tree.find("z3"));
-//    expect_polynom_equal(p5, *tree.find("xyz"));
-//    expect_polynom_equal(p6, *tree.find("quadratic"));
-//
-//    tree.erase("y2");
-//    EXPECT_EQ(nullptr, tree.find("y2"));
-//
-//    EXPECT_NE(nullptr, tree.find("number"));
-//    EXPECT_NE(nullptr, tree.find("x"));
-//    EXPECT_NE(nullptr, tree.find("z3"));
-//    EXPECT_NE(nullptr, tree.find("xyz"));
-//    EXPECT_NE(nullptr, tree.find("quadratic"));
-//}
+TEST(TestRBTree, various_polynoms) {
+    RBTree<std::pair<std::string, Polynom>> tree;
+
+    Polynom p1("1.0");
+    Polynom p2("x");
+    Polynom p3("y^2");
+    Polynom p4("z^3");
+    Polynom p5("xyz");
+    Polynom p6("2x^2 + 3y^2 + 4z^2");
+
+    tree.insert({ "number", p1 });
+    tree.insert({ "x", p2 });
+    tree.insert({ "y2", p3 });
+    tree.insert({ "z3", p4 });
+    tree.insert({ "xyz", p5 });
+    tree.insert({ "quadratic", p6 });
+
+    EXPECT_FALSE(tree.is_empty());
+
+    expect_polynom_equal(p1, *tree.find("number"));
+    expect_polynom_equal(p2, *tree.find("x"));
+    expect_polynom_equal(p3, *tree.find("y2"));
+    expect_polynom_equal(p4, *tree.find("z3"));
+    expect_polynom_equal(p5, *tree.find("xyz"));
+    expect_polynom_equal(p6, *tree.find("quadratic"));
+
+    tree.erase("y2");
+    EXPECT_EQ(nullptr, tree.find("y2"));
+
+    EXPECT_NE(nullptr, tree.find("number"));
+    EXPECT_NE(nullptr, tree.find("x"));
+    EXPECT_NE(nullptr, tree.find("z3"));
+    EXPECT_NE(nullptr, tree.find("xyz"));
+    EXPECT_NE(nullptr, tree.find("quadratic"));
+}
 
 TEST(TestRBTree, erase_and_reinsert) {
     RBTree<std::pair<std::string, Polynom>> tree;
@@ -287,4 +287,77 @@ TEST(TestRBTree, left_rotate_via_rr) {
     std::string* val = tree.find(20);
     ASSERT_NE(nullptr, val);
     EXPECT_EQ("twenty", *val);
+}
+
+// большие тесты с полным деревом - на повороты и удаление
+TEST(TestRBTree, large_tree_ll_rotations) {
+    RBTree<std::pair<int, std::string>> tree;
+
+    //в убывающем порядке - много LL поворотов
+    for (int i = 100; i >= 1; --i) {
+        tree.insert({ i, std::to_string(i) });
+    }
+
+    // Проверяем, что все элементы на месте
+    for (int i = 1; i <= 100; ++i) {
+        std::string* val = tree.find(i);
+        ASSERT_NE(nullptr, val);
+        EXPECT_EQ(std::to_string(i), *val);
+    }
+}
+
+TEST(TestRBTree, large_tree_rr_rotations) {
+    RBTree<std::pair<int, std::string>> tree;
+
+    // в возрастающем порядке - много RR поворотов
+    for (int i = 1; i <= 100; ++i) {
+        tree.insert({ i, std::to_string(i) });
+    }
+
+    //проверяем что все элементы на месте
+    for (int i = 1; i <= 100; ++i) {
+        std::string* val = tree.find(i);
+        ASSERT_NE(nullptr, val);
+        EXPECT_EQ(std::to_string(i), *val);
+    }
+}
+
+TEST(TestRBTree, large_tree_mixed_rotations) {
+    RBTree<std::pair<int, std::string>> tree;
+
+    // Случайная последовательность для смешанных поворотов
+    std::vector<int> keys = { 50, 30, 70, 20, 40, 60, 80, 10, 25, 35, 45, 55, 65, 75, 85,
+                              5, 15, 33, 37, 43, 47, 53, 57, 63, 67, 73, 77, 83, 87, 90 };
+
+    for (int key : keys) {
+        tree.insert({ key, std::to_string(key) });
+    }
+
+    // Проверяем, что все элементы на месте
+    for (int key : keys) {
+        std::string* val = tree.find(key);
+        ASSERT_NE(nullptr, val);
+        EXPECT_EQ(std::to_string(key), *val);
+    }
+}
+
+TEST(TestRBTree, recolor_color_check) {
+    RBTree<std::pair<int, std::string>> tree;
+
+    tree.insert({ 100, "100" });   // корень чёрный
+    tree.insert({ 50, "50" });     // левый красный
+    tree.insert({ 150, "150" });   // правый красный
+    tree.insert({ 25, "25" });     // вставка вызывает перекрашивание
+
+    // Проверка корень чёрный
+    EXPECT_TRUE(tree.is_black(100));
+
+    // Проверка 50 стал чёрным (перекрасился)
+    EXPECT_TRUE(tree.is_black(50));
+
+    // Проверка 150 стал чёрным (перекрасился)
+    EXPECT_TRUE(tree.is_black(150));
+
+    // Проверка новый элемент 25 - красный
+    EXPECT_TRUE(tree.is_red(25));
 }
