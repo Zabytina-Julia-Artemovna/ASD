@@ -51,6 +51,15 @@ public:
     RBTree(const RBTree<T>& other);
     ~RBTree();
 
+    bool is_black(const typename T::first_type& key) const {
+        RBNode<T>* node = find_node_by_key(key);
+        return node ? node->color_ == Color::black : false;
+    }
+
+    bool is_red(const typename T::first_type& key) const {
+        RBNode<T>* node = find_node_by_key(key);
+        return node ? node->color_ == Color::red : false;
+    }
     void insert(const T& item);  // item - это пара ключ-значение
     typename T::second_type* find(const typename T::first_type& key) const noexcept;
     void erase(const typename T::first_type& key);
@@ -267,40 +276,34 @@ void RBTree<T>::recover_balance(RBNode<T>* node) {
         RBNode<T>* parent = node->parent_;
         RBNode<T>* grandparent = parent->parent_;
 
-        if (parent == grandparent->left_) {
-            RBNode<T>* uncle = grandparent->right_; //родитель слева, дядя справа
+        RBNode<T>* uncle = (parent == grandparent->left_) ? grandparent->right_ : grandparent->left_;
 
-            if (uncle && uncle->color_ == Color::red) {
-                recolor(parent);     
-                recolor(uncle);
-                recolor(grandparent);
-                node = grandparent; //подним на уров выше
-            }
-            else {
+        if (uncle && uncle->color_ == Color::red) {
+            // Случай 1: Дядя красный - перекрашиваем
+            recolor(parent);
+            recolor(uncle);
+            recolor(grandparent);
+            node = grandparent;
+        }
+        else {
+            // Случай 2: Дядя чёрный - повороты
+            if (parent == grandparent->left_) {
+                // Родитель слева
                 if (node == parent->right_) {
                     node = parent;
                     left_rotate(node);
-                    parent = node->parent_; //подним на уров выше
+                    parent = node->parent_;
                 }
                 recolor(parent);
                 recolor(grandparent);
                 right_rotate(grandparent);
             }
-        }
-        else { // родитель справа, дядя слева
-            RBNode<T>* uncle = grandparent->left_;
-
-            if (uncle && uncle->color_ == Color::red) {
-                recolor(parent);
-                recolor(uncle);
-                recolor(grandparent);
-                node = grandparent; //подним на уров выше
-            }
             else {
+                // Родитель справа
                 if (node == parent->left_) {
                     node = parent;
                     right_rotate(node);
-                    parent = node->parent_; //подним на уров выше
+                    parent = node->parent_;
                 }
                 recolor(parent);
                 recolor(grandparent);
@@ -309,7 +312,6 @@ void RBTree<T>::recover_balance(RBNode<T>* node) {
         }
     }
 }
-
 template <class T>
 void RBTree<T>::recalc_height(RBNode<T>* node) {
     if (!node) return;
