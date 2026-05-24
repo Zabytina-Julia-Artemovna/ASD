@@ -35,7 +35,8 @@ private:
     int get_height(AVLNode<TKey, TValue>* node) const noexcept;  
 
     void clear_recursive(AVLNode<TKey, TValue>* node) noexcept;
-    AVLNode<TKey, TValue>* erase_recursive(AVLNode<TKey, TValue>* node, const TKey& key);
+    void erase_recursive(AVLNode<TKey, TValue>*& node,  // передаЄм по ссылке!
+        const TKey& key);
     AVLNode<TKey, TValue>* copy_node(
         AVLNode<TKey, TValue>* node);
     template <class Func>
@@ -46,6 +47,9 @@ public:
     AVLTree(const AVLTree<TKey, TValue>& other);
     ~AVLTree();
 
+    AVLNode<TKey, TValue>* get_root() const noexcept {
+        return _root;
+    }
     void insert(const TKey& key, const TValue& value);
     TValue* find(const TKey& key) const noexcept; 
     void erase(const TKey& key);
@@ -115,20 +119,20 @@ void AVLTree<TKey, TValue>::left_rotate(AVLNode<TKey, TValue>* node) {
     if (!node || !node->right_) {
         return;
     }
-    // запоминаем правого ребенка (он станет новым корнем поддерева)
+
     AVLNode<TKey, TValue>* child = node->right_;
     AVLNode<TKey, TValue>* parent = node->parent_;
-    //правый ребенок node становитс€ левым ребенком child
+
     node->right_ = child->left_;
     if (child->left_) {
         child->left_->parent_ = node;
     }
-    //child поднимаетс€ на место node
+
     child->left_ = node;
     node->parent_ = child;
-    // ќбновл€ем parent у child
+
     child->parent_ = parent;
-    // е был родитель, обновл€ем его указатель на child
+
     if (parent) {
         if (parent->left_ == node) {
             parent->left_ = child;
@@ -138,13 +142,12 @@ void AVLTree<TKey, TValue>::left_rotate(AVLNode<TKey, TValue>* node) {
         }
     }
     else {
-        // node был корнем
         _root = child;
     }
+
     recalc_height(node);
     recalc_height(child);
-}
-template <class TKey, class TValue>
+}template <class TKey, class TValue>
 void AVLTree<TKey, TValue>::right_rotate(AVLNode<TKey, TValue>* node) {
     if (!node || !node->left_) {
         return;
@@ -215,24 +218,23 @@ void AVLTree<TKey, TValue>::recover_balance(AVLNode<TKey, TValue>* node) {
     recalc_height(node);
     int balance = calc_balance(node);
 
-    if (balance == 2) {  // Ћевое т€желее
+    if (balance == 2) {
         if (calc_balance(node->left_) == -1) {
             LR(node);
         }
         else {
-            LL(node); 
+            LL(node);
         }
     }
-    else if (balance == -2) {  // ѕравое т€желее
+    else if (balance == -2) {
         if (calc_balance(node->right_) == 1) {
             RL(node);
         }
         else {
-            RR(node); 
+            RR(node);
         }
     }
-}
-template <class TKey, class TValue>
+}template <class TKey, class TValue>
 void AVLTree<TKey, TValue>::recalc_height(AVLNode<TKey, TValue>* node) {
     if (!node) {
         return;
@@ -319,7 +321,7 @@ AVLNode<TKey, TValue>* AVLTree<TKey, TValue>::bst_insert(const TKey& key, const 
     else {
         parent->left_ = new_node;
     }
-
+    
     return new_node;
 }
 template <class TKey, class TValue>
@@ -372,46 +374,52 @@ void AVLTree<TKey, TValue>::insert(const TKey& key, const TValue& value) {
 }
 template <class TKey, class TValue>
 void AVLTree<TKey, TValue>::erase(const TKey& key) {
-    _root = erase_recursive(_root, key);
+    erase_recursive(_root, key);
 }
+
 template <class TKey, class TValue>
-AVLNode<TKey, TValue>* AVLTree<TKey, TValue>::erase_recursive(
-    AVLNode<TKey, TValue>* node,
+void AVLTree<TKey, TValue>::erase_recursive(
+    AVLNode<TKey, TValue>*& node,  // передаЄм по ссылке
     const TKey& key) {
     if (!node) {
         throw std::invalid_argument("Key not found");
     }
-    // ищем удал узел
+
     if (key < node->data_.first) {
-        node->left_ = erase_recursive(node->left_, key);
+        erase_recursive(node->left_, key);
         if (node->left_) node->left_->parent_ = node;
     }
     else if (key > node->data_.first) {
-        node->right_ = erase_recursive(node->right_, key);
+        erase_recursive(node->right_, key);
         if (node->right_) node->right_->parent_ = node;
     }
     else {
-        // если найден - удал
-
-        //  0 или 1 реб
         if (!node->left_ || !node->right_) {
             AVLNode<TKey, TValue>* child = node->left_ ? node->left_ : node->right_;
+            if (child) child->parent_ = node->parent_;
             delete node;
-            return child;
+            node = child;
+            return;
         }
 
-        //2 ребенка ищем замену
         AVLNode<TKey, TValue>* replacer = node->left_;
         while (replacer->right_) {
             replacer = replacer->right_;
         }
-        node->data_ = replacer->data_;
-        // ”дал замену рекурсивно
-        node->left_ = erase_recursive(node->left_, replacer->data_.first);
+
+        TKey replacer_key = replacer->data_.first;
+        TValue replacer_value = replacer->data_.second;
+
+        erase_recursive(node->left_, replacer_key);
         if (node->left_) node->left_->parent_ = node;
+
+        node->data_.first = replacer_key;
+        node->data_.second = replacer_value;
     }
+
     recalc_height(node);
     recover_balance(node);
 
-    return node;
+    // ѕосле recover_balance, если node был корнем, _root мог изменитьс€
+    // Ќо node передан по ссылке, так что если мы обновим node, это обновит и _root
 }
