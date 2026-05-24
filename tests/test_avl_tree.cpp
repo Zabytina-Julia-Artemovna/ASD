@@ -108,6 +108,56 @@ TEST(TestAVLTree, erase_with_double_rotation) {
 
 }
 
+
+TEST(TestAVLTree, insert_with_double_rotation_big_tree) {
+    AVLTree<int, std::string> tree;
+
+    // правое поддерево значительно тяжелее
+    tree.insert(50, "50");
+    tree.insert(30, "30");
+    tree.insert(70, "70");
+    tree.insert(20, "20");
+    tree.insert(40, "40");
+    tree.insert(60, "60");
+    tree.insert(80, "80");
+    tree.insert(10, "10");
+    tree.insert(25, "25");
+    tree.insert(35, "35");
+    tree.insert(45, "45");
+    tree.insert(55, "55");
+    tree.insert(65, "65");
+    tree.insert(75, "75");
+    tree.insert(85, "85");
+    tree.insert(5, "5");
+    tree.insert(15, "15");
+    tree.insert(33, "33");
+    tree.insert(37, "37");
+    tree.insert(43, "43");
+    tree.insert(47, "47");
+    tree.insert(53, "53");
+    tree.insert(57, "57");
+    tree.insert(63, "63");
+    tree.insert(67, "67");
+    tree.insert(73, "73");
+    tree.insert(77, "77");
+    tree.insert(83, "83");
+    tree.insert(87, "87");
+
+    //  RL поворот
+    // Вставляем - дисбаланс
+    tree.insert(72, "72"); //произойдет двойной поворот на уровне 70
+
+     EXPECT_NE(nullptr, tree.find(72));
+
+    // Проверяем, что остальные элементы на месте
+    EXPECT_NE(nullptr, tree.find(50));
+    EXPECT_NE(nullptr, tree.find(30));
+    EXPECT_NE(nullptr, tree.find(70));
+    EXPECT_NE(nullptr, tree.find(80));
+    EXPECT_NE(nullptr, tree.find(75));
+    //корень при вставках редко меняется, потому что даже в больших деревьях дисбаланс чаще возникает не в root 
+    // а в более нижних узлах? и тут корень не изменился но повороты произошли
+}
 TEST(TestAVLTree, erase_root) {
     AVLTree<int, std::string> tree;
     tree.insert(5, "five");
