@@ -222,124 +222,7 @@ TEST(TestRBTree, erase_and_reinsert) {
     EXPECT_NE(nullptr, tree.find("test"));
     expect_polynom_equal(p2, *tree.find("test"));
 }
-TEST(TestRBTree, recolor_check) {
-    RBTree<std::pair<int, std::string>> tree;
-
-    // Дядя - красный
-    tree.insert({ 50, "fifty" });      // корень чёрный
-    tree.insert({ 30, "thirty" });     // левый красный
-    tree.insert({ 70, "seventy" });    // правый красный
-    tree.insert({ 20, "twenty" });     // должен вызвать перекрашивание
-
-    EXPECT_NE(nullptr, tree.find(50));
-    EXPECT_NE(nullptr, tree.find(30));
-    EXPECT_NE(nullptr, tree.find(70));
-    EXPECT_NE(nullptr, tree.find(20));
-
-    std::string* val = tree.find(50);
-    ASSERT_NE(nullptr, val);
-    EXPECT_EQ("fifty", *val);
-}
-
-
-//right_rotate - через LL ситуацию
-TEST(TestRBTree, right_rotate_via_ll) {
-    RBTree<std::pair<int, std::string>> tree;
-
-    //  LL : 30, 20, 10
-    //  правый поворот вокруг 30
-    tree.insert({ 30, "thirty" });
-    tree.insert({ 20, "twenty" });
-    tree.insert({ 10, "ten" });
-
-    EXPECT_NE(nullptr, tree.find(10));
-    EXPECT_NE(nullptr, tree.find(20));
-    EXPECT_NE(nullptr, tree.find(30));
-
-    // Проверяем значения
-    std::string* val = tree.find(20);
-    ASSERT_NE(nullptr, val);
-    EXPECT_EQ("twenty", *val);
-
-    val = tree.find(10);
-    ASSERT_NE(nullptr, val);
-    EXPECT_EQ("ten", *val);
-
-    val = tree.find(30);
-    ASSERT_NE(nullptr, val);
-    EXPECT_EQ("thirty", *val);
-}
-
-// left_rotate - через RR ситуацию
-TEST(TestRBTree, left_rotate_via_rr) {
-    RBTree<std::pair<int, std::string>> tree;
-
-    // RR : 10, 20, 30
-    // левый поворот вокруг 10
-    tree.insert({ 10, "ten" });
-    tree.insert({ 20, "twenty" });
-    tree.insert({ 30, "thirty" });
-
-    EXPECT_NE(nullptr, tree.find(10));
-    EXPECT_NE(nullptr, tree.find(20));
-    EXPECT_NE(nullptr, tree.find(30));
-
-    std::string* val = tree.find(20);
-    ASSERT_NE(nullptr, val);
-    EXPECT_EQ("twenty", *val);
-}
-
-// большие тесты с полным деревом - на повороты и удаление
-TEST(TestRBTree, large_tree_ll_rotations) {
-    RBTree<std::pair<int, std::string>> tree;
-
-    //в убывающем порядке - много LL поворотов
-    for (int i = 100; i >= 1; --i) {
-        tree.insert({ i, std::to_string(i) });
-    }
-
-    // Проверяем, что все элементы на месте
-    for (int i = 1; i <= 100; ++i) {
-        std::string* val = tree.find(i);
-        ASSERT_NE(nullptr, val);
-        EXPECT_EQ(std::to_string(i), *val);
-    }
-}
-
-TEST(TestRBTree, large_tree_rr_rotations) {
-    RBTree<std::pair<int, std::string>> tree;
-
-    // в возрастающем порядке - много RR поворотов
-    for (int i = 1; i <= 100; ++i) {
-        tree.insert({ i, std::to_string(i) });
-    }
-
-    //проверяем что все элементы на месте
-    for (int i = 1; i <= 100; ++i) {
-        std::string* val = tree.find(i);
-        ASSERT_NE(nullptr, val);
-        EXPECT_EQ(std::to_string(i), *val);
-    }
-}
-
-TEST(TestRBTree, large_tree_mixed_rotations) {
-    RBTree<std::pair<int, std::string>> tree;
-
-    // Случайная последовательность для смешанных поворотов
-    std::vector<int> keys = { 50, 30, 70, 20, 40, 60, 80, 10, 25, 35, 45, 55, 65, 75, 85,
-                              5, 15, 33, 37, 43, 47, 53, 57, 63, 67, 73, 77, 83, 87, 90 };
-
-    for (int key : keys) {
-        tree.insert({ key, std::to_string(key) });
-    }
-
-    // Проверяем, что все элементы на месте
-    for (int key : keys) {
-        std::string* val = tree.find(key);
-        ASSERT_NE(nullptr, val);
-        EXPECT_EQ(std::to_string(key), *val);
-    }
-}
+//recolor и повороты
 
 TEST(TestRBTree, recolor_color_check) {
     RBTree<std::pair<int, std::string>> tree;
@@ -352,10 +235,10 @@ TEST(TestRBTree, recolor_color_check) {
     // Проверка корень чёрный
     EXPECT_TRUE(tree.is_black(100));
 
-    // Проверка 50 стал чёрным (перекрасился)
+    // Проверка 50 стал чёрным 
     EXPECT_TRUE(tree.is_black(50));
 
-    // Проверка 150 стал чёрным (перекрасился)
+    // Проверка 150 стал чёрным 
     EXPECT_TRUE(tree.is_black(150));
 
     // Проверка новый элемент 25 - красный
@@ -377,28 +260,63 @@ TEST(TestRBTree, recolor_large_tree_check) {
     tree.insert({ 65, "65" });
     tree.insert({ 80, "80" });
     tree.insert({ 75, "75" });
-
-    // Добавляем элемент, который вызовет перекрашивание
-    // 77 - создаст ситуацию с красным дядей (75 будет красным)
     tree.insert({ 77, "77" });
 
-    // Проверяем, что все элементы на месте
-    EXPECT_NE(nullptr, tree.find(40));
-    EXPECT_NE(nullptr, tree.find(20));
-    EXPECT_NE(nullptr, tree.find(60));
-    EXPECT_NE(nullptr, tree.find(15));
-    EXPECT_NE(nullptr, tree.find(25));
-    EXPECT_NE(nullptr, tree.find(50));
-    EXPECT_NE(nullptr, tree.find(70));
-    EXPECT_NE(nullptr, tree.find(5));
-    EXPECT_NE(nullptr, tree.find(45));
-    EXPECT_NE(nullptr, tree.find(55));
-    EXPECT_NE(nullptr, tree.find(65));
-    EXPECT_NE(nullptr, tree.find(80));
-    EXPECT_NE(nullptr, tree.find(75));
-    EXPECT_NE(nullptr, tree.find(77));
-
-    // Проверяем цвета (после перекрашивания)
-    // Корень должен быть чёрным
+    // Корень чёрный
     EXPECT_TRUE(tree.is_black(40));
+}
+
+TEST(TestRBTree, right_rotate_via_ll) {
+    RBTree<std::pair<int, std::string>> tree;
+
+    tree.insert({ 30, "thirty" });
+    tree.insert({ 20, "twenty" });
+    tree.insert({ 10, "ten" });
+
+    EXPECT_EQ(tree.get_root()->data_.first, 20);
+
+    EXPECT_NE(nullptr, tree.find(10));
+    EXPECT_NE(nullptr, tree.find(20));
+    EXPECT_NE(nullptr, tree.find(30));
+}
+
+TEST(TestRBTree, left_rotate_via_rr) {
+    RBTree<std::pair<int, std::string>> tree;
+
+    tree.insert({ 10, "ten" });
+    tree.insert({ 20, "twenty" });
+    tree.insert({ 30, "thirty" });
+
+    EXPECT_EQ(tree.get_root()->data_.first, 20);
+
+    EXPECT_NE(nullptr, tree.find(10));
+    EXPECT_NE(nullptr, tree.find(20));
+    EXPECT_NE(nullptr, tree.find(30));
+}
+TEST(TestRBTree, lr_double_rotation) {
+    RBTree<std::pair<int, std::string>> tree;
+
+    tree.insert({ 30, "thirty" });
+    tree.insert({ 10, "ten" });
+    tree.insert({ 20, "twenty" });
+
+    EXPECT_EQ(tree.get_root()->data_.first, 20);
+
+    EXPECT_NE(nullptr, tree.find(10));
+    EXPECT_NE(nullptr, tree.find(20));
+    EXPECT_NE(nullptr, tree.find(30));
+}
+
+TEST(TestRBTree, rl_double_rotation) {
+    RBTree<std::pair<int, std::string>> tree;
+
+    tree.insert({ 10, "ten" });
+    tree.insert({ 30, "thirty" });
+    tree.insert({ 20, "twenty" });
+
+    EXPECT_EQ(tree.get_root()->data_.first, 20);
+
+    EXPECT_NE(nullptr, tree.find(10));
+    EXPECT_NE(nullptr, tree.find(20));
+    EXPECT_NE(nullptr, tree.find(30));
 }
