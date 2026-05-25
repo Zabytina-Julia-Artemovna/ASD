@@ -50,7 +50,9 @@ public:
     RBTree() : _root(nullptr) {}
     RBTree(const RBTree<T>& other);
     ~RBTree();
-
+    RBNode<T>* get_root() const noexcept {
+        return _root;
+    }
     bool is_black(const typename T::first_type& key) const {
         RBNode<T>* node = find_node_by_key(key);
         return node ? node->color_ == Color::black : false;
