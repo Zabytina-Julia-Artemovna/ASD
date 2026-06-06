@@ -59,6 +59,7 @@ add_subdirectory(lib_queue_with_priority)
 
 add_subdirectory(lib_calculator_app)
 add_subdirectory(lib_algoritm)
+add_subdirectory(Experiments)
 
 
 add_subdirectory(main)                # подключаем дополнительный CMakeLists.txt из подкаталога с именем main
