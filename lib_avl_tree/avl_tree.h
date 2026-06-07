@@ -394,32 +394,39 @@ void AVLTree<TKey, TValue>::erase_recursive(
         if (node->right_) node->right_->parent_ = node;
     }
     else {
+        // ”зел найден
         if (!node->left_ || !node->right_) {
+            // —лучай 1 или 2: 0 или 1 ребЄнок
             AVLNode<TKey, TValue>* child = node->left_ ? node->left_ : node->right_;
-            if (child) child->parent_ = node->parent_;
+            if (child) {
+                child->parent_ = node->parent_;
+            }
             delete node;
             node = child;
-            return;
+            //  Ќ≈ ¬ќ«¬–јўј≈ћ—я Ч нужно продолжить балансировку
         }
+        else {
+            // —лучай 3: 2 ребЄнка
+            AVLNode<TKey, TValue>* replacer = node->left_;
+            while (replacer->right_) {
+                replacer = replacer->right_;
+            }
 
-        AVLNode<TKey, TValue>* replacer = node->left_;
-        while (replacer->right_) {
-            replacer = replacer->right_;
+            TKey replacer_key = replacer->data_.first;
+            TValue replacer_value = replacer->data_.second;
+
+            // –екурсивно удал€ем замен€ющий узел
+            erase_recursive(node->left_, replacer_key);
+            if (node->left_) node->left_->parent_ = node;
+
+            node->data_.first = replacer_key;
+            node->data_.second = replacer_value;
         }
-
-        TKey replacer_key = replacer->data_.first;
-        TValue replacer_value = replacer->data_.second;
-
-        erase_recursive(node->left_, replacer_key);
-        if (node->left_) node->left_->parent_ = node;
-
-        node->data_.first = replacer_key;
-        node->data_.second = replacer_value;
     }
 
-    recalc_height(node);
-    recover_balance(node);
-
-    // ѕосле recover_balance, если node был корнем, _root мог изменитьс€
-    // Ќо node передан по ссылке, так что если мы обновим node, это обновит и _root
+    // Ѕалансировка выполн€етс€ дл€ всех узлов на пути к корню
+    if (node) {
+        recalc_height(node);
+        recover_balance(node);
+    }
 }
